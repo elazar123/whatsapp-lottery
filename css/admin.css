@@ -92,6 +92,28 @@
     color: var(--text-muted);
 }
 
+/* Terms Modal Styles */
+.terms-content h4 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+.terms-content p {
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+}
+
+.terms-content ul {
+    margin-bottom: 20px;
+}
+
+.terms-content li {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
 /* --------------------------------------------------------------------------
    Dashboard Layout
    -------------------------------------------------------------------------- */

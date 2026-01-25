@@ -86,6 +86,33 @@ function setupEventListeners() {
     document.getElementById('btn-google-login')?.addEventListener('click', handleGoogleLogin);
     document.getElementById('btn-logout')?.addEventListener('click', handleLogout);
     
+    // Terms of Use logic
+    const termsCheckbox = document.getElementById('terms-checkbox');
+    const loginBtn = document.getElementById('btn-google-login');
+    const showTermsBtn = document.getElementById('btn-show-terms');
+    const termsModal = document.getElementById('terms-modal');
+    const closeTermsBtn = document.getElementById('close-terms-modal');
+    const closeTermsBottomBtn = document.getElementById('btn-close-terms-bottom');
+
+    termsCheckbox?.addEventListener('change', (e) => {
+        if (loginBtn) {
+            loginBtn.disabled = !e.target.checked;
+            loginBtn.style.opacity = e.target.checked ? '1' : '0.6';
+            loginBtn.style.cursor = e.target.checked ? 'pointer' : 'not-allowed';
+        }
+    });
+
+    showTermsBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        termsModal?.classList.remove('hidden');
+    });
+
+    [closeTermsBtn, closeTermsBottomBtn].forEach(btn => {
+        btn?.addEventListener('click', () => {
+            termsModal?.classList.add('hidden');
+        });
+    });
+    
     // Navigation
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', (e) => handleNavigation(e.currentTarget.dataset.view));
