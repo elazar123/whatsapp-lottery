@@ -36,43 +36,38 @@
 </head>
 <body>
     <!-- Global Logo Header -->
-    <div class="global-header">
-        <img src="logo.png" alt="Logo" class="main-logo">
-    </div>
+    <header class="global-header">
+        <div class="header-content">
+            <img src="logo.png" alt="WhatsApp Lottery" class="main-logo">
+        </div>
+    </header>
 
     <div id="app" class="campaign-container">
         <!-- Project Homepage (Shown if no campaign ID) -->
         <div id="home-page" class="hidden">
             <header class="page-header home-header">
-                <div class="logo">
-                    <svg viewBox="0 0 48 48" fill="none" class="logo-icon">
-                        <rect width="48" height="48" rx="12" fill="white"/>
-                        <path d="M24 14L32 22L24 30L16 22L24 14Z" fill="var(--primary-color)"/>
-                        <circle cx="24" cy="32" r="4" fill="var(--primary-color)"/>
-                    </svg>
-                </div>
                 <h1>WhatsApp Lottery</h1>
                 <p>פלטפורמת הגרלות ויראליות בוואטסאפ</p>
             </header>
 
             <main class="step-section">
                 <div class="home-grid">
-                    <div class="home-card">
+                    <div class="home-card bento-card">
                         <div class="home-card-icon">🏗️</div>
                         <h3>מנהלי קמפיינים</h3>
                         <p>צרו הגרלה ויראלית חדשה, נהלו משתתפים ובחרו זוכים בקלות.</p>
                         <a href="admin.html" class="btn btn-primary">כניסה למערכת ניהול</a>
                     </div>
 
-                    <div class="home-card">
+                    <div class="home-card bento-card">
                         <div class="home-card-icon">🎁</div>
                         <h3>מחפשים הגרלות?</h3>
                         <p>צפו בכל ההגרלות הפעילות עכשיו והצטרפו כדי לזכות בפרסים.</p>
-                        <a href="lotteries.html" class="btn btn-secondary">לכל ההגרלות הפתוחות</a>
+                        <a href="lotteries.html" class="btn btn-outline">לכל ההגרלות הפתוחות</a>
                     </div>
                 </div>
 
-                <div class="features-section">
+                <div class="features-section bento-card">
                     <h3>למה WhatsApp Lottery?</h3>
                     <div class="features-list">
                         <div class="feature-item">
@@ -153,7 +148,7 @@
 
             <!-- Step 1: Registration Form -->
             <section id="step-registration" class="step-section">
-                <div class="step-card">
+                <div class="step-card bento-card">
                     <h2 class="step-title">הירשמו להגרלה</h2>
                     <form id="registration-form" class="registration-form">
                         <div class="form-group">
@@ -181,7 +176,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-large">
                             להרשמה להגרלה
-                            <span class="btn-arrow">←</span>
                         </button>
                     </form>
                 </div>
@@ -189,7 +183,7 @@
 
             <!-- Success State -->
             <section id="step-success" class="step-section hidden">
-                <div class="step-card success-card">
+                <div class="step-card bento-card success-card">
                     <div class="success-animation">
                         <div class="checkmark-circle">
                             <svg class="checkmark" viewBox="0 0 52 52">

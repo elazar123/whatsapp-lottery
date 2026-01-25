@@ -14,27 +14,41 @@
 }
 
 /* ==========================================================================
-   Global Header & Logo
+   Global Header & Logo - 2026 Refinement
    ========================================================================== */
 .global-header {
     position: fixed;
     top: 0;
+    left: 0;
     right: 0;
-    padding: var(--space-md);
+    height: 80px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     z-index: var(--z-sticky);
-    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-end; /* Logo on the right for RTL */
 }
 
 .main-logo {
-    height: 60px;
+    height: 32px; /* Mobile height */
     width: auto;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
-    pointer-events: auto;
+    transition: var(--transition-base);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     .main-logo {
-        height: 80px;
+        height: 40px; /* Desktop height */
     }
 }
 
@@ -42,12 +56,119 @@
    Campaign Container
    -------------------------------------------------------------------------- */
 .campaign-container {
-    min-height: 100vh;
-    background: var(--campaign-bg);
+    padding-top: 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Home Page Specifics */
+.home-header {
+    background: transparent;
+    color: var(--text-primary);
+    padding: 40px 0;
+}
+
+.home-header h1 {
+    font-size: var(--font-size-4xl);
+    letter-spacing: -0.02em;
+    color: var(--primary-color);
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin: 40px 0;
+}
+
+@media (min-width: 768px) {
+    .home-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Lotteries Grid Refinement */
+.lotteries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+    padding: 40px 0;
+}
+
+.lottery-card {
+    background: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-base);
     display: flex;
     flex-direction: column;
-    padding-top: 80px; /* Space for fixed logo */
 }
+
+.lottery-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 40px 80px -15px rgba(0,0,0,0.15);
+}
+
+.lottery-image {
+    width: 100%;
+    height: 200px;
+    background: var(--primary-light);
+    position: relative;
+}
+
+.lottery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lottery-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--primary-color);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.lottery-info {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.lottery-info h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+}
+
+.lottery-info p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.lottery-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.lottery-date {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
 
 /* --------------------------------------------------------------------------
    Campaign Banner
@@ -757,35 +878,19 @@
 }
 
 .home-header {
-    background: #000000;
-    color: white;
-    padding: var(--space-3xl) var(--space-md);
     text-align: center;
-    border-radius: 0 0 var(--border-radius-2xl) var(--border-radius-2xl);
     margin-bottom: var(--space-2xl);
     position: relative;
-    overflow: hidden;
-}
-
-.home-header::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at top right, rgba(255,215,0,0.1) 0%, transparent 70%);
 }
 
 .home-header h1 { 
-    color: white; 
     margin-bottom: var(--space-sm); 
-    font-size: 3.5rem; 
+    font-size: 3rem; 
     font-weight: 900;
     letter-spacing: -1px;
 }
 
-.home-header p { font-size: 1.5rem; opacity: 0.8; font-weight: 300; }
+.home-header p { font-size: 1.25rem; opacity: 0.7; font-weight: 400; }
 
 .logo-icon {
     display: none; /* Hide old SVG logo */
