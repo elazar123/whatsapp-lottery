@@ -442,9 +442,13 @@ function handleNavigation(view) {
     currentView = view;
     
     if (view === 'campaigns') {
+        loadCampaigns(); // טען רק את ההגרלות שלי
         showCampaignsView();
     } else if (view === 'create') {
         showCreateView();
+    } else if (view === 'all-campaigns' && isSuperAdminUser) {
+        loadAllCampaigns(); // טען את כל ההגרלות
+        showCampaignsView();
     } else if (view === 'users' && isSuperAdminUser) {
         showUsersView();
     }
@@ -574,21 +578,31 @@ async function showDetailsView(campaignId) {
    ========================================================================== */
 
 /**
- * Load campaigns for current user (or all campaigns for super admin)
+ * Load campaigns for current user (always shows only user's own campaigns)
  */
 async function loadCampaigns() {
     if (!currentUser) return;
     
     try {
-        // סופר אדמין רואה את כל ההגרלות
-        if (isSuperAdminUser) {
-            campaigns = await getAllCampaigns();
-        } else {
-            campaigns = await getCampaignsByManager(currentUser.uid);
-        }
+        // תמיד טען רק את ההגרלות של המשתמש הנוכחי
+        campaigns = await getCampaignsByManager(currentUser.uid);
         renderCampaignsList();
     } catch (error) {
         console.error('Error loading campaigns:', error);
+    }
+}
+
+/**
+ * Load ALL campaigns (for super admin "all campaigns" view)
+ */
+async function loadAllCampaigns() {
+    if (!currentUser || !isSuperAdminUser) return;
+    
+    try {
+        campaigns = await getAllCampaigns();
+        renderCampaignsList(true); // true = showing all campaigns
+    } catch (error) {
+        console.error('Error loading all campaigns:', error);
     }
 }
 
@@ -616,8 +630,27 @@ function showSuperAdminUI() {
         userNameEl.innerHTML = `${currentUser.displayName || 'משתמש'} <span class="super-admin-badge">👑 מנהל ראשי</span>`;
     }
     
-    // הוסף תפריט משתמשים
     const navMenu = document.querySelector('.nav-menu');
+    
+    // הוסף תפריט "כל ההגרלות"
+    if (navMenu && !document.querySelector('[data-view="all-campaigns"]')) {
+        const allCampaignsNavItem = document.createElement('li');
+        allCampaignsNavItem.className = 'nav-item';
+        allCampaignsNavItem.dataset.view = 'all-campaigns';
+        allCampaignsNavItem.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>כל ההגרלות</span>
+        `;
+        allCampaignsNavItem.addEventListener('click', () => handleNavigation('all-campaigns'));
+        navMenu.appendChild(allCampaignsNavItem);
+    }
+    
+    // הוסף תפריט משתמשים
     if (navMenu && !document.querySelector('[data-view="users"]')) {
         const usersNavItem = document.createElement('li');
         usersNavItem.className = 'nav-item';
@@ -778,9 +811,16 @@ window.showUserDetailsFromCard = showUserDetails;
 
 /**
  * Render campaigns list
+ * @param {boolean} showingAll - if true, showing all campaigns (super admin view)
  */
-function renderCampaignsList() {
+function renderCampaignsList(showingAll = false) {
     if (!elements.campaignsList || !elements.campaignsEmpty) return;
+    
+    // Update header based on view
+    const viewHeader = document.querySelector('#view-campaigns .view-header h2');
+    if (viewHeader) {
+        viewHeader.textContent = showingAll ? '📊 כל ההגרלות במערכת' : '🎰 ההגרלות שלי';
+    }
     
     if (campaigns.length === 0) {
         elements.campaignsList.classList.add('hidden');
@@ -796,8 +836,8 @@ function renderCampaignsList() {
         const statusClass = isActive ? 'active' : 'ended';
         const statusText = isActive ? 'פעיל' : 'הסתיים';
         
-        // אם סופר אדמין - הצג גם את שם היוצר
-        const ownerInfo = isSuperAdminUser ? `<span class="campaign-owner">👤 ${campaign.managerId?.substring(0, 8)}...</span>` : '';
+        // הצג את שם היוצר רק בתצוגת "כל ההגרלות"
+        const ownerInfo = showingAll ? `<span class="campaign-owner">👤 ${campaign.managerId?.substring(0, 8)}...</span>` : '';
         
         return `
             <div class="campaign-card" data-id="${campaign.id}">
