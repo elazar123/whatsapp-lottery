@@ -1303,12 +1303,19 @@ function renderLeadsTable(leads) {
     
     emptyState.classList.add('hidden');
     
-    // Use Vercel domain for referral links
-    const vDomain = 'whatsapp-lottery-wsam.vercel.app';
+    // Referral link - Dynamic detection
+    const currentOrigin = window.location.origin;
+    const currentPath = window.location.pathname.replace('admin.html', '');
+    const isVercel = window.location.hostname.includes('vercel.app');
     
     tbody.innerHTML = leads.map((lead, index) => {
-        // Generate unique referral link for this lead - Short format
-        const referralLink = `https://${vDomain}/l/${campaignId.substring(0, 6)}/${lead.id.substring(0, 6)}`;
+        // Generate unique referral link for this lead
+        let referralLink;
+        if (isVercel) {
+            referralLink = `${currentOrigin}/l/${campaignId.substring(0, 6)}/${lead.id.substring(0, 6)}`;
+        } else {
+            referralLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}&ref=${lead.id}`;
+        }
         
         return `
             <tr>

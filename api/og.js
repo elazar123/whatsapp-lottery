@@ -12,7 +12,9 @@ export default async function handler(req, res) {
     
     // Build redirect URL with referral parameter
     const redirectUrl = ref ? `/?c=${campaignId}&r=${ref}` : `/?c=${campaignId}`;
-    const pageUrl = `https://whatsapp-lottery-wsam.vercel.app${redirectUrl}`;
+    // Use dynamic domain if possible, fallback to hardcoded for OG tags
+    const host = req.headers.host || 'whatsapp-lottery-wsam.vercel.app';
+    const pageUrl = `https://${host}${redirectUrl}`;
     
     try {
         const projectId = 'whatsapp-lottery1';
