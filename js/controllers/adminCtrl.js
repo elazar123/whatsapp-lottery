@@ -1252,9 +1252,14 @@ function generatePreviewHtml(title, description, primaryColor, bgColor, bannerUr
  * Render leads table
  * @param {Array} leads 
  */
+/**
+ * Render leads table
+ * @param {Array} leads 
+ */
 function renderLeadsTable(leads) {
     const tbody = document.getElementById('leads-table-body');
     const emptyState = document.getElementById('leads-empty');
+    const campaignId = elements.viewDetails?.dataset.campaignId;
     
     if (!tbody || !emptyState) return;
     
@@ -1266,21 +1271,50 @@ function renderLeadsTable(leads) {
     
     emptyState.classList.add('hidden');
     
-    tbody.innerHTML = leads.map((lead, index) => `
-        <tr>
-            <td>${index + 1}</td>
-            <td>${escapeHtml(lead.fullName)}</td>
-            <td dir="ltr">${escapeHtml(lead.phone)}</td>
-            <td>${formatDate(lead.joinedAt)}</td>
-            <td><span class="ticket-badge">🎫 ${lead.tickets || 1}</span></td>
-            <td class="${lead.tasksCompleted?.savedContact ? 'status-yes' : 'status-no'}">
-                ${lead.tasksCompleted?.savedContact ? '✓' : '✗'}
-            </td>
-            <td class="${lead.tasksCompleted?.sharedWhatsapp ? 'status-yes' : 'status-no'}">
-                ${lead.tasksCompleted?.sharedWhatsapp ? '✓' : '✗'}
-            </td>
-        </tr>
-    `).join('');
+    // Get base URL for referrals
+    const baseUrl = window.location.origin;
+    
+    tbody.innerHTML = leads.map((lead, index) => {
+        // Generate unique referral link for this lead
+        const referralLink = `${baseUrl}/api/og?c=${campaignId}&ref=${lead.id}`;
+        
+        return `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${escapeHtml(lead.fullName)}</td>
+                <td dir="ltr">${escapeHtml(lead.phone)}</td>
+                <td>${formatDate(lead.joinedAt)}</td>
+                <td><span class="ticket-badge">🎫 ${lead.tickets || 1}</span></td>
+                <td class="${lead.tasksCompleted?.savedContact ? 'status-yes' : 'status-no'}">
+                    ${lead.tasksCompleted?.savedContact ? '✓' : '✗'}
+                </td>
+                <td class="${lead.tasksCompleted?.sharedWhatsapp ? 'status-yes' : 'status-no'}">
+                    ${lead.tasksCompleted?.sharedWhatsapp ? '✓' : '✗'}
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline btn-copy-lead-ref" data-link="${referralLink}" title="העתק קישור אישי">
+                        העתק קישור
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    // Add copy handlers
+    tbody.querySelectorAll('.btn-copy-lead-ref').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const link = btn.dataset.link;
+            navigator.clipboard.writeText(link).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = '✓ הועתק';
+                btn.style.color = '#10b981';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.color = '';
+                }, 2000);
+            });
+        });
+    });
 }
 
 /**
