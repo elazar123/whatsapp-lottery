@@ -11,27 +11,28 @@
     <link rel="stylesheet" href="css/campaign.css">
 </head>
 <body>
-    <!-- Global Logo Header -->
-    <header class="global-header">
-        <div class="header-content">
-            <img src="logo.png" alt="WhatsApp Lottery" class="main-logo">
+    <div class="hero-visual"></div>
+    
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="logo.png" alt="WhatsApp Lottery" class="navbar-logo">
         </div>
-    </header>
+    </nav>
 
-    <div id="app" class="campaign-container">
-        <header class="page-header home-header">
+    <div id="app" class="main-container">
+        <header class="home-header">
             <h1>🌐 הגרלות פתוחות</h1>
             <p>מצאו הגרלות שוות והצטרפו עכשיו בחינם!</p>
         </header>
 
-        <main class="step-section">
-            <div id="loading-lotteries" class="text-center">
-                <div class="loader margin-auto"></div>
-                <p>טוען הגרלות...</p>
+        <main>
+            <div id="loading-lotteries" class="text-center" style="padding: 100px;">
+                <div class="loader" style="margin: 0 auto 20px;"></div>
+                <p>מחפש הגרלות...</p>
             </div>
 
-            <div id="empty-lotteries" class="hidden text-center">
-                <p>אין כרגע הגרלות פעילות. חזרו בקרוב!</p>
+            <div id="empty-lotteries" class="hidden text-center wow-card" style="padding: 60px;">
+                <p>אין כרגע הגרלות פעילות. חזרו בקרוב! 🎲</p>
             </div>
 
             <div id="lotteries-list" class="lotteries-grid">
@@ -39,11 +40,8 @@
             </div>
         </main>
 
-        <footer class="campaign-footer">
-            <p>נבנה על ידי <strong>ריגר הפקות</strong></p>
-            <span class="footer-phone">
-                <a href="tel:0525624350">📞 052-562-4350</a>
-            </span>
+        <footer style="text-align: center; padding: 60px 0; opacity: 0.6;">
+            <p>נבנה על ידי <strong>ריגר הפקות</strong> | 052-562-4350</p>
         </footer>
     </div>
 
