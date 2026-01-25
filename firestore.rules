@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection - only authenticated users can read/write their own document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Campaigns collection
+    match /campaigns/{campaignId} {
+      // Anyone can read active campaigns (for public pages)
+      allow read: if true;
+      
+      // Only authenticated owner can create/update/delete
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null 
+        && resource.data.managerId == request.auth.uid;
+      
+      // Leads subcollection
+      match /leads/{leadId} {
+        // Anyone can create leads (public registration)
+        allow create: if true;
+        
+        // Anyone can update their own tasks (by lead ID stored in session)
+        allow update: if true;
+        
+        // Only campaign owner can read leads
+        allow read: if request.auth != null 
+          && get(/databases/$(database)/documents/campaigns/$(campaignId)).data.managerId == request.auth.uid;
+        
+        // Only campaign owner can delete leads
+        allow delete: if request.auth != null 
+          && get(/databases/$(database)/documents/campaigns/$(campaignId)).data.managerId == request.auth.uid;
+      }
+    }
+  }
+}

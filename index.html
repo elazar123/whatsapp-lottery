@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" id="meta-description" content="הירשמו להגרלה וזכו בפרסים מדהימים!">
+    <title id="page-title">הגרלה מיוחדת</title>
+    
+    <!-- Open Graph Meta Tags (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" id="og-title" content="הירשמו להגרלה!">
+    <meta property="og:description" id="og-description" content="הירשמו להגרלה וזכו בפרסים מדהימים!">
+    <meta property="og:image" id="og-image" content="">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" id="og-url" content="">
+    <meta property="og:locale" content="he_IL">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="הירשמו להגרלה!">
+    <meta name="twitter:description" id="twitter-description" content="הירשמו להגרלה וזכו בפרסים מדהימים!">
+    <meta name="twitter:image" id="twitter-image" content="">
+    
+    <!-- WhatsApp specific -->
+    <meta property="og:site_name" content="WhatsApp Lottery">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/campaign.css">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app" class="campaign-container">
+        <!-- Loading State -->
+        <div id="loading-state" class="state-container">
+            <div class="loader"></div>
+            <p>טוען...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="state-container hidden">
+            <div class="error-icon">⚠️</div>
+            <h2>אופס!</h2>
+            <p id="error-message">הקמפיין לא נמצא או שפג תוקפו.</p>
+        </div>
+
+        <!-- Main Campaign Content -->
+        <main id="campaign-content" class="hidden">
+            <!-- Banner Image -->
+            <div class="campaign-banner hidden" id="campaign-banner">
+                <img id="banner-image" src="" alt="באנר ההגרלה">
+            </div>
+            
+            <!-- Header Section -->
+            <header class="campaign-header">
+                <div class="brand-logo" id="brand-logo"></div>
+                <h1 class="campaign-title" id="campaign-title">טוען...</h1>
+                <p class="campaign-description" id="campaign-description"></p>
+            </header>
+
+            <!-- Countdown Timer -->
+            <section class="countdown-section">
+                <p class="countdown-label">הגרלה מסתיימת בעוד:</p>
+                <div class="countdown-timer" id="countdown-timer">
+                    <div class="time-block">
+                        <span class="time-value" id="days">00</span>
+                        <span class="time-label">ימים</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time-value" id="hours">00</span>
+                        <span class="time-label">שעות</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time-value" id="minutes">00</span>
+                        <span class="time-label">דקות</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time-value" id="seconds">00</span>
+                        <span class="time-label">שניות</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 1: Registration Form -->
+            <section id="step-registration" class="step-section">
+                <div class="step-card">
+                    <h2 class="step-title">הירשמו להגרלה</h2>
+                    <form id="registration-form" class="registration-form">
+                        <div class="form-group">
+                            <label for="fullName">שם מלא</label>
+                            <input 
+                                type="text" 
+                                id="fullName" 
+                                name="fullName" 
+                                placeholder="הכניסו את שמכם המלא"
+                                required
+                                autocomplete="name"
+                            >
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">מספר טלפון</label>
+                            <input 
+                                type="tel" 
+                                id="phone" 
+                                name="phone" 
+                                placeholder="050-1234567"
+                                required
+                                autocomplete="tel"
+                                pattern="[0-9\-]+"
+                            >
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-large">
+                            להרשמה להגרלה
+                            <span class="btn-arrow">←</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Step 2: Viral Tasks -->
+            <section id="step-tasks" class="step-section hidden">
+                <div class="step-card">
+                    <h2 class="step-title">כמעט שם! 🎉</h2>
+                    <p class="step-subtitle">השלימו 2 משימות קצרות לאישור ההשתתפות:</p>
+                    
+                    <div class="tasks-container">
+                        <!-- Task 1: Save Contact -->
+                        <div class="task-item" id="task-contact">
+                            <div class="task-number">1</div>
+                            <div class="task-content">
+                                <h3>שמרו את איש הקשר שלנו</h3>
+                                <p>לחצו לשמירת הפרטים בטלפון</p>
+                            </div>
+                            <button class="btn btn-task" id="btn-save-contact">
+                                <svg class="task-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                שמירת איש קשר
+                            </button>
+                            <div class="task-check hidden">✓</div>
+                        </div>
+
+                        <!-- Task 2: Share on WhatsApp -->
+                        <div class="task-item" id="task-whatsapp">
+                            <div class="task-number">2</div>
+                            <div class="task-content">
+                                <h3>שתפו בווטסאפ</h3>
+                                <p>ספרו לחברים על ההגרלה</p>
+                            </div>
+                            <button class="btn btn-task btn-whatsapp" id="btn-share-whatsapp">
+                                <svg class="task-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                                שיתוף בווטסאפ
+                            </button>
+                            <div class="task-check hidden">✓</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-large btn-finish" id="btn-finish" disabled>
+                        סיום והשתתפות בהגרלה
+                    </button>
+                </div>
+            </section>
+
+            <!-- Success State -->
+            <section id="step-success" class="step-section hidden">
+                <div class="step-card success-card">
+                    <div class="success-animation">
+                        <div class="checkmark-circle">
+                            <svg class="checkmark" viewBox="0 0 52 52">
+                                <circle class="checkmark-circle-bg" cx="26" cy="26" r="25" fill="none"/>
+                                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h2 class="success-title">נרשמתם בהצלחה! 🎉</h2>
+                    <p class="success-message">אתם רשומים להגרלה. בהצלחה!</p>
+                    <p class="success-note">שמרו את הדף הזה - נעדכן כאן את הזוכים</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="campaign-footer">
+            <p>נבנה על ידי <strong>ריגר הפקות</strong></p>
+            <span class="footer-phone">
+                <a href="tel:0525624350">📞 052-562-4350</a>
+            </span>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/controllers/publicCtrl.js"></script>
+</body>
+</html>
