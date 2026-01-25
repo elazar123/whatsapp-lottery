@@ -1013,8 +1013,12 @@ function updateLivePreview() {
     const primaryColor = document.getElementById('primary-color')?.value || '#6366f1';
     const bgColor = document.getElementById('bg-color')?.value || '#f8fafc';
     
+    // Get banner image (from preview or hidden input)
+    const bannerPreview = document.getElementById('banner-preview');
+    const bannerUrl = bannerPreview?.src && !bannerPreview.classList.contains('hidden') ? bannerPreview.src : '';
+    
     // Generate preview HTML
-    const previewHtml = generatePreviewHtml(title, description, primaryColor, bgColor);
+    const previewHtml = generatePreviewHtml(title, description, primaryColor, bgColor, bannerUrl);
     
     // Update iframe
     const iframe = elements.previewIframe;
@@ -1027,7 +1031,7 @@ function updateLivePreview() {
 /**
  * Generate preview HTML for iframe
  */
-function generatePreviewHtml(title, description, primaryColor, bgColor) {
+function generatePreviewHtml(title, description, primaryColor, bgColor, bannerUrl = '') {
     return `
         <!DOCTYPE html>
         <html lang="he" dir="rtl">
@@ -1046,6 +1050,17 @@ function generatePreviewHtml(title, description, primaryColor, bgColor) {
                     background: var(--campaign-bg);
                     min-height: 100vh;
                     padding: 20px;
+                }
+                .banner {
+                    width: 100%;
+                    border-radius: 12px;
+                    margin-bottom: 16px;
+                    overflow: hidden;
+                }
+                .banner img {
+                    width: 100%;
+                    height: auto;
+                    display: block;
                 }
                 .header {
                     text-align: center;
@@ -1108,6 +1123,7 @@ function generatePreviewHtml(title, description, primaryColor, bgColor) {
             </style>
         </head>
         <body>
+            ${bannerUrl ? `<div class="banner"><img src="${bannerUrl}" alt="באנר"></div>` : ''}
             <div class="header">
                 <h1 class="title">${escapeHtml(title)}</h1>
                 ${description ? `<p class="desc">${escapeHtml(description)}</p>` : ''}
