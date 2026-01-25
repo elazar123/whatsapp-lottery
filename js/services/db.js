@@ -56,7 +56,31 @@ export async function createCampaign(campaignData, managerId) {
     
     try {
         const docRef = await addDoc(collection(db, CAMPAIGNS_COLLECTION), campaign);
-        return docRef.id;
+        const campaignId = docRef.id;
+
+        // יצירת ליד ראשון עבור המנהל כדי שיוכל לצבור כרטיסים
+        const managerLead = {
+            fullName: campaignData.contactVcardName + " (מנהל)",
+            phone: campaignData.contactPhoneNumber,
+            joinedAt: serverTimestamp(),
+            tickets: 1,
+            referredBy: null,
+            isManager: true,
+            tasksCompleted: {
+                savedContact: true,
+                sharedWhatsapp: true
+            }
+        };
+        
+        const leadRef = await addDoc(collection(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION), managerLead);
+        
+        // עדכון הקמפיין עם ה-ID של הליד של המנהל ומונה התחלתי
+        await updateDoc(doc(db, CAMPAIGNS_COLLECTION, campaignId), {
+            managerLeadId: leadRef.id,
+            leadsCount: 1
+        });
+
+        return campaignId;
     } catch (error) {
         console.error('Error creating campaign:', error);
         throw error;

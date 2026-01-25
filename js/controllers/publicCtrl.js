@@ -437,7 +437,7 @@ function handleShareWhatsapp() {
     if (!currentCampaign) return;
     
     // Generate campaign link with referral ID for ticket system
-    // Use OG endpoint for proper social preview + ref parameter
+    // Use host for shorter link + OG endpoint
     let campaignLink = `${window.location.host}/api/og?c=${currentCampaign.id}`;
     
     // Add referral ID if user is registered (for ticket system)

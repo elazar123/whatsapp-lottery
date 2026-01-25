@@ -562,8 +562,9 @@ async function showDetailsView(campaignId) {
             : 0;
         document.getElementById('stat-conversion').textContent = `${conversion}%`;
         
-        // Campaign link
-        const campaignLink = `${window.location.origin}/?c=${campaignId}`;
+        // Campaign link - use OG endpoint with manager's referral ID
+        const referralParam = campaign.managerLeadId ? `&ref=${campaign.managerLeadId}` : '';
+        const campaignLink = `${window.location.origin}/api/og?c=${campaignId}${referralParam}`;
         document.getElementById('campaign-link').value = campaignLink;
         
         // Store campaign ID for actions
