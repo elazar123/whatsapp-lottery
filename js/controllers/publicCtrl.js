@@ -455,11 +455,24 @@ function handleSaveContact() {
 async function handleShareWhatsapp() {
     if (!currentCampaign) return;
     
-    // Use short URL format for sharing
-    const vDomain = 'whatsapp-lottery-wsam.vercel.app';
-    const campaignIdShort = currentCampaign.id.substring(0, 6);
-    const leadIdShort = currentLeadId ? currentLeadId.substring(0, 6) : '';
-    const rawCampaignLink = `https://${vDomain}/l/${campaignIdShort}${leadIdShort ? `/${leadIdShort}` : ''}`;
+    // Use the current domain dynamically
+    const currentOrigin = window.location.origin;
+    const currentPath = window.location.pathname.replace('index.html', '');
+    
+    // Check if we are on Vercel (to decide between short /l/ format and standard format)
+    const isVercel = window.location.hostname.includes('vercel.app');
+    
+    let rawCampaignLink;
+    if (isVercel) {
+        // Use the short format that triggers OG tags on Vercel
+        rawCampaignLink = `${currentOrigin}/l/${currentCampaign.id.substring(0, 6)}${currentLeadId ? `/${currentLeadId.substring(0, 6)}` : ''}`;
+    } else {
+        // Fallback for GitHub Pages or local testing
+        const url = new URL(currentOrigin + currentPath);
+        url.searchParams.set('c', currentCampaign.id);
+        if (currentLeadId) url.searchParams.set('ref', currentLeadId);
+        rawCampaignLink = url.toString();
+    }
     
     // 1. Shorten the URL further using external service
     const campaignLink = await shortenUrl(rawCampaignLink);

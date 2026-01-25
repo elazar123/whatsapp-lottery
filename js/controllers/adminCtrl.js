@@ -611,9 +611,18 @@ async function showDetailsView(campaignId) {
             : 0;
         document.getElementById('stat-conversion').textContent = `${conversion}%`;
         
-        // Campaign link - Short format
-        const vDomain = 'whatsapp-lottery-wsam.vercel.app';
-        const campaignLink = `https://${vDomain}/l/${campaignId.substring(0, 6)}${campaign.managerLeadId ? `/${campaign.managerLeadId.substring(0, 6)}` : ''}`;
+        // Campaign link - Dynamic detection
+        const currentOrigin = window.location.origin;
+        const currentPath = window.location.pathname.replace('admin.html', '');
+        const isVercel = window.location.hostname.includes('vercel.app');
+        
+        let campaignLink;
+        if (isVercel) {
+            campaignLink = `${currentOrigin}/l/${campaignId.substring(0, 6)}${campaign.managerLeadId ? `/${campaign.managerLeadId.substring(0, 6)}` : ''}`;
+        } else {
+            campaignLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}${campaign.managerLeadId ? `&ref=${campaign.managerLeadId}` : ''}`;
+        }
+        
         document.getElementById('campaign-link').value = campaignLink;
         
         // Store campaign ID for actions
