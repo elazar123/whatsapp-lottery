@@ -360,7 +360,7 @@ async function handleRegistration(e) {
         
     } catch (error) {
         console.error('Error registering:', error);
-        alert('אירעה שגיאה בהרשמה. נסו שוב.');
+        alert('אירעה שגיאה בהרשמה: ' + (error.message || 'נסו שוב.'));
     }
 }
 
@@ -381,9 +381,9 @@ function normalizePhone(phone) {
  * @returns {boolean}
  */
 function isValidPhone(phone) {
-    // Israeli phone: starts with 05, 9-10 digits total
+    // More flexible validation - at least 9 digits
     const normalized = normalizePhone(phone);
-    return /^0?5\d{8}$/.test(normalized) || /^972?5\d{8}$/.test(normalized);
+    return normalized.length >= 9 && normalized.length <= 15;
 }
 
 /* ==========================================================================
@@ -420,8 +420,8 @@ function handleSaveContact() {
 function handleShareWhatsapp() {
     if (!currentCampaign) return;
     
-    // Generate campaign link
-    const campaignLink = `${window.location.origin}${window.location.pathname}?c=${currentCampaign.id}`;
+    // Generate campaign link - use OG endpoint for proper social preview
+    const campaignLink = `${window.location.origin}/api/og?c=${currentCampaign.id}`;
     
     // Replace {{link}} placeholder in share text
     let shareText = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';
