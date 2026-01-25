@@ -2,6 +2,14 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/l/:c/:ref",
+      "destination": "/api/og?c=:c&ref=:ref"
+    },
+    {
+      "source": "/l/:c",
+      "destination": "/api/og?c=:c"
+    },
+    {
       "source": "/j/:c/:ref",
       "destination": "/api/og?c=:c&ref=:ref"
     },

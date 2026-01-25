@@ -586,7 +586,7 @@ async function showDetailsView(campaignId) {
         
         // Campaign link - Short format
         const vDomain = 'whatsapp-lottery-wsam.vercel.app';
-        const campaignLink = `https://${vDomain}/j/${campaignId}${campaign.managerLeadId ? `/${campaign.managerLeadId}` : ''}`;
+        const campaignLink = `https://${vDomain}/l/${campaignId}${campaign.managerLeadId ? `/${campaign.managerLeadId.substring(0, 6)}` : ''}`;
         document.getElementById('campaign-link').value = campaignLink;
         
         // Store campaign ID for actions
@@ -1272,7 +1272,7 @@ function renderLeadsTable(leads) {
     
     tbody.innerHTML = leads.map((lead, index) => {
         // Generate unique referral link for this lead - Short format
-        const referralLink = `https://${vDomain}/j/${campaignId}/${lead.id}`;
+        const referralLink = `https://${vDomain}/l/${campaignId}/${lead.id.substring(0, 6)}`;
         
         return `
             <tr>

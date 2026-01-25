@@ -97,7 +97,7 @@ function getCampaignIdFromUrl() {
  */
 function getReferrerFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('ref');
+    return urlParams.get('r') || urlParams.get('ref');
 }
 
 /* ==========================================================================
@@ -458,7 +458,7 @@ function handleShareWhatsapp() {
     // Generate campaign link with referral ID for ticket system
     // Use short URL format for sharing
     const vDomain = 'whatsapp-lottery-wsam.vercel.app';
-    const campaignLink = `${vDomain}/j/${currentCampaign.id}${currentLeadId ? `/${currentLeadId}` : ''}`;
+    const campaignLink = `${vDomain}/l/${currentCampaign.id}${currentLeadId ? `/${currentLeadId.substring(0, 6)}` : ''}`;
     
     // Generate WhatsApp URL and open using specialized helper
     const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';

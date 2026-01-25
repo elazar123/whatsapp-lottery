@@ -248,17 +248,32 @@ export async function saveLead(campaignId, leadData) {
 /**
  * Add a ticket to referrer when someone registers through their link
  * @param {string} campaignId - Campaign document ID
- * @param {string} referrerLeadId - Lead ID of the referrer
+ * @param {string} referrerId - Lead ID or prefix of the referrer
  */
-export async function addTicketToReferrer(campaignId, referrerLeadId) {
+export async function addTicketToReferrer(campaignId, referrerId) {
     const db = getDbInstance();
     
     try {
-        const leadRef = doc(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION, referrerLeadId);
+        let targetLeadId = referrerId;
+
+        // If it's a prefix (short ID), find the full ID
+        if (referrerId.length < 20) {
+            const leadsRef = collection(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION);
+            const querySnapshot = await getDocs(leadsRef);
+            const matchingLead = querySnapshot.docs.find(doc => doc.id.startsWith(referrerId));
+            if (matchingLead) {
+                targetLeadId = matchingLead.id;
+            } else {
+                console.warn('No lead found matching prefix:', referrerId);
+                return;
+            }
+        }
+
+        const leadRef = doc(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION, targetLeadId);
         await updateDoc(leadRef, {
             tickets: increment(1)
         });
-        console.log('Added ticket to referrer:', referrerLeadId);
+        console.log('Added ticket to referrer:', targetLeadId);
     } catch (error) {
         console.error('Error adding ticket to referrer:', error);
         // Don't throw - this is not critical

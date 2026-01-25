@@ -11,8 +11,8 @@ export default async function handler(req, res) {
     }
     
     // Build redirect URL with referral parameter
-    const redirectUrl = ref ? `/?c=${campaignId}&ref=${ref}` : `/?c=${campaignId}`;
-    const pageUrl = `https://whatsapp-lottery.vercel.app${redirectUrl}`;
+    const redirectUrl = ref ? `/?c=${campaignId}&r=${ref}` : `/?c=${campaignId}`;
+    const pageUrl = `https://whatsapp-lottery-wsam.vercel.app${redirectUrl}`;
     
     try {
         // Fetch campaign from Firestore REST API
