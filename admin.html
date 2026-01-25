@@ -16,44 +16,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img src="logo.png" alt="WhatsApp Lottery" class="navbar-logo">
-        </div>
-    </nav>
+    <!-- 3D Visual Background -->
+    <div class="bg-visuals">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
 
-    <div id="app" class="main-container" style="padding-top: 130px;">
+    <!-- Top Right Logo -->
+    <div class="brand-container">
+        <img src="logo.png" alt="Logo" class="main-logo">
+    </div>
+
+    <div id="app" class="app-content">
         
         <!-- State 1: Logged Out - Login Screen -->
         <div id="login-screen" class="login-screen">
-            <div class="login-card wow-card" style="max-width: 450px; margin: 0 auto; padding: 60px;">
-                <div class="login-header" style="text-align: center; margin-bottom: 40px;">
-                    <h1 style="font-size: 2.5rem; font-weight: 900; letter-spacing: -1px;">מנהל הגרלות</h1>
-                    <p style="opacity: 0.7;">צרו הגרלות ויראליות בשניות</p>
-                </div>
+            <div class="card-3d text-center" style="max-width: 500px; margin: 0 auto; padding: 60px;">
+                <h1 style="margin-bottom: 20px;">ניהול הגרלות</h1>
+                <p style="margin-bottom: 40px;">התחברו למערכת כדי לנהל את הקמפיינים שלכם</p>
                 
-                <div class="login-body">
-                    <button id="btn-google-login" class="btn btn-primary" style="width: 100%; height: 65px; font-size: 1.1rem; background: #fff; color: #000; border: 2px solid #eee;">
-                        <svg class="google-icon" viewBox="0 0 24 24" style="width: 24px; height: 24px;">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        התחברות עם Google
-                    </button>
-                </div>
+                <button id="btn-google-login" class="btn-wow" style="width: 100%; background: #fff; color: #000; border: 2px solid #eee; box-shadow: none;">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 24px;">
+                    התחברות עם Google
+                </button>
             </div>
         </div>
 
         <!-- State 2 & 3: Logged In - Dashboard -->
         <div id="dashboard" class="dashboard hidden" style="display: grid; grid-template-columns: 280px 1fr; gap: 40px;">
-            <nav class="sidebar wow-card" style="padding: 30px; height: fit-content; position: sticky; top: 130px;">
-                <ul class="nav-menu" style="list-style: none;">
-                    <li class="nav-item active" data-view="campaigns" style="margin-bottom: 15px; padding: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700; transition: 0.3s;">
+            <!-- Navigation -->
+            <nav class="card-3d" style="padding: 30px; height: fit-content; position: sticky; top: 120px;">
+                <ul style="list-style: none;">
+                    <li class="nav-item active" data-view="campaigns" style="margin-bottom: 10px; padding: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700;">
                         <span>🎰 הקמפיינים שלי</span>
                     </li>
-                    <li class="nav-item" data-view="create" style="padding: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700; transition: 0.3s;">
+                    <li class="nav-item" data-view="create" style="padding: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-weight: 700;">
                         <span>➕ יצירת הגרלה</span>
                     </li>
                 </ul>
@@ -62,121 +59,122 @@
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
                         <img id="user-avatar" src="" style="width: 45px; height: 45px; border-radius: 50%;">
                         <div style="overflow: hidden;">
-                            <p id="user-name" style="font-weight: 800; font-size: 0.9rem; white-space: nowrap; text-overflow: ellipsis;"></p>
+                            <p id="user-name" style="font-weight: 800; font-size: 0.9rem; white-space: nowrap; text-overflow: ellipsis; color: #000;"></p>
                         </div>
                     </div>
-                    <button id="btn-logout" class="btn btn-primary" style="width: 100%; height: 45px; font-size: 0.8rem; background: #fee2e2; color: #ef4444; box-shadow: none;">התנתקות</button>
+                    <button id="btn-logout" class="btn-wow" style="width: 100%; height: 45px; font-size: 0.8rem; background: #fee2e2; color: #ef4444; box-shadow: none;">התנתקות</button>
                 </div>
             </nav>
 
-            <main class="main-content">
+            <!-- Main Content -->
+            <main>
+                <!-- View: List -->
                 <section id="view-campaigns">
-                    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-                        <h2 style="font-size: 2rem; font-weight: 900;">הקמפיינים שלי</h2>
-                        <button class="btn btn-primary" id="btn-new-campaign">➕ הגרלה חדשה</button>
-                    </header>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                        <h2>🎰 הקמפיינים שלי</h2>
+                        <button id="btn-new-campaign" class="btn-wow">➕ הגרלה חדשה</button>
+                    </div>
                     
-                    <div id="campaigns-empty" class="wow-card text-center" style="padding: 80px;">
+                    <div id="campaigns-empty" class="card-3d text-center" style="padding: 80px;">
                         <span style="font-size: 4rem;">🎲</span>
                         <h3 style="margin: 20px 0;">אין עדיין הגרלות</h3>
                         <p style="margin-bottom: 30px;">צרו את ההגרלה הראשונה שלכם עכשיו!</p>
-                        <button class="btn btn-primary" id="btn-create-first">יצירת הגרלה</button>
+                        <button id="btn-create-first" class="btn-wow">יצירת הגרלה ראשונה</button>
                     </div>
 
-                    <div id="campaigns-list" class="hidden" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
-                    </div>
+                    <div id="campaigns-list" class="hidden" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;"></div>
                 </section>
 
+                <!-- View: Create -->
                 <section id="view-create" class="hidden">
-                    <div class="wow-card" style="padding: 40px;">
-                        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-                            <h2 id="create-view-title" style="font-size: 1.8rem; font-weight: 900;">יצירת הגרלה</h2>
-                            <button class="btn btn-primary" id="btn-save-campaign">🚀 פרסום עכשיו</button>
-                        </header>
+                    <div class="card-3d">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                            <h2 id="create-view-title">➕ יצירת הגרלה</h2>
+                            <button id="btn-save-campaign" class="btn-wow">🚀 פרסום עכשיו</button>
+                        </div>
 
                         <form id="campaign-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                            <div class="form-panel">
-                                <div style="margin-bottom: 25px;">
-                                    <label>כותרת ההגרלה *</label>
-                                    <input type="text" name="title" placeholder="למשל: הגרלת אייפון 15" required>
+                            <div>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">כותרת ההגרלה *</label>
+                                    <input type="text" name="title" required>
                                 </div>
-                                <div style="margin-bottom: 25px;">
-                                    <label>תיאור הקמפיין</label>
-                                    <textarea name="description" rows="4" placeholder="ספרו על הפרס ועל תנאי ההשתתפות"></textarea>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">תיאור</label>
+                                    <textarea name="description" rows="4"></textarea>
                                 </div>
-                                <div style="margin-bottom: 25px;">
-                                    <label>תאריך סיום *</label>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">תאריך סיום *</label>
                                     <input type="datetime-local" name="endDate" required>
                                 </div>
                             </div>
-
-                            <div class="form-panel">
-                                <div style="margin-bottom: 25px;">
-                                    <label>שם איש קשר (לשמירה) *</label>
-                                    <input type="text" name="contactVcardName" placeholder="השם שיופיע בטלפון" required>
+                            <div>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">שם איש קשר (לשמירה) *</label>
+                                    <input type="text" name="contactVcardName" required>
                                 </div>
-                                <div style="margin-bottom: 25px;">
-                                    <label>מספר טלפון (לשמירה) *</label>
-                                    <input type="tel" name="contactPhoneNumber" placeholder="9725XXXXXXXX" required>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">מספר טלפון (9725...) *</label>
+                                    <input type="tel" name="contactPhoneNumber" required>
                                 </div>
-                                <div style="margin-bottom: 25px;">
-                                    <label>טקסט שיתוף לוואטסאפ *</label>
-                                    <textarea name="whatsappShareText" rows="3" placeholder="הירשמתי להגרלה! בואו גם אתם:"></textarea>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">טקסט שיתוף</label>
+                                    <textarea name="whatsappShareText" rows="3"></textarea>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </section>
 
+                <!-- View: Details -->
                 <section id="view-details" class="hidden">
-                    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-                        <h2 id="details-title" style="font-size: 2rem; font-weight: 900;">פרטי הגרלה</h2>
-                        <div style="display: flex; gap: 15px;">
-                            <button class="btn btn-primary" id="btn-edit-campaign" style="background: #fff; color: #000; border: 2px solid #000;">עריכה</button>
-                            <button class="btn btn-primary" id="btn-delete-campaign" style="background: #fee2e2; color: #ef4444;">מחיקה</button>
-                        </div>
-                    </header>
-
-                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 40px;">
-                        <div class="wow-card text-center" style="padding: 25px;">
-                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">צפיות</span>
-                            <div id="stat-views" style="font-size: 2rem; font-weight: 900;">0</div>
-                        </div>
-                        <div class="wow-card text-center" style="padding: 25px;">
-                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">נרשמים</span>
-                            <div id="stat-leads" style="font-size: 2rem; font-weight: 900;">0</div>
-                        </div>
-                        <div class="wow-card text-center" style="padding: 25px;">
-                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">כרטיסים</span>
-                            <div id="stat-tickets" style="font-size: 2rem; font-weight: 900;">0</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                        <h2 id="details-title">פרטי הגרלה</h2>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="btn-edit-campaign" class="btn-wow" style="background: #fff; color: #000; border: 2px solid #000; box-shadow: none;">עריכה</button>
+                            <button id="btn-delete-campaign" class="btn-wow" style="background: #fee2e2; color: #ef4444; box-shadow: none;">מחיקה</button>
                         </div>
                     </div>
 
-                    <div class="wow-card" style="padding: 40px; margin-bottom: 40px;">
-                        <h3 style="margin-bottom: 25px;">🎯 בחירת זוכה</h3>
-                        <div style="display: flex; gap: 20px; align-items: center;">
-                            <input type="number" id="winner-count" value="1" min="1" style="width: 100px;">
-                            <button class="btn btn-primary" id="btn-select-winner" style="flex: 1;">🎰 בצע הגרלה עכשיו!</button>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                        <div class="card-3d text-center" style="padding: 25px;">
+                            <span style="font-weight: 700; color: var(--text-light);">צפיות</span>
+                            <div id="stat-views" style="font-size: 2.5rem; font-weight: 900; color: #000;">0</div>
                         </div>
-                        <div id="winner-display" class="hidden" style="margin-top: 30px; padding: 30px; background: #f0fdf4; border-radius: 20px; border: 2px solid #22c55e;">
-                            <h4 style="color: #16a34a; margin-bottom: 15px;">🏆 הזוכים המאושרים:</h4>
+                        <div class="card-3d text-center" style="padding: 25px;">
+                            <span style="font-weight: 700; color: var(--text-light);">נרשמים</span>
+                            <div id="stat-leads" style="font-size: 2.5rem; font-weight: 900; color: #000;">0</div>
+                        </div>
+                        <div class="card-3d text-center" style="padding: 25px;">
+                            <span style="font-weight: 700; color: var(--text-light);">כרטיסים</span>
+                            <div id="stat-tickets" style="font-size: 2.5rem; font-weight: 900; color: #000;">0</div>
+                        </div>
+                    </div>
+
+                    <div class="card-3d" style="margin-bottom: 40px;">
+                        <h3 style="margin-bottom: 20px;">🎲 הגרלת זוכה</h3>
+                        <div style="display: flex; gap: 20px;">
+                            <input type="number" id="winner-count" value="1" min="1" style="width: 100px;">
+                            <button id="btn-select-winner" class="btn-wow" style="flex: 1;">🎰 הגרל עכשיו!</button>
+                        </div>
+                        <div id="winner-display" class="hidden" style="margin-top: 30px; padding: 25px; background: #f0fdf4; border-radius: 20px; border: 2px solid #22c55e;">
+                            <h4 style="color: #16a34a; margin-bottom: 10px;">🏆 הזוכים:</h4>
                             <div id="winner-list"></div>
                         </div>
                     </div>
 
-                    <div class="wow-card" style="padding: 40px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                            <h3>👥 רשימת נרשמים</h3>
-                            <button class="btn btn-primary" id="btn-export-leads" style="height: 45px; font-size: 0.9rem;">הורד CSV</button>
+                    <div class="card-3d">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                            <h3>👥 נרשמים</h3>
+                            <button id="btn-export-leads" class="btn-wow" style="height: 45px; font-size: 0.9rem;">CSV ייצוא</button>
                         </div>
                         <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                            <table style="width: 100%; border-spacing: 0 10px; border-collapse: separate;">
                                 <thead>
-                                    <tr style="text-align: right; color: var(--text-secondary); font-size: 0.8rem;">
-                                        <th style="padding: 10px;">שם מלא</th>
+                                    <tr style="text-align: right; color: var(--text-light); font-size: 0.8rem;">
+                                        <th style="padding: 10px;">שם</th>
                                         <th>טלפון</th>
                                         <th>כרטיסים</th>
-                                        <th>סטטוס</th>
                                         <th>פעולות</th>
                                     </tr>
                                 </thead>

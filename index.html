@@ -35,166 +35,105 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="hero-visual"></div>
-    <div class="hero-visual-alt"></div>
+    <!-- 3D Visual Background -->
+    <div class="bg-visuals">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
 
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img src="logo.png" alt="WhatsApp Lottery" class="navbar-logo">
-        </div>
-    </nav>
+    <!-- Top Right Logo -->
+    <div class="brand-container">
+        <img src="logo.png" alt="Logo" class="main-logo">
+    </div>
 
-    <div id="app" class="main-container">
-        <!-- Project Homepage (Shown if no campaign ID) -->
+    <div id="app" class="app-content">
+        <!-- Project Homepage -->
         <div id="home-page" class="hidden">
-            <header class="home-header">
+            <header style="text-align: center; margin-bottom: 80px;">
                 <h1>WhatsApp Lottery</h1>
-                <p>פלטפורמת הגרלות ויראליות בוואטסאפ</p>
+                <p style="font-size: 1.5rem; margin-top: 15px;">פלטפורמת הגרלות ויראליות בוואטסאפ</p>
             </header>
 
-            <main>
-                <div class="home-grid">
-                    <div class="home-card wow-card">
-                        <div class="home-card-icon">🏗️</div>
-                        <h3>מנהלי קמפיינים</h3>
-                        <p>צרו הגרלה ויראלית חדשה, נהלו משתתפים ובחרו זוכים בקלות.</p>
-                        <a href="admin.html" class="btn btn-primary">כניסה למערכת ניהול</a>
-                    </div>
-
-                    <div class="home-card wow-card">
-                        <div class="home-card-icon">🎁</div>
-                        <h3>מחפשים הגרלות?</h3>
-                        <p>צפו בכל ההגרלות הפעילות עכשיו והצטרפו כדי לזכות בפרסים.</p>
-                        <a href="lotteries.html" class="btn btn-primary">לכל ההגרלות הפתוחות</a>
-                    </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin-bottom: 80px;">
+                <div class="card-3d text-center">
+                    <span style="font-size: 4rem;">🏗️</span>
+                    <h3 style="margin: 20px 0; font-size: 1.8rem;">מנהלי קמפיינים</h3>
+                    <p style="margin-bottom: 30px;">צרו הגרלה ויראלית חדשה, נהלו משתתפים ובחרו זוכים בקלות.</p>
+                    <a href="admin.html" class="btn-wow" style="width: 100%;">כניסה לניהול</a>
                 </div>
 
-                <div class="features-section wow-card" style="padding: 50px;">
-                    <h3 style="text-align: center; margin-bottom: 40px; font-size: 2rem;">למה WhatsApp Lottery?</h3>
-                    <div class="features-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;">
-                        <div class="feature-item">
-                            <h4 style="margin-bottom: 10px; font-size: 1.25rem;">🚀 צמיחה ויראלית</h4>
-                            <p style="color: var(--text-secondary);">מערכת הפניות (Referrals) מובנית - כל משתף מקבל יותר סיכויים לזכות.</p>
-                        </div>
-                        <div class="feature-item">
-                            <h4 style="margin-bottom: 10px; font-size: 1.25rem;">📱 מותאם לוואטסאפ</h4>
-                            <p style="color: var(--text-secondary);">חוויית משתמש חלקה בתוך הווטסאפ עם תצוגה מקדימה עשירה.</p>
-                        </div>
-                        <div class="feature-item">
-                            <h4 style="margin-bottom: 10px; font-size: 1.25rem;">🎯 ניהול פשוט</h4>
-                            <p style="color: var(--text-secondary);">לוח בקרה מלא למנהלים, מעקב לידים ובחירת זוכים אוטומטית.</p>
-                        </div>
-                    </div>
+                <div class="card-3d text-center">
+                    <span style="font-size: 4rem;">🎁</span>
+                    <h3 style="margin: 20px 0; font-size: 1.8rem;">מחפשים הגרלות?</h3>
+                    <p style="margin-bottom: 30px;">צפו בכל ההגרלות הפעילות עכשיו והצטרפו כדי לזכות בפרסים.</p>
+                    <a href="lotteries.html" class="btn-wow" style="width: 100%; background: #fff; color: #000; border: 2px solid #000;">לכל ההגרלות</a>
                 </div>
-            </main>
-        </div>
-
-        <!-- Loading State -->
-        <div id="loading-state" class="state-container text-center" style="padding: 100px;">
-            <div class="loader" style="margin: 0 auto 20px;"></div>
-            <p>טוען מערכת...</p>
-        </div>
-
-        <!-- Error State -->
-        <div id="error-state" class="state-container hidden text-center" style="padding: 100px;">
-            <h2 style="font-size: 3rem; margin-bottom: 20px;">⚠️</h2>
-            <h2>הקמפיין לא נמצא</h2>
-            <p>הקישור שבור או שההגרלה כבר הסתיימה.</p>
-        </div>
-
-        <!-- Main Campaign Content -->
-        <main id="campaign-content" class="hidden">
-            <div class="campaign-banner hidden" id="campaign-banner">
-                <img id="banner-image" src="" alt="באנר ההגרלה">
             </div>
-            
-            <header class="text-center" style="margin-bottom: 40px;">
-                <h1 class="campaign-title" id="campaign-title">טוען...</h1>
-                <p id="campaign-description" style="font-size: 1.2rem; opacity: 0.8;"></p>
+        </div>
+
+        <!-- Campaign View -->
+        <main id="campaign-content" class="hidden">
+            <div id="campaign-banner" class="hidden" style="margin-bottom: 60px; border-radius: 32px; overflow: hidden; box-shadow: var(--shadow-premium);">
+                <img id="banner-image" src="" style="width: 100%; height: auto; display: block;">
+            </div>
+
+            <header style="text-align: center; margin-bottom: 60px;">
+                <h1 id="campaign-title">טוען...</h1>
+                <p id="campaign-description" style="font-size: 1.3rem; margin-top: 15px;"></p>
             </header>
 
-            <section class="text-center">
-                <p style="font-weight: 700; color: var(--text-secondary);">הגרלה מסתיימת בעוד:</p>
-                <div class="countdown-timer" id="countdown-timer">
-                    <div class="time-block">
-                        <span class="time-value" id="days">00</span>
-                        <p>ימים</p>
-                    </div>
-                    <div class="time-block">
-                        <span class="time-value" id="hours">00</span>
-                        <p>שעות</p>
-                    </div>
-                    <div class="time-block">
-                        <span class="time-value" id="minutes">00</span>
-                        <p>דקות</p>
-                    </div>
-                    <div class="time-block">
-                        <span class="time-value" id="seconds">00</span>
-                        <p>שניות</p>
-                    </div>
-                </div>
-            </section>
-
+            <!-- Step: Registration -->
             <section id="step-registration">
-                <div class="step-card wow-card">
-                    <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">הירשמו עכשיו</h2>
+                <div class="card-3d" style="max-width: 600px; margin: 0 auto;">
+                    <h2 style="text-align: center; margin-bottom: 40px;">הרשמה להגרלה</h2>
                     <form id="registration-form">
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">שם מלא</label>
-                            <input type="text" id="fullName" name="fullName" placeholder="שם פרטי ומשפחה" required>
+                        <div style="margin-bottom: 25px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 700;">שם מלא</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="הכניסו שם פרטי ומשפחה" required>
                         </div>
-                        <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">מספר טלפון</label>
-                            <input type="tel" id="phone" name="phone" placeholder="05X-XXXXXXX" required>
+                        <div style="margin-bottom: 40px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 700;">מספר טלפון</label>
+                            <input type="tel" id="phone" name="phone" placeholder="05XXXXXXXX" required>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            להשתתפות בהגרלה ←
-                        </button>
+                        <button type="submit" class="btn-wow" style="width: 100%;">הרשמה עכשיו ←</button>
                     </form>
                 </div>
             </section>
 
+            <!-- Step: Success -->
             <section id="step-success" class="hidden">
-                <div class="step-card wow-card text-center">
-                    <h2 style="font-size: 3rem; margin-bottom: 20px;">✅</h2>
-                    <h2>נרשמתם בהצלחה!</h2>
-                    <p style="margin-bottom: 30px;">פרטיכם נקלטו. הזוכים יקבלו הודעה אישית.</p>
-                    
-                    <div class="optional-tasks">
-                        <h3 style="margin-bottom: 20px;">🎁 הגדילו סיכויים!</h3>
-                        
-                        <div class="task-item" id="task-contact">
-                            <div style="flex: 1; text-align: right;">
-                                <h4 style="font-size: 1rem;">1. שמירת איש קשר</h4>
-                                <p style="font-size: 0.8rem; color: var(--text-secondary);">חובה כדי לזהות את ההודעה שלנו</p>
-                            </div>
-                            <button class="btn btn-primary" style="height: 45px; font-size: 0.9rem;" id="btn-save-contact">שמירה</button>
-                        </div>
+                <div class="card-3d text-center" style="max-width: 600px; margin: 0 auto;">
+                    <span style="font-size: 5rem;">✅</span>
+                    <h2 style="margin: 20px 0;">נרשמתם בהצלחה!</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 40px;">הזוכים יקבלו הודעה אישית בווטסאפ.</p>
 
-                        <div class="task-item" id="task-whatsapp">
-                            <div style="flex: 1; text-align: right;">
-                                <h4 style="font-size: 1rem;">2. שיתוף בוואטסאפ</h4>
-                                <p style="font-size: 0.8rem; color: var(--text-secondary);">כרטיס נוסף על כל חבר שנרשם!</p>
-                            </div>
-                            <button class="btn btn-whatsapp" style="height: 45px; font-size: 0.9rem;" id="btn-share-whatsapp">שיתוף</button>
+                    <div style="background: #f1f5f9; border-radius: 24px; padding: 30px; margin-bottom: 40px;">
+                        <h3 style="margin-bottom: 20px;">🎁 הגדילו סיכויי זכייה!</h3>
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <button id="btn-save-contact" class="btn-wow" style="width: 100%; font-size: 1rem;">1. שמירת איש קשר</button>
+                            <button id="btn-share-whatsapp" class="btn-wow" style="width: 100%; background: #25D366; font-size: 1rem;">2. שיתוף בווטסאפ</button>
                         </div>
                     </div>
 
-                    <div style="margin-top: 40px; padding: 20px; border: 2px dashed #000; border-radius: 20px;">
-                        <p style="font-size: 0.9rem; font-weight: 700;">כרטיסי השתתפות שצברת:</p>
-                        <span id="user-tickets-count" style="font-size: 3rem; font-weight: 900;">1</span>
-                    </div>
-
-                    <div id="leaderboard-container" class="hidden" style="margin-top: 40px;">
-                        <h3 style="margin-bottom: 20px;">🏆 מובילי ההגרלה</h3>
-                        <div id="leaderboard-list"></div>
+                    <div style="border: 2px dashed #ccc; border-radius: 24px; padding: 20px;">
+                        <p style="font-weight: 800;">כרטיסי השתתפות שצברת:</p>
+                        <span id="user-tickets-count" style="font-size: 4rem; font-weight: 900; color: #000;">1</span>
                     </div>
                 </div>
             </section>
         </main>
 
-        <footer style="text-align: center; padding: 60px 0; opacity: 0.6;">
-            <p>נבנה על ידי <strong>ריגר הפקות</strong> | 052-562-4350</p>
+        <!-- Loading / Error -->
+        <div id="loading-state" class="text-center" style="padding: 100px 0;">
+            <div class="loader" style="margin: 0 auto;"></div>
+        </div>
+        <div id="error-state" class="hidden text-center" style="padding: 100px 0;">
+            <span style="font-size: 4rem;">⚠️</span>
+            <h2>קמפיין לא נמצא</h2>
+        </div>
+
+        <footer style="text-align: center; padding: 100px 0; opacity: 0.5;">
+            <p>נבנה על ידי <strong>ריגר הפקות</strong></p>
         </footer>
     </div>
 
