@@ -16,249 +16,453 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 3D Visual Background -->
-    <div class="bg-visuals">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-    </div>
-
-    <!-- Top Right Logo -->
-    <div class="brand-container">
-        <img src="logo.png" alt="Logo" class="main-logo">
-    </div>
-
-    <div id="app" class="app-content">
+    <div id="app" class="admin-container">
         
         <!-- State 1: Logged Out - Login Screen -->
         <div id="login-screen" class="login-screen">
-            <div class="card-3d text-center" style="max-width: 500px; margin: 0 auto; padding: 60px;">
-                <h1 style="margin-bottom: 20px;">ניהול הגרלות</h1>
-                <p style="margin-bottom: 40px;">התחברו למערכת כדי לנהל את הקמפיינים שלכם</p>
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo">
+                        <svg viewBox="0 0 48 48" fill="none" class="logo-icon">
+                            <rect width="48" height="48" rx="12" fill="var(--primary-color)"/>
+                            <path d="M24 14L32 22L24 30L16 22L24 14Z" fill="white"/>
+                            <circle cx="24" cy="32" r="4" fill="white"/>
+                        </svg>
+                    </div>
+                    <h1>WhatsApp Lottery</h1>
+                    <p class="login-subtitle">פלטפורמת הגרלות ויראליות</p>
+                </div>
                 
-                <button id="btn-google-login" class="btn-wow" style="width: 100%; background: #fff; color: #000; border: 2px solid #eee; box-shadow: none;">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 24px; margin-left: 10px;">
-                    התחברות עם Google
-                </button>
+                <div class="login-body">
+                    <p class="login-description">התחברו כדי ליצור ולנהל הגרלות ויראליות בווטסאפ</p>
+                    
+                    <button id="btn-google-login" class="btn btn-google">
+                        <svg class="google-icon" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        התחברות עם Google
+                    </button>
+                </div>
+                
+                <div class="login-footer">
+                    <p>בהתחברות אתם מסכימים ל<a href="#">תנאי השימוש</a></p>
+                </div>
             </div>
         </div>
 
         <!-- State 2 & 3: Logged In - Dashboard -->
         <div id="dashboard" class="dashboard hidden">
-            <!-- Navigation Sidebar -->
-            <nav class="sidebar card-3d">
+            <!-- Sidebar Navigation (Desktop) / Top Nav (Mobile) -->
+            <nav class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-small">
+                        <svg viewBox="0 0 48 48" fill="none" class="logo-icon">
+                            <rect width="48" height="48" rx="12" fill="var(--primary-color)"/>
+                            <path d="M24 14L32 22L24 30L16 22L24 14Z" fill="white"/>
+                            <circle cx="24" cy="32" r="4" fill="white"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text">WhatsApp Lottery</span>
+                </div>
+                
                 <ul class="nav-menu">
                     <li class="nav-item active" data-view="campaigns">
-                        <span>🎰 הקמפיינים שלי</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>הקמפיינים שלי</span>
                     </li>
                     <li class="nav-item" data-view="create">
-                        <span>➕ יצירת הגרלה</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="16"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                        </svg>
+                        <span>יצירת הגרלה</span>
                     </li>
                 </ul>
                 
                 <div class="sidebar-footer">
                     <div class="user-info">
-                        <img id="user-avatar" src="" class="user-avatar">
+                        <img id="user-avatar" src="" alt="User" class="user-avatar">
                         <div class="user-details">
-                            <p id="user-name" class="user-name"></p>
-                            <p id="user-email" class="user-email"></p>
+                            <span id="user-name" class="user-name">טוען...</span>
+                            <span id="user-email" class="user-email"></span>
                         </div>
                     </div>
-                    <button id="btn-logout" class="btn-logout btn">התנתקות</button>
+                    <button id="btn-logout" class="btn btn-logout">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        התנתקות
+                    </button>
                 </div>
             </nav>
 
             <!-- Main Content Area -->
             <main class="main-content">
-                <!-- View: Campaigns List -->
+                <!-- View: Campaign List -->
                 <section id="view-campaigns" class="view">
                     <header class="view-header">
-                        <h2>🎰 הקמפיינים שלי</h2>
-                        <button id="btn-new-campaign" class="btn-wow">➕ הגרלה חדשה</button>
+                        <h2>הקמפיינים שלי</h2>
+                        <button class="btn btn-primary" id="btn-new-campaign">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            הגרלה חדשה
+                        </button>
                     </header>
                     
-                    <div id="campaigns-empty" class="card-3d text-center empty-state">
-                        <span class="empty-icon">🎲</span>
-                        <h3>אין עדיין הגרלות</h3>
-                        <p>צרו את ההגרלה הראשונה שלכם עכשיו!</p>
-                        <button id="btn-create-first" class="btn-wow">יצירת הגרלה ראשונה</button>
+                    <!-- Empty State -->
+                    <div id="campaigns-empty" class="empty-state">
+                        <div class="empty-icon">🎲</div>
+                        <h3>עדיין אין הגרלות</h3>
+                        <p>צרו את ההגרלה הראשונה שלכם וקבלו לידים חדשים!</p>
+                        <button class="btn btn-primary" id="btn-create-first">יצירת הגרלה ראשונה</button>
                     </div>
 
-                    <div id="campaigns-list" class="campaigns-grid hidden"></div>
+                    <!-- Campaign List -->
+                    <div id="campaigns-list" class="campaigns-grid hidden">
+                        <!-- Campaign cards will be dynamically inserted here -->
+                    </div>
                 </section>
 
-                <!-- View: Create/Edit Campaign -->
+                <!-- View: Create/Edit Campaign (Split View) -->
                 <section id="view-create" class="view hidden">
                     <header class="view-header">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <button id="btn-back-to-list" class="btn btn-back">← חזרה</button>
-                            <h2 id="create-view-title">➕ יצירת הגרלה</h2>
-                        </div>
-                        <button id="btn-save-campaign" class="btn-wow">🚀 שמירה ופרסום</button>
+                        <button class="btn btn-back" id="btn-back-to-list">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                            חזרה
+                        </button>
+                        <h2 id="create-view-title">יצירת הגרלה חדשה</h2>
+                        <button class="btn btn-primary" id="btn-save-campaign">שמירה ופרסום</button>
                     </header>
 
                     <div class="split-view">
-                        <!-- Form Panel -->
+                        <!-- Left Side: Form -->
                         <div class="form-panel">
-                            <form id="campaign-form" class="campaign-form card-3d">
-                                <div class="form-section">
-                                    <legend>📋 פרטי הקמפיין</legend>
-                                    <div style="margin-bottom: 20px;">
-                                        <label>כותרת ההגרלה *</label>
-                                        <input type="text" id="campaign-title" name="title" required placeholder="למשל: הגרלת אייפון 15">
+                            <form id="campaign-form" class="campaign-form">
+                                <!-- Basic Info -->
+                                <fieldset class="form-section">
+                                    <legend>פרטי ההגרלה</legend>
+                                    
+                                    <div class="form-group">
+                                        <label for="campaign-title">כותרת ההגרלה *</label>
+                                        <input 
+                                            type="text" 
+                                            id="campaign-title" 
+                                            name="title"
+                                            placeholder="לדוגמה: הגרלת iPhone 15 Pro"
+                                            required
+                                        >
                                     </div>
-                                    <div style="margin-bottom: 20px;">
-                                        <label>תיאור הקמפיין</label>
-                                        <textarea id="campaign-description" name="description" rows="3" placeholder="ספרו על הפרס ועל תנאי ההשתתפות"></textarea>
+                                    
+                                    <div class="form-group">
+                                        <label for="campaign-description">תיאור</label>
+                                        <textarea 
+                                            id="campaign-description" 
+                                            name="description"
+                                            rows="3"
+                                            placeholder="תארו את הפרס ומה משתתפים יכולים לזכות"
+                                        ></textarea>
                                     </div>
-                                    <div style="margin-bottom: 20px;">
-                                        <label>תאריך סיום *</label>
-                                        <input type="datetime-local" id="campaign-end-date" name="endDate" required>
+                                    
+                                    <div class="form-group">
+                                        <label for="campaign-end-date">תאריך סיום ההגרלה *</label>
+                                        <input 
+                                            type="datetime-local" 
+                                            id="campaign-end-date" 
+                                            name="endDate"
+                                            required
+                                        >
                                     </div>
-                                </div>
+                                </fieldset>
 
-                                <div class="form-section">
-                                    <legend>🖼️ תמונת באנר</legend>
-                                    <div id="banner-upload-area" class="image-upload-area">
-                                        <div id="upload-placeholder" class="upload-placeholder">
-                                            <span class="upload-icon">📸</span>
-                                            <p>לחץ להעלאת תמונה</p>
-                                            <small>מומלץ: 1200x630 פיקסלים</small>
+                                <!-- Banner Image -->
+                                <fieldset class="form-section">
+                                    <legend>🖼️ באנר ההגרלה</legend>
+                                    
+                                    <div class="form-group">
+                                        <label for="banner-upload">תמונת באנר</label>
+                                        <div class="image-size-hint">
+                                            <strong>📐 גודל מומלץ:</strong> 1200×630 פיקסל (יחס 1.91:1)
+                                            <br><small>זה הגודל המושלם לשיתוף בוואטסאפ, פייסבוק וטוויטר</small>
                                         </div>
-                                        <img id="banner-preview" class="banner-preview hidden">
-                                        <button type="button" id="btn-remove-banner" class="btn-remove-image hidden">מחק 🗑️</button>
-                                        <input type="file" id="banner-upload" accept="image/*" style="display: none;">
+                                        <div class="image-upload-area" id="banner-upload-area">
+                                            <input type="file" id="banner-upload" name="bannerImage" accept="image/*" hidden>
+                                            <div class="upload-placeholder" id="upload-placeholder">
+                                                <span class="upload-icon">📷</span>
+                                                <span>לחץ להעלאת תמונה או גרור לכאן</span>
+                                                <small>JPG, PNG עד 5MB • מומלץ 1200×630px</small>
+                                            </div>
+                                            <img id="banner-preview" class="banner-preview hidden" alt="תצוגה מקדימה">
+                                            <button type="button" class="btn-remove-image hidden" id="btn-remove-banner">✕ הסר תמונה</button>
+                                        </div>
                                         <input type="hidden" id="banner-url" name="bannerUrl">
                                     </div>
-                                </div>
+                                </fieldset>
 
-                                <div class="form-section">
-                                    <legend>📱 הגדרות וואטסאפ</legend>
-                                    <div style="margin-bottom: 20px;">
-                                        <label>שם איש קשר (לשמירה) *</label>
-                                        <input type="text" id="contact-name" name="contactVcardName" required placeholder="השם שיופיע בטלפון">
+                                <!-- Viral Mechanism -->
+                                <fieldset class="form-section">
+                                    <legend>מנגנון ויראלי</legend>
+                                    
+                                    <div class="form-group">
+                                        <label for="contact-name">שם איש הקשר לשמירה *</label>
+                                        <input 
+                                            type="text" 
+                                            id="contact-name" 
+                                            name="contactVcardName"
+                                            placeholder="לדוגמה: פיצה האט ראשון"
+                                            required
+                                        >
                                     </div>
-                                    <div style="margin-bottom: 20px;">
-                                        <label>מספר טלפון (9725...) *</label>
-                                        <input type="tel" id="contact-phone" name="contactPhoneNumber" required placeholder="9725XXXXXXXX">
+                                    
+                                    <div class="form-group">
+                                        <label for="contact-phone">מספר טלפון לשמירה *</label>
+                                        <input 
+                                            type="tel" 
+                                            id="contact-phone" 
+                                            name="contactPhoneNumber"
+                                            placeholder="972501234567"
+                                            required
+                                        >
+                                        <small class="form-hint">בפורמט בינלאומי ללא + (לדוגמה: 972501234567)</small>
                                     </div>
-                                    <div style="margin-bottom: 20px;">
-                                        <label>טקסט שיתוף ברירת מחדל</label>
-                                        <textarea id="share-text" name="whatsappShareText" rows="2" placeholder="הירשמתי להגרלה! בואו גם אתם:"></textarea>
+                                    
+                                    <div class="form-group">
+                                        <label for="share-text">טקסט לשיתוף בווטסאפ *</label>
+                                        <textarea 
+                                            id="share-text" 
+                                            name="whatsappShareText"
+                                            rows="3"
+                                            placeholder="הירשמתי להגרלה מטורפת! 🎉 בואו גם אתם:"
+                                            required
+                                        ></textarea>
+                                        <small class="form-hint">
+                                            <strong>💡 הקישור יתווסף אוטומטית לסוף ההודעה.</strong> 
+                                            אם תרצו לשלב אותו בתוך הטקסט, השתמשו ב-{{link}}.
+                                        </small>
                                     </div>
-                                </div>
+                                </fieldset>
 
-                                <div class="form-section">
-                                    <legend>🎨 עיצוב מותאם</legend>
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                        <div class="color-picker-wrapper">
-                                            <label>צבע ראשי</label>
-                                            <div style="display: flex; align-items: center; gap: 10px;">
-                                                <input type="color" id="primary-color" name="primaryColor" value="#6366f1">
+                                <!-- Design/Theming -->
+                                <fieldset class="form-section">
+                                    <legend>עיצוב וצבעים</legend>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="primary-color">צבע ראשי</label>
+                                            <div class="color-picker-wrapper">
+                                                <input 
+                                                    type="color" 
+                                                    id="primary-color" 
+                                                    name="primaryColor"
+                                                    value="#6366f1"
+                                                >
                                                 <span class="color-value">#6366f1</span>
                                             </div>
                                         </div>
-                                        <div class="color-picker-wrapper">
-                                            <label>צבע רקע</label>
-                                            <div style="display: flex; align-items: center; gap: 10px;">
-                                                <input type="color" id="bg-color" name="backgroundColor" value="#f8fafc">
+                                        
+                                        <div class="form-group">
+                                            <label for="bg-color">צבע רקע</label>
+                                            <div class="color-picker-wrapper">
+                                                <input 
+                                                    type="color" 
+                                                    id="bg-color" 
+                                                    name="backgroundColor"
+                                                    value="#f8fafc"
+                                                >
                                                 <span class="color-value">#f8fafc</span>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </fieldset>
+
+                                <!-- Lottery Settings -->
+                                <fieldset class="form-section">
+                                    <legend>🎲 הגדרות הגרלה</legend>
+                                    
+                                    <div class="form-group">
+                                        <label>סוג הגרלה</label>
+                                        <div class="radio-group">
+                                            <label class="radio-option">
+                                                <input type="radio" name="lotteryMode" value="manual" checked>
+                                                <span class="radio-label">
+                                                    <strong>הגרלה ידנית</strong>
+                                                    <small>אני בוחר את הזוכה מתי שארצה</small>
+                                                </span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" name="lotteryMode" value="automatic">
+                                                <span class="radio-label">
+                                                    <strong>הגרלה אוטומטית</strong>
+                                                    <small>גלגל מזל מסתובב בסוף הזמן</small>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="max-entries">הגבלת כניסות למשתמש</label>
+                                        <select id="max-entries" name="maxEntriesPerUser">
+                                            <option value="1">פעם אחת בלבד</option>
+                                            <option value="0">ללא הגבלה</option>
+                                        </select>
+                                        <small class="form-hint">כמה פעמים אותו טלפון יכול להירשם</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="thank-you-message">הודעת תודה מותאמת</label>
+                                        <textarea 
+                                            id="thank-you-message" 
+                                            name="thankYouMessage"
+                                            rows="2"
+                                            placeholder="תודה שנרשמת! נעדכן אותך כשנבחר זוכה 🎉"
+                                        ></textarea>
+                                    </div>
+                                </fieldset>
                             </form>
                         </div>
 
-                        <!-- Preview Panel -->
+                        <!-- Right Side: Live Preview -->
                         <div class="preview-panel">
                             <div class="preview-header">
-                                <span class="preview-label">👁️ תצוגה מקדימה בשידור חי</span>
+                                <span class="preview-label">תצוגה מקדימה</span>
                                 <div class="preview-device-toggle">
                                     <button class="device-btn active" data-device="mobile">📱</button>
                                     <button class="device-btn" data-device="desktop">💻</button>
                                 </div>
                             </div>
                             <div class="preview-frame mobile">
-                                <iframe id="preview-iframe"></iframe>
+                                <iframe id="preview-iframe" src="about:blank"></iframe>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- View: Campaign Details -->
+                <!-- View: Campaign Details / Leads -->
                 <section id="view-details" class="view hidden">
                     <header class="view-header">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <button id="btn-back-from-details" class="btn btn-back">← חזרה</button>
-                            <h2 id="details-title">פרטי הגרלה</h2>
-                        </div>
+                        <button class="btn btn-back" id="btn-back-from-details">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                            חזרה
+                        </button>
+                        <h2 id="details-title">פרטי קמפיין</h2>
                         <div class="header-actions">
-                            <button id="btn-edit-campaign" class="btn btn-wow" style="background: #fff; color: #000; border: 2px solid #000; box-shadow: none;">עריכה</button>
-                            <button id="btn-delete-campaign" class="btn btn-wow" style="background: #fee2e2; color: #ef4444; box-shadow: none;">מחיקה</button>
+                            <button class="btn btn-outline" id="btn-edit-campaign">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                עריכה
+                            </button>
+                            <button class="btn btn-outline btn-danger" id="btn-delete-campaign">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                                מחיקה
+                            </button>
                         </div>
                     </header>
 
+                    <!-- Campaign Stats -->
                     <div class="stats-grid">
-                        <div class="stat-card card-3d">
-                            <span class="stat-icon">👁️</span>
-                            <div id="stat-views" class="stat-value">0</div>
-                            <span class="stat-label">צפיות</span>
+                        <div class="stat-card">
+                            <div class="stat-icon">👁️</div>
+                            <div class="stat-value" id="stat-views">0</div>
+                            <div class="stat-label">צפיות</div>
                         </div>
-                        <div class="stat-card card-3d">
-                            <span class="stat-icon">👥</span>
-                            <div id="stat-leads" class="stat-value">0</div>
-                            <span class="stat-label">נרשמים</span>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-value" id="stat-leads">0</div>
+                            <div class="stat-label">נרשמים</div>
                         </div>
-                        <div class="stat-card card-3d">
-                            <span class="stat-icon">📢</span>
-                            <div id="stat-shares" class="stat-value">0</div>
-                            <span class="stat-label">שיתופים</span>
+                        <div class="stat-card">
+                            <div class="stat-icon">🎫</div>
+                            <div class="stat-value" id="stat-tickets">0</div>
+                            <div class="stat-label">סה"כ כרטיסים</div>
                         </div>
-                        <div class="stat-card card-3d">
-                            <span class="stat-icon">🎫</span>
-                            <div id="stat-tickets" class="stat-value">0</div>
-                            <span class="stat-label">כרטיסים</span>
+                        <div class="stat-card">
+                            <div class="stat-icon">📤</div>
+                            <div class="stat-value" id="stat-shares">0</div>
+                            <div class="stat-label">שיתופים</div>
                         </div>
-                        <div class="stat-card card-3d">
-                            <span class="stat-icon">📈</span>
-                            <div id="stat-conversion" class="stat-value">0%</div>
-                            <span class="stat-label">המרה</span>
-                        </div>
-                    </div>
-
-                    <!-- Link Box -->
-                    <div class="campaign-link-box card-3d">
-                        <label>🔗 קישור לקמפיין (להפצה):</label>
-                        <div class="link-copy-group">
-                            <input type="text" id="campaign-link" readonly dir="ltr">
-                            <button id="btn-copy-link" class="btn-wow btn-copy">העתק קישור</button>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-value" id="stat-conversion">0%</div>
+                            <div class="stat-label">המרה</div>
                         </div>
                     </div>
 
                     <!-- Winner Selection -->
-                    <div class="winner-selection-box card-3d">
-                        <h3>🎲 הגרלת זוכה</h3>
-                        <p>המערכת תבחר זוכה אקראי מבין כל המשתתפים שביצעו את המטלות.</p>
+                    <div class="winner-selection-box">
+                        <h3>🎲 בחירת זוכה</h3>
+                        <p>כמה זוכים תרצה להגריל?</p>
                         <div class="winner-count-selector">
-                            <label>מספר זוכים:</label>
                             <input type="number" id="winner-count" value="1" min="1" max="10">
+                            <label for="winner-count">זוכים</label>
                         </div>
-                        <button id="btn-select-winner" class="btn-wow" style="flex: 1;">🎰 הגרל עכשיו!</button>
-                        
+                        <button class="btn btn-primary btn-large" id="btn-select-winner">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                            🎰 הגרלת זוכים עכשיו!
+                        </button>
                         <div id="winner-display" class="winner-display hidden">
-                            <h4 style="color: #16a34a; margin-bottom: 10px;">🏆 הזוכים המאושרים:</h4>
+                            <span class="winner-label">🏆 הזוכים המאושרים:</span>
                             <div id="winner-list" class="winner-list"></div>
                         </div>
                     </div>
 
-                    <!-- Leads List -->
-                    <div class="leads-section card-3d">
+                    <!-- Campaign Link -->
+                    <div class="campaign-link-box">
+                        <label>קישור להגרלה:</label>
+                        <div class="link-copy-group">
+                            <input type="text" id="campaign-link" readonly>
+                            <button class="btn btn-copy" id="btn-copy-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                                העתקה
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Leads Table -->
+                    <div class="leads-section">
                         <div class="leads-header">
-                            <h3>👥 רשימת נרשמים</h3>
+                            <h3>רשימת נרשמים</h3>
                             <div class="leads-actions">
-                                <button id="btn-show-vcf-guide" class="btn btn-outline" style="height: 45px; font-size: 0.9rem; background: #fff; border: 1px solid #ddd; color: #333;">📖 איך מייבאים?</button>
-                                <button id="btn-export-vcf" class="btn btn-success" style="height: 45px; font-size: 0.9rem; background: #25D366; color: #fff;">📱 הורד אנשי קשר (VCF)</button>
-                                <button id="btn-export-leads" class="btn-wow" style="height: 45px; font-size: 0.9rem;">CSV ייצוא</button>
+                                <button class="btn btn-outline" id="btn-export-leads">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    ייצוא Excel
+                                </button>
+                                <button class="btn btn-success" id="btn-export-vcf">
+                                    📱 שמור אנשי קשר בטלפון
+                                </button>
+                                <button class="btn btn-outline" id="btn-show-vcf-guide" title="מדריך ייבוא">
+                                    ❓ איך להשתמש?
+                                </button>
                             </div>
                         </div>
                         <div class="table-wrapper">
@@ -268,18 +472,20 @@
                                         <th>#</th>
                                         <th>שם מלא</th>
                                         <th>טלפון</th>
-                                        <th>תאריך</th>
+                                        <th>תאריך הצטרפות</th>
                                         <th>כרטיסים</th>
-                                        <th>שמר</th>
+                                        <th>שמר איש קשר</th>
                                         <th>שיתף</th>
-                                        <th>פעולות</th>
+                                        <th>קישור אישי</th>
                                     </tr>
                                 </thead>
-                                <tbody id="leads-table-body"></tbody>
+                                <tbody id="leads-table-body">
+                                    <!-- Leads will be inserted dynamically -->
+                                </tbody>
                             </table>
-                            <div id="leads-empty" class="empty-state small hidden">
-                                <p>אין עדיין נרשמים לקמפיין זה.</p>
-                            </div>
+                        </div>
+                        <div id="leads-empty" class="empty-state small hidden">
+                            <p>עדיין אין נרשמים להגרלה זו</p>
                         </div>
                     </div>
                 </section>
@@ -291,36 +497,116 @@
     <div id="vcf-guide-modal" class="modal hidden">
         <div class="modal-content guide-modal">
             <button class="modal-close" id="close-vcf-guide">&times;</button>
+            
             <div class="guide-header">
                 <h2>📱 איך לייבא אנשי קשר לטלפון?</h2>
                 <p>מדריך פשוט צעד אחר צעד</p>
             </div>
+            
             <div class="guide-content">
                 <div class="guide-tabs">
                     <button class="guide-tab active" data-tab="iphone">🍎 iPhone</button>
                     <button class="guide-tab" data-tab="android">🤖 Android</button>
                     <button class="guide-tab" data-tab="computer">💻 מחשב</button>
                 </div>
+                
+                <!-- iPhone Guide -->
                 <div class="guide-panel active" id="guide-iphone">
                     <ol class="guide-steps">
-                        <li class="guide-step"><div class="guide-step-content"><h4>הורד את הקובץ</h4><p>לחץ על כפתור "📱 הורד אנשי קשר" - הקובץ יורד אוטומטית</p></div></li>
-                        <li class="guide-step"><div class="guide-step-content"><h4>פתח את הקובץ</h4><p>לחץ על הקובץ שהורד במכשיר ה-iPhone שלך</p></div></li>
-                        <li class="guide-step"><div class="guide-step-content"><h4>הוסף את כל אנשי הקשר</h4><p>לחץ על "הוסף את כל X אנשי הקשר" למעלה</p></div></li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>הורד את הקובץ</h4>
+                                <p>לחץ על כפתור "📱 שמור אנשי קשר בטלפון" - הקובץ יורד אוטומטית</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>פתח את הקובץ</h4>
+                                <p>לחץ על ההתראה או עבור לאפליקציית "קבצים" ומצא את הקובץ בתיקיית "הורדות"</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>בחר "פתח באנשי קשר"</h4>
+                                <p>iPhone יזהה אוטומטית שזה קובץ אנשי קשר ויציע לייבא</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>אשר את הייבוא</h4>
+                                <p>לחץ "הוסף את כל X אנשי הקשר" - וסיימת! 🎉</p>
+                            </div>
+                        </li>
                     </ol>
+                    <div class="guide-tip">
+                        <strong>💡 טיפ:</strong> אם הקובץ נפתח בספארי, לחץ על כפתור השיתוף (ריבוע עם חץ) ובחר "אנשי קשר"
+                    </div>
                 </div>
+                
+                <!-- Android Guide -->
                 <div class="guide-panel" id="guide-android">
                     <ol class="guide-steps">
-                        <li class="guide-step"><div class="guide-step-content"><h4>הורד את הקובץ</h4><p>לחץ על כפתור "📱 הורד אנשי קשר" - הקובץ יורד אוטומטית</p></div></li>
-                        <li class="guide-step"><div class="guide-step-content"><h4>פתח את הקובץ</h4><p>בחר "אנשי קשר" כאפליקציה לפתיחת הקובץ</p></div></li>
-                        <li class="guide-step"><div class="guide-step-content"><h4>אשר את הייבוא</h4><p>אשר את ייבוא כל אנשי הקשר לחשבון ה-Google שלך</p></div></li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>הורד את הקובץ</h4>
+                                <p>לחץ על כפתור "📱 שמור אנשי קשר בטלפון" - הקובץ יורד אוטומטית</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>פתח את הקובץ</h4>
+                                <p>לחץ על ההתראה או עבור לאפליקציית "הקבצים שלי" / "Downloads"</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>בחר את אפליקציית אנשי הקשר</h4>
+                                <p>Android יציע לפתוח את הקובץ עם "אנשי קשר" - בחר בה</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>אשר את הייבוא</h4>
+                                <p>בחר לאן לשמור (חשבון Google מומלץ) ולחץ "ייבוא" 🎉</p>
+                            </div>
+                        </li>
                     </ol>
+                    <div class="guide-tip">
+                        <strong>💡 טיפ:</strong> באנדרואיד אפשר גם לפתוח את אפליקציית אנשי הקשר, ללכת להגדרות ← ייבוא/ייצוא ← ייבוא מקובץ
+                    </div>
                 </div>
+                
+                <!-- Computer Guide -->
                 <div class="guide-panel" id="guide-computer">
                     <ol class="guide-steps">
-                        <li class="guide-step"><div class="guide-step-content"><h4>הורד את הקובץ</h4><p>הורד את הקובץ למחשב</p></div></li>
-                        <li class="guide-step"><div class="guide-step-content"><h4>פתח את Google Contacts</h4><p>גש ל-contacts.google.com ולחץ על "ייבוא"</p></div></li>
-                        <li class="guide-step"><div class="guide-step-content"><h4>בחר את הקובץ</h4><p>בחר את קובץ ה-VCF שהורדת ואשר</p></div></li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>הורד את הקובץ</h4>
+                                <p>לחץ על כפתור "📱 שמור אנשי קשר בטלפון" - הקובץ יורד לתיקיית ההורדות</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>פתח את Google Contacts</h4>
+                                <p>גש ל-<a href="https://contacts.google.com" target="_blank">contacts.google.com</a> והתחבר לחשבון Google</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>לחץ על "ייבוא"</h4>
+                                <p>בתפריט השמאלי לחץ "ייבוא" ← "בחר קובץ" ← בחר את קובץ ה-VCF שהורדת</p>
+                            </div>
+                        </li>
+                        <li class="guide-step">
+                            <div class="guide-step-content">
+                                <h4>סנכרן לטלפון</h4>
+                                <p>אנשי הקשר יסתנכרנו אוטומטית לטלפון שלך אם מחובר לאותו חשבון Google 🎉</p>
+                            </div>
+                        </li>
                     </ol>
+                    <div class="guide-tip">
+                        <strong>💡 טיפ למשתמשי Mac:</strong> אפשר גם ללחוץ פעמיים על קובץ ה-VCF - זה יפתח את אפליקציית אנשי הקשר ויציע לייבא
+                    </div>
                 </div>
             </div>
         </div>
