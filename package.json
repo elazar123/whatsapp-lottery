@@ -2,11 +2,12 @@
   "name": "whatsapp-lottery",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "echo 'No build step required'"
   },
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "dependencies": {}
 }
