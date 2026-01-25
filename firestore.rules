@@ -2,9 +2,17 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Users collection - only authenticated users can read/write their own document
+    // Super Admin email
+    function isSuperAdmin() {
+      return request.auth != null && request.auth.token.email == 'elazar12321@gmail.com';
+    }
+    
+    // Users collection
     match /users/{userId} {
+      // Users can read/write their own document
       allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Super Admin can read all users
+      allow read: if isSuperAdmin();
     }
     
     // Campaigns collection
@@ -15,7 +23,7 @@ service cloud.firestore {
       // Only authenticated owner can create/update/delete
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null 
-        && resource.data.managerId == request.auth.uid;
+        && (resource.data.managerId == request.auth.uid || isSuperAdmin());
       
       // Leads subcollection
       match /leads/{leadId} {
@@ -25,13 +33,13 @@ service cloud.firestore {
         // Anyone can update their own tasks (by lead ID stored in session)
         allow update: if true;
         
-        // Only campaign owner can read leads
+        // Campaign owner or Super Admin can read leads
         allow read: if request.auth != null 
-          && get(/databases/$(database)/documents/campaigns/$(campaignId)).data.managerId == request.auth.uid;
+          && (get(/databases/$(database)/documents/campaigns/$(campaignId)).data.managerId == request.auth.uid || isSuperAdmin());
         
-        // Only campaign owner can delete leads
+        // Only campaign owner or Super Admin can delete leads
         allow delete: if request.auth != null 
-          && get(/databases/$(database)/documents/campaigns/$(campaignId)).data.managerId == request.auth.uid;
+          && (get(/databases/$(database)/documents/campaigns/$(campaignId)).data.managerId == request.auth.uid || isSuperAdmin());
       }
     }
   }

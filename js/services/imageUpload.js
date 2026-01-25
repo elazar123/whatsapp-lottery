@@ -4,7 +4,7 @@
  */
 
 // imgBB API Key - Get yours free at https://api.imgbb.com/
-const IMGBB_API_KEY = 'c3bcc92408e402b3e9beb29d25a5a77c';
+const IMGBB_API_KEY = '2900a17df9232acc4653f815631dff73';
 
 /**
  * Upload image to imgBB
