@@ -97,7 +97,7 @@ function getCampaignIdFromUrl() {
  */
 function getReferrerFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('ref');
+    return urlParams.get('r') || urlParams.get('ref');
 }
 
 /* ==========================================================================
