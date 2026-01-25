@@ -7,20 +7,21 @@
    CSS Custom Properties (Design Tokens)
    -------------------------------------------------------------------------- */
 :root {
-    /* Primary Colors */
-    --primary-color: #6366f1;
-    --primary-hover: #4f46e5;
-    --primary-light: #e0e7ff;
+    /* Primary Colors - Based on Logo */
+    --primary-color: #000000; /* Deep Black from logo */
+    --primary-hover: #1a1a1a;
+    --primary-light: #f3f4f6;
+    --accent-color: #ffd700; /* Gold accent for "WOW" effect */
     
     /* Neutral Colors */
-    --bg-color: #f8fafc;
+    --bg-color: #ffffff;
     --bg-white: #ffffff;
-    --bg-dark: #1e293b;
+    --bg-dark: #000000;
     
     /* Text Colors */
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --text-muted: #94a3b8;
+    --text-primary: #000000;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
     --text-inverse: #ffffff;
     
     /* Status Colors */
@@ -345,14 +346,16 @@ strong {
 
 /* Primary Button */
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-    color: var(--text-inverse);
-    border-color: var(--primary-color);
+    background: #000000;
+    color: white;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-color) 100%);
-    box-shadow: 0 8px 25px -5px rgba(99, 102, 241, 0.4);
+    background: #1a1a1a;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
 }
 
 /* Outline Button */

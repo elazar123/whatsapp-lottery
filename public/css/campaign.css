@@ -13,6 +13,31 @@
     --campaign-text: var(--text-primary);
 }
 
+/* ==========================================================================
+   Global Header & Logo
+   ========================================================================== */
+.global-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: var(--space-md);
+    z-index: var(--z-sticky);
+    pointer-events: none;
+}
+
+.main-logo {
+    height: 60px;
+    width: auto;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+    pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+    .main-logo {
+        height: 80px;
+    }
+}
+
 /* --------------------------------------------------------------------------
    Campaign Container
    -------------------------------------------------------------------------- */
@@ -21,6 +46,7 @@
     background: var(--campaign-bg);
     display: flex;
     flex-direction: column;
+    padding-top: 80px; /* Space for fixed logo */
 }
 
 /* --------------------------------------------------------------------------
@@ -193,17 +219,24 @@
 .step-card {
     background: var(--bg-white);
     border-radius: var(--border-radius-xl);
-    box-shadow: var(--shadow-xl);
-    padding: var(--space-xl);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    padding: var(--space-2xl);
     width: 100%;
-    max-width: 480px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    max-width: 520px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
 }
 
 .step-title {
     text-align: center;
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
     margin-bottom: var(--space-lg);
+    letter-spacing: -0.5px;
 }
 
 .step-subtitle {
@@ -724,21 +757,38 @@
 }
 
 .home-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, #4f46e5 100%);
+    background: #000000;
     color: white;
     padding: var(--space-3xl) var(--space-md);
     text-align: center;
     border-radius: 0 0 var(--border-radius-2xl) var(--border-radius-2xl);
     margin-bottom: var(--space-2xl);
+    position: relative;
+    overflow: hidden;
 }
 
-.home-header h1 { color: white; margin-bottom: var(--space-sm); font-size: 3rem; }
-.home-header p { font-size: 1.25rem; opacity: 0.9; }
+.home-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top right, rgba(255,215,0,0.1) 0%, transparent 70%);
+}
+
+.home-header h1 { 
+    color: white; 
+    margin-bottom: var(--space-sm); 
+    font-size: 3.5rem; 
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.home-header p { font-size: 1.5rem; opacity: 0.8; font-weight: 300; }
 
 .logo-icon {
-    width: 64px;
-    height: 64px;
-    margin-bottom: var(--space-md);
+    display: none; /* Hide old SVG logo */
 }
 
 /* Optional Viral Tasks in Success Page */
