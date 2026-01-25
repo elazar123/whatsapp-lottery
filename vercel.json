@@ -4,6 +4,10 @@
     {
       "source": "/api/og",
       "destination": "/api/og.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
     }
   ]
 }
