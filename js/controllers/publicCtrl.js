@@ -50,8 +50,9 @@ async function init() {
  * Show the project homepage
  */
 function showHomePage() {
-    elements.loadingState.classList.add('hidden');
-    document.getElementById('home-page').classList.remove('hidden');
+    if (elements.loadingState) elements.loadingState.classList.add('hidden');
+    const homePage = document.getElementById('home-page');
+    if (homePage) homePage.classList.remove('hidden');
     // Set page title for homepage
     document.title = 'WhatsApp Lottery - הגרלות ויראליות בוואטסאפ';
 }
@@ -290,10 +291,10 @@ function startCountdown(endDate) {
         
         if (distance < 0) {
             clearInterval(countdownInterval);
-            elements.days.textContent = '00';
-            elements.hours.textContent = '00';
-            elements.minutes.textContent = '00';
-            elements.seconds.textContent = '00';
+            if (elements.days) elements.days.textContent = '00';
+            if (elements.hours) elements.hours.textContent = '00';
+            if (elements.minutes) elements.minutes.textContent = '00';
+            if (elements.seconds) elements.seconds.textContent = '00';
             return;
         }
         
@@ -372,6 +373,7 @@ async function handleRegistration(e) {
             // If all tasks completed, show success
             if (tasksState.savedContact && tasksState.sharedWhatsapp) {
                 showStep('success');
+                loadAndShowLeaderboard();
             } else {
                 showStep('tasks');
             }
@@ -487,11 +489,12 @@ function handleShareWhatsapp() {
 function handleFinish() {
     if (tasksState.savedContact && tasksState.sharedWhatsapp) {
         showStep('success');
-    // Launch confetti celebration!
-    launchConfetti();
-    
-    // Load and show leaderboard
-    loadAndShowLeaderboard();
+        // Launch confetti celebration!
+        launchConfetti();
+        
+        // Load and show leaderboard
+        loadAndShowLeaderboard();
+    }
 }
 
 /**
@@ -509,12 +512,13 @@ async function loadAndShowLeaderboard() {
         if (topLeads.length > 0) {
             listEl.innerHTML = topLeads.map((lead, index) => {
                 // Mask name for privacy (optional, but professional)
-                const name = lead.fullName.split(' ')[0] + (lead.fullName.split(' ')[1] ? ' ' + lead.fullName.split(' ')[1][0] + '.' : '');
+                const nameParts = lead.fullName.split(' ');
+                const maskedName = nameParts[0] + (nameParts[1] ? ' ' + nameParts[1][0] + '.' : '');
                 
                 return `
                     <div class="leaderboard-item">
                         <span class="leaderboard-rank">${index + 1}</span>
-                        <span class="leaderboard-name">${escapeHtml(name)}</span>
+                        <span class="leaderboard-name">${escapeHtml(maskedName)}</span>
                         <span class="leaderboard-tickets">🎫 ${lead.tickets || 1}</span>
                     </div>
                 `;
@@ -558,10 +562,10 @@ function showSocialProof(name) {
  * Escape HTML
  */
 function escapeHtml(str) {
+    if (!str) return '';
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
-}
 }
 
 /**
@@ -618,9 +622,9 @@ function showLoading() {
  * @param {string} message 
  */
 function showError(message) {
-    elements.loadingState?.classList.add('hidden');
-    elements.errorState?.classList.remove('hidden');
-    elements.campaignContent?.classList.add('hidden');
+    if (elements.loadingState) elements.loadingState.classList.add('hidden');
+    if (elements.errorState) elements.errorState.classList.remove('hidden');
+    if (elements.campaignContent) elements.campaignContent.classList.add('hidden');
     
     if (elements.errorMessage) {
         elements.errorMessage.textContent = message;
@@ -631,9 +635,9 @@ function showError(message) {
  * Show campaign content
  */
 function showContent() {
-    elements.loadingState?.classList.add('hidden');
-    elements.errorState?.classList.add('hidden');
-    elements.campaignContent?.classList.remove('hidden');
+    if (elements.loadingState) elements.loadingState.classList.add('hidden');
+    if (elements.errorState) elements.errorState.classList.add('hidden');
+    if (elements.campaignContent) elements.campaignContent.classList.remove('hidden');
 }
 
 /**
