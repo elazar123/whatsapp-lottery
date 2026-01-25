@@ -69,11 +69,9 @@ function cacheElements() {
     elements.campaignDescription = document.getElementById('campaign-description');
     elements.registrationForm = document.getElementById('registration-form');
     elements.stepRegistration = document.getElementById('step-registration');
-    elements.stepTasks = document.getElementById('step-tasks');
     elements.stepSuccess = document.getElementById('step-success');
     elements.btnSaveContact = document.getElementById('btn-save-contact');
     elements.btnShareWhatsapp = document.getElementById('btn-share-whatsapp');
-    elements.btnFinish = document.getElementById('btn-finish');
     elements.taskContact = document.getElementById('task-contact');
     elements.taskWhatsapp = document.getElementById('task-whatsapp');
     
@@ -328,9 +326,6 @@ function setupEventListeners() {
     // Task buttons
     elements.btnSaveContact?.addEventListener('click', handleSaveContact);
     elements.btnShareWhatsapp?.addEventListener('click', handleShareWhatsapp);
-    
-    // Finish button
-    elements.btnFinish?.addEventListener('click', handleFinish);
 }
 
 /* ==========================================================================
@@ -370,13 +365,9 @@ async function handleRegistration(e) {
             // Update UI based on existing tasks
             updateTasksUI();
             
-            // If all tasks completed, show success
-            if (tasksState.savedContact && tasksState.sharedWhatsapp) {
-                showStep('success');
-                loadAndShowLeaderboard();
-            } else {
-                showStep('tasks');
-            }
+            // If lead already exists, go straight to success
+            showStep('success');
+            loadAndShowLeaderboard();
             return;
         }
         
@@ -390,8 +381,14 @@ async function handleRegistration(e) {
             referredBy 
         });
         
-        // Show tasks step
-        showStep('tasks');
+        // Show success step immediately
+        showStep('success');
+        
+        // Launch confetti celebration!
+        launchConfetti();
+        
+        // Load and show leaderboard
+        loadAndShowLeaderboard();
         
         // Show immediate social proof
         showSocialProof(fullName.split(' ')[0]);
@@ -476,20 +473,6 @@ function handleShareWhatsapp() {
     // Update in database
     if (currentLeadId) {
         updateLeadTasks(currentCampaign.id, currentLeadId, { sharedWhatsapp: true });
-    }
-}
-
-/**
- * Handle finish button click
- */
-function handleFinish() {
-    if (tasksState.savedContact && tasksState.sharedWhatsapp) {
-        showStep('success');
-        // Launch confetti celebration!
-        launchConfetti();
-        
-        // Load and show leaderboard
-        loadAndShowLeaderboard();
     }
 }
 
@@ -579,12 +562,6 @@ async function updateTasksUI() {
         elements.taskWhatsapp?.classList.add('completed');
         elements.taskWhatsapp?.querySelector('.task-check')?.classList.remove('hidden');
     }
-    
-    // Update finish button
-    if (elements.btnFinish) {
-        const allCompleted = tasksState.savedContact && tasksState.sharedWhatsapp;
-        elements.btnFinish.disabled = !allCompleted;
-    }
 
     // Update tickets count in success step
     if (currentLeadId && currentCampaign) {
@@ -638,19 +615,15 @@ function showContent() {
 
 /**
  * Show specific step
- * @param {'registration'|'tasks'|'success'} step 
+ * @param {'registration'|'success'} step 
  */
 function showStep(step) {
     elements.stepRegistration?.classList.add('hidden');
-    elements.stepTasks?.classList.add('hidden');
     elements.stepSuccess?.classList.add('hidden');
     
     switch (step) {
         case 'registration':
             elements.stepRegistration?.classList.remove('hidden');
-            break;
-        case 'tasks':
-            elements.stepTasks?.classList.remove('hidden');
             break;
         case 'success':
             elements.stepSuccess?.classList.remove('hidden');

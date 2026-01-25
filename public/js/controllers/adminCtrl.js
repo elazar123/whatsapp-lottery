@@ -1252,10 +1252,6 @@ function generatePreviewHtml(title, description, primaryColor, bgColor, bannerUr
  * Render leads table
  * @param {Array} leads 
  */
-/**
- * Render leads table
- * @param {Array} leads 
- */
 function renderLeadsTable(leads) {
     const tbody = document.getElementById('leads-table-body');
     const emptyState = document.getElementById('leads-empty');
