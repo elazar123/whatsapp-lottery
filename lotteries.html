@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="צפו בכל ההגרלות הפתוחות והירשמו לזכות בפרסים שווים!">
+    <title>הגרלות פתוחות | WhatsApp Lottery</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/campaign.css">
+    <style>
+        .lotteries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-xl);
+            padding: var(--space-xl) 0;
+        }
+        .lottery-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+        .lottery-card:hover {
+            transform: translateY(-10px);
+        }
+        .lottery-image {
+            width: 100%;
+            height: 180px;
+            background: var(--bg-color);
+            position: relative;
+        }
+        .lottery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .lottery-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: var(--border-radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 700;
+        }
+        .lottery-info {
+            padding: var(--space-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .lottery-info h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-sm);
+            color: var(--primary-color);
+        }
+        .lottery-info p {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .lottery-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--border-color);
+        }
+        .lottery-date {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+        .btn-join {
+            width: 100%;
+            margin-top: var(--space-md);
+        }
+        .page-header {
+            text-align: center;
+            padding: var(--space-3xl) var(--space-md);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #4f46e5 100%);
+            color: white;
+            border-radius: 0 0 var(--border-radius-xl) var(--border-radius-xl);
+        }
+        .page-header h1 { color: white; margin-bottom: var(--space-sm); }
+        .page-header p { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="campaign-container">
+        <header class="page-header">
+            <h1>🌐 הגרלות פתוחות</h1>
+            <p>מצאו הגרלות שוות והצטרפו עכשיו בחינם!</p>
+        </header>
+
+        <main class="step-section">
+            <div id="loading-lotteries" class="text-center">
+                <div class="loader margin-auto"></div>
+                <p>טוען הגרלות...</p>
+            </div>
+
+            <div id="empty-lotteries" class="hidden text-center">
+                <p>אין כרגע הגרלות פעילות. חזרו בקרוב!</p>
+            </div>
+
+            <div id="lotteries-list" class="lotteries-grid">
+                <!-- Lotteries will be loaded here -->
+            </div>
+        </main>
+
+        <footer class="campaign-footer">
+            <p>נבנה על ידי <strong>ריגר הפקות</strong></p>
+            <span class="footer-phone">
+                <a href="tel:0525624350">📞 052-562-4350</a>
+            </span>
+        </footer>
+    </div>
+
+    <script type="module">
+        import { getActiveCampaigns } from './js/services/db.js';
+        import { initFirebase } from './js/config/firebase.js';
+
+        async function init() {
+            initFirebase();
+            const listEl = document.getElementById('lotteries-list');
+            const loadingEl = document.getElementById('loading-lotteries');
+            const emptyEl = document.getElementById('empty-lotteries');
+
+            try {
+                const lotteries = await getActiveCampaigns();
+                loadingEl.classList.add('hidden');
+
+                if (lotteries.length === 0) {
+                    emptyEl.classList.remove('hidden');
+                    return;
+                }
+
+                listEl.innerHTML = lotteries.map(lottery => {
+                    const endDate = lottery.endDate?.toDate ? lottery.endDate.toDate() : new Date(lottery.endDate);
+                    const formattedDate = endDate.toLocaleDateString('he-IL');
+                    
+                    return `
+                        <div class="lottery-card">
+                            <div class="lottery-image">
+                                ${lottery.bannerUrl ? `<img src="${lottery.bannerUrl}" alt="${lottery.title}">` : '<div class="upload-placeholder"><span class="upload-icon">🎲</span></div>'}
+                                <span class="lottery-badge">בקרוב נגמר!</span>
+                            </div>
+                            <div class="lottery-info">
+                                <h3>${lottery.title}</h3>
+                                <p>${lottery.description || 'לחצו להצטרפות להגרלה'}</p>
+                                <div class="lottery-meta">
+                                    <span class="lottery-date">📅 מסתיים ב: ${formattedDate}</span>
+                                    <span class="lottery-date">👥 ${lottery.leadsCount || 0} משתתפים</span>
+                                </div>
+                                <a href="index.html?c=${lottery.id}" class="btn btn-primary btn-join">אני רוצה להשתתף! ←</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading lotteries:', error);
+                loadingEl.innerHTML = '<p class="text-error">אירעה שגיאה בטעינת ההגרלות.</p>';
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

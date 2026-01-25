@@ -408,17 +408,21 @@
                     <!-- Winner Selection -->
                     <div class="winner-selection-box">
                         <h3>🎲 בחירת זוכה</h3>
-                        <p>לחץ על הכפתור להפעלת גלגל ההגרלה ובחירת זוכה</p>
+                        <p>כמה זוכים תרצה להגריל?</p>
+                        <div class="winner-count-selector">
+                            <input type="number" id="winner-count" value="1" min="1" max="10">
+                            <label for="winner-count">זוכים</label>
+                        </div>
                         <button class="btn btn-primary btn-large" id="btn-select-winner">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
                                 <circle cx="12" cy="12" r="10"/>
                                 <path d="M12 6v6l4 2"/>
                             </svg>
-                            🎰 הגרלת זוכה עכשיו!
+                            🎰 הגרלת זוכים עכשיו!
                         </button>
                         <div id="winner-display" class="winner-display hidden">
-                            <span class="winner-label">🏆 הזוכה:</span>
-                            <span class="winner-name" id="winner-name-display"></span>
+                            <span class="winner-label">🏆 הזוכים המאושרים:</span>
+                            <div id="winner-list" class="winner-list"></div>
                         </div>
                     </div>
 

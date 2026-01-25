@@ -312,6 +312,7 @@ async function handleExportVCF() {
  */
 async function handleSelectWinner() {
     const campaignId = elements.viewDetails?.dataset.campaignId;
+    const winnerCount = parseInt(document.getElementById('winner-count')?.value) || 1;
     if (!campaignId) return;
     
     try {
@@ -321,20 +322,41 @@ async function handleSelectWinner() {
             alert('אין משתתפים להגרלה! צריך לפחות נרשם אחד.');
             return;
         }
+
+        // Create weighted pool based on tickets
+        const weightedPool = [];
+        leads.forEach(lead => {
+            const ticketCount = lead.tickets || 1;
+            for (let i = 0; i < ticketCount; i++) {
+                weightedPool.push(lead);
+            }
+        });
         
         // Show spinning wheel
-        showSpinningWheel(leads, (winner) => {
-            // Display winner
+        showSpinningWheel(weightedPool, (winner) => {
             const winnerDisplay = document.getElementById('winner-display');
-            const winnerName = document.getElementById('winner-name-display');
+            const winnerList = document.getElementById('winner-list');
             
-            if (winnerDisplay && winnerName) {
-                winnerName.textContent = `${winner.fullName} (${winner.phone})`;
+            if (winnerDisplay && winnerList) {
+                // If we need more winners, select them randomly from the remaining
+                const allWinners = [winner];
+                
+                if (winnerCount > 1) {
+                    const remainingLeads = leads.filter(l => l.id !== winner.id);
+                    // Shuffle and pick
+                    const shuffled = [...remainingLeads].sort(() => 0.5 - Math.random());
+                    allWinners.push(...shuffled.slice(0, winnerCount - 1));
+                }
+
+                winnerList.innerHTML = allWinners.map(w => `
+                    <div class="winner-item">
+                        <span>${escapeHtml(w.fullName)}</span>
+                        <span>${escapeHtml(w.phone)}</span>
+                    </div>
+                `).join('');
+                
                 winnerDisplay.classList.remove('hidden');
             }
-            
-            // TODO: Save winner to database and optionally send notification
-            console.log('Winner selected:', winner);
         });
         
     } catch (error) {

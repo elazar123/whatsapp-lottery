@@ -971,6 +971,44 @@
     padding: 16px 40px;
 }
 
+.winner-count-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.winner-count-selector input {
+    width: 80px;
+    text-align: center;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    border-radius: 12px;
+}
+
+.winner-list {
+    margin-top: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.winner-item {
+    background: var(--success-light);
+    color: #065f46;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--border-radius);
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+}
+
+.winner-item::before {
+    content: '⭐';
+    margin-left: 8px;
+}
+
 .winner-display {
     margin-top: var(--space-lg);
     padding: var(--space-lg);

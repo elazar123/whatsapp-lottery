@@ -16,7 +16,8 @@ import {
     where, 
     orderBy,
     serverTimestamp,
-    increment
+    increment,
+    limit
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // Collection names
@@ -395,12 +396,50 @@ export async function getAllUsers() {
 }
 
 /**
- * Check if phone number already registered for campaign
- * @param {string} campaignId - Campaign document ID
- * @param {string} phone - Phone number to check
- * @returns {Promise<Object|null>} - Existing lead or null
+ * Get all ACTIVE campaigns for the public "Open Lotteries" page
+ * @returns {Promise<Array>} - Array of active campaigns
  */
-export async function findLeadByPhone(campaignId, phone) {
+export async function getActiveCampaigns() {
+    const db = getDbInstance();
+    try {
+        const now = new Date();
+        const q = query(
+            collection(db, CAMPAIGNS_COLLECTION),
+            where('isActive', '==', true),
+            where('endDate', '>', now),
+            orderBy('endDate', 'asc')
+        );
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error getting active campaigns:', error);
+        // Fallback if index isn't ready: filter client-side
+        const q = query(collection(db, CAMPAIGNS_COLLECTION), where('isActive', '==', true));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(c => new Date(c.endDate?.toDate?.() || c.endDate) > now);
+    }
+}
+
+/**
+ * Get top leads for a campaign leaderboard
+ * @param {string} campaignId 
+ * @param {number} limitCount
+ * @returns {Promise<Array>}
+ */
+export async function getLeaderboard(campaignId, limitCount = 5) {
+    const db = getDbInstance();
+    try {
+        const leadsRef = collection(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION);
+        const q = query(leadsRef, orderBy('tickets', 'desc'), limit(limitCount));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error getting leaderboard:', error);
+        return [];
+    }
+}
     const db = getDbInstance();
     
     try {

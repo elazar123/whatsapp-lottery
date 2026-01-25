@@ -4,7 +4,7 @@
  */
 
 import { initFirebase } from '../config/firebase.js';
-import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByPhone, getLead } from '../services/db.js';
+import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByPhone, getLead, getLeaderboard } from '../services/db.js';
 import { generateVCard, downloadVCard } from '../utils/vcfGenerator.js';
 import { generateWhatsAppUrl, generateCampaignShareUrl, openWhatsAppShare } from '../utils/whatsappUrl.js';
 import { launchConfetti } from '../utils/confetti.js';
@@ -140,6 +140,13 @@ async function loadCampaign(campaignId) {
         
         // Show content
         showContent();
+        
+        // Show social proof occasionally
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                showSocialProof();
+            }
+        }, 8000);
         
     } catch (error) {
         console.error('Error loading campaign:', error);
@@ -374,6 +381,9 @@ async function handleRegistration(e) {
         // Show tasks step
         showStep('tasks');
         
+        // Show immediate social proof
+        showSocialProof(fullName.split(' ')[0]);
+        
     } catch (error) {
         console.error('Error registering:', error);
         alert('אירעה שגיאה בהרשמה: ' + (error.message || 'נסו שוב.'));
@@ -467,9 +477,81 @@ function handleShareWhatsapp() {
 function handleFinish() {
     if (tasksState.savedContact && tasksState.sharedWhatsapp) {
         showStep('success');
-        // Launch confetti celebration!
-        launchConfetti();
+    // Launch confetti celebration!
+    launchConfetti();
+    
+    // Load and show leaderboard
+    loadAndShowLeaderboard();
+}
+
+/**
+ * Fetch and render leaderboard
+ */
+async function loadAndShowLeaderboard() {
+    const container = document.getElementById('leaderboard-container');
+    const listEl = document.getElementById('leaderboard-list');
+    
+    if (!container || !listEl || !currentCampaign) return;
+    
+    try {
+        const topLeads = await getLeaderboard(currentCampaign.id, 5);
+        
+        if (topLeads.length > 0) {
+            listEl.innerHTML = topLeads.map((lead, index) => {
+                // Mask name for privacy (optional, but professional)
+                const name = lead.fullName.split(' ')[0] + (lead.fullName.split(' ')[1] ? ' ' + lead.fullName.split(' ')[1][0] + '.' : '');
+                
+                return `
+                    <div class="leaderboard-item">
+                        <span class="leaderboard-rank">${index + 1}</span>
+                        <span class="leaderboard-name">${escapeHtml(name)}</span>
+                        <span class="leaderboard-tickets">🎫 ${lead.tickets || 1}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            container.classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
     }
+}
+
+/**
+ * Show a social proof notification
+ */
+function showSocialProof(name) {
+    let toast = document.getElementById('social-proof-toast');
+    
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'social-proof-toast';
+        toast.className = 'social-proof-toast';
+        document.body.appendChild(toast);
+    }
+    
+    const firstNames = ['מיכל', 'דניאל', 'נועה', 'איתי', 'יובל', 'מאיה', 'רוני', 'עידו'];
+    const randomName = name || firstNames[Math.floor(Math.random() * firstNames.length)];
+    
+    toast.innerHTML = `
+        <div class="toast-avatar">👤</div>
+        <div class="toast-content">
+            <strong>${randomName}</strong> נרשם/ה עכשיו להגרלה!
+        </div>
+    `;
+    
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+/**
+ * Escape HTML
+ */
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
 }
 
 /**
