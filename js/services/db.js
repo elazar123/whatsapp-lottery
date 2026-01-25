@@ -180,7 +180,7 @@ export async function incrementViewCount(campaignId) {
 /**
  * Save a new lead to a campaign
  * @param {string} campaignId - Campaign document ID
- * @param {Object} leadData - Lead data (fullName, phone)
+ * @param {Object} leadData - Lead data (fullName, phone, referredBy?)
  * @returns {Promise<string>} - Created lead ID
  */
 export async function saveLead(campaignId, leadData) {
@@ -190,6 +190,8 @@ export async function saveLead(campaignId, leadData) {
         fullName: leadData.fullName,
         phone: leadData.phone,
         joinedAt: serverTimestamp(),
+        tickets: 1, // כרטיס אחד בהרשמה
+        referredBy: leadData.referredBy || null, // מי הפנה אותי
         tasksCompleted: {
             savedContact: false,
             sharedWhatsapp: false
@@ -199,10 +201,36 @@ export async function saveLead(campaignId, leadData) {
     try {
         const leadsRef = collection(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION);
         const docRef = await addDoc(leadsRef, lead);
+        
+        // אם יש מפנה - תן לו כרטיס נוסף!
+        if (leadData.referredBy) {
+            await addTicketToReferrer(campaignId, leadData.referredBy);
+        }
+        
         return docRef.id;
     } catch (error) {
         console.error('Error saving lead:', error);
         throw error;
+    }
+}
+
+/**
+ * Add a ticket to referrer when someone registers through their link
+ * @param {string} campaignId - Campaign document ID
+ * @param {string} referrerLeadId - Lead ID of the referrer
+ */
+export async function addTicketToReferrer(campaignId, referrerLeadId) {
+    const db = getDbInstance();
+    
+    try {
+        const leadRef = doc(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION, referrerLeadId);
+        await updateDoc(leadRef, {
+            tickets: increment(1)
+        });
+        console.log('Added ticket to referrer:', referrerLeadId);
+    } catch (error) {
+        console.error('Error adding ticket to referrer:', error);
+        // Don't throw - this is not critical
     }
 }
 

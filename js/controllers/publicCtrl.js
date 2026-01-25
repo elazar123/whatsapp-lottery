@@ -82,6 +82,15 @@ function getCampaignIdFromUrl() {
     return urlParams.get('c') || urlParams.get('campaign');
 }
 
+/**
+ * Get referrer lead ID from URL (for ticket system)
+ * @returns {string|null}
+ */
+function getReferrerFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('ref');
+}
+
 /* ==========================================================================
    Campaign Loading
    ========================================================================== */
@@ -352,8 +361,15 @@ async function handleRegistration(e) {
             return;
         }
         
-        // Save new lead
-        currentLeadId = await saveLead(currentCampaign.id, { fullName, phone });
+        // Get referrer from URL (if someone shared this link)
+        const referredBy = getReferrerFromUrl();
+        
+        // Save new lead (with referral info for ticket system)
+        currentLeadId = await saveLead(currentCampaign.id, { 
+            fullName, 
+            phone,
+            referredBy 
+        });
         
         // Show tasks step
         showStep('tasks');
@@ -420,8 +436,14 @@ function handleSaveContact() {
 function handleShareWhatsapp() {
     if (!currentCampaign) return;
     
-    // Generate campaign link - use OG endpoint for proper social preview
-    const campaignLink = `${window.location.origin}/api/og?c=${currentCampaign.id}`;
+    // Generate campaign link with referral ID for ticket system
+    // Use OG endpoint for proper social preview + ref parameter
+    let campaignLink = `${window.location.origin}/api/og?c=${currentCampaign.id}`;
+    
+    // Add referral ID if user is registered (for ticket system)
+    if (currentLeadId) {
+        campaignLink += `&ref=${currentLeadId}`;
+    }
     
     // Replace {{link}} placeholder in share text
     let shareText = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';

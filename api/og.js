@@ -4,11 +4,15 @@
  */
 
 export default async function handler(req, res) {
-    const { c: campaignId } = req.query;
+    const { c: campaignId, ref } = req.query;
     
     if (!campaignId) {
         return res.redirect('/');
     }
+    
+    // Build redirect URL with referral parameter
+    const redirectUrl = ref ? `/?c=${campaignId}&ref=${ref}` : `/?c=${campaignId}`;
+    const pageUrl = `https://whatsapp-lottery.vercel.app${redirectUrl}`;
     
     try {
         // Fetch campaign from Firestore REST API
@@ -18,7 +22,7 @@ export default async function handler(req, res) {
         const response = await fetch(firestoreUrl);
         
         if (!response.ok) {
-            return res.redirect(`/?c=${campaignId}`);
+            return res.redirect(redirectUrl);
         }
         
         const data = await response.json();
@@ -28,7 +32,6 @@ export default async function handler(req, res) {
         const title = fields.title?.stringValue || 'הגרלה מיוחדת';
         const description = fields.description?.stringValue || 'הירשמו להגרלה וזכו בפרסים מדהימים!';
         const bannerUrl = fields.bannerUrl?.stringValue || '';
-        const pageUrl = `https://whatsapp-lottery.vercel.app/?c=${campaignId}`;
         
         // Return HTML with proper meta tags
         const html = `<!DOCTYPE html>
@@ -57,12 +60,12 @@ export default async function handler(req, res) {
     <meta name="twitter:image" content="${bannerUrl}">
     
     <!-- Redirect to actual page -->
-    <meta http-equiv="refresh" content="0;url=/?c=${campaignId}">
-    <script>window.location.href = "/?c=${campaignId}";</script>
+    <meta http-equiv="refresh" content="0;url=${redirectUrl}">
+    <script>window.location.href = "${redirectUrl}";</script>
 </head>
 <body>
     <p>מעביר אותך להגרלה...</p>
-    <p><a href="/?c=${campaignId}">לחץ כאן אם אתה לא מועבר אוטומטית</a></p>
+    <p><a href="${redirectUrl}">לחץ כאן אם אתה לא מועבר אוטומטית</a></p>
 </body>
 </html>`;
         
@@ -72,7 +75,7 @@ export default async function handler(req, res) {
         
     } catch (error) {
         console.error('Error fetching campaign:', error);
-        return res.redirect(`/?c=${campaignId}`);
+        return res.redirect(redirectUrl);
     }
 }
 
