@@ -57,11 +57,14 @@ export function generateCampaignShareUrl(shareText, campaignUrl) {
     // Replace {{link}} placeholder with actual URL
     let finalText = shareText;
     
+    // Ensure the link is absolute
+    const absoluteUrl = campaignUrl.startsWith('http') ? campaignUrl : `https://${campaignUrl}`;
+    
     if (shareText.includes('{{link}}')) {
-        finalText = shareText.replace(/\{\{link\}\}/g, campaignUrl);
+        finalText = shareText.replace(/\{\{link\}\}/g, absoluteUrl);
     } else {
         // If no placeholder, append the link at the end
-        finalText = `${shareText}\n${campaignUrl}`;
+        finalText = `${shareText}\n\n${absoluteUrl}`;
     }
     
     return generateWhatsAppUrl(finalText);

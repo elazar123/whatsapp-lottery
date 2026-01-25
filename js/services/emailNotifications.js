@@ -47,7 +47,7 @@ export async function notifyNewUserRegistration(user) {
         }
         
         const templateParams = {
-            to_email: ADMIN_CONFIG.adminEmail,
+            to_email: ADMIN_CONFIG.superAdminEmail,
             subject: '🆕 משתמש חדש נרשם למערכת',
             user_name: user.displayName || 'לא צוין',
             user_email: user.email,
@@ -84,7 +84,7 @@ export async function notifyNewCampaignCreated(campaign, user) {
         }
         
         const templateParams = {
-            to_email: ADMIN_CONFIG.adminEmail,
+            to_email: ADMIN_CONFIG.superAdminEmail,
             subject: '🎲 הגרלה חדשה נוצרה במערכת',
             user_name: user.displayName || 'לא צוין',
             user_email: user.email,
@@ -123,7 +123,7 @@ export async function notifyNewLead(lead, campaign) {
         }
         
         const templateParams = {
-            to_email: ADMIN_CONFIG.adminEmail,
+            to_email: ADMIN_CONFIG.superAdminEmail,
             subject: `👤 נרשם חדש להגרלה: ${campaign.title}`,
             lead_name: lead.fullName,
             lead_phone: lead.phone,

@@ -467,6 +467,49 @@
     color: var(--text-muted);
 }
 
+/* Ticket System Display */
+.tickets-display {
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-xl);
+    margin: var(--space-lg) 0;
+    text-align: center;
+    border: 2px dashed var(--campaign-primary);
+}
+
+.tickets-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.tickets-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--campaign-primary);
+    line-height: 1;
+}
+
+.tickets-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tickets-hint {
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.tickets-hint strong {
+    color: var(--campaign-primary);
+}
+
 /* --------------------------------------------------------------------------
    Campaign Footer
    -------------------------------------------------------------------------- */
@@ -475,6 +518,7 @@
     padding: var(--space-xl) var(--space-md);
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
     margin-top: auto;
+    border-top: 4px solid var(--primary-color);
 }
 
 .campaign-footer p {
@@ -488,25 +532,21 @@
 }
 
 .campaign-footer a {
-    color: var(--campaign-primary);
+    color: white;
     text-decoration: none;
     transition: color var(--transition-fast);
-}
-
-.campaign-footer a:hover {
-    color: white;
 }
 
 .campaign-footer .footer-phone {
     display: block;
     margin-top: var(--space-sm);
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
     color: white;
-    font-weight: var(--font-weight-medium);
+    font-weight: 700;
 }
 
 .campaign-footer .footer-phone a {
-    color: white;
+    color: var(--primary-color);
     direction: ltr;
     display: inline-block;
 }

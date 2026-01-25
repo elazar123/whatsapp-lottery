@@ -4,9 +4,9 @@
  */
 
 import { initFirebase } from '../config/firebase.js';
-import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByPhone } from '../services/db.js';
+import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByPhone, getLead } from '../services/db.js';
 import { generateVCard, downloadVCard } from '../utils/vcfGenerator.js';
-import { generateWhatsAppUrl } from '../utils/whatsappUrl.js';
+import { generateWhatsAppUrl, generateCampaignShareUrl } from '../utils/whatsappUrl.js';
 import { launchConfetti } from '../utils/confetti.js';
 
 // State
@@ -438,19 +438,18 @@ function handleShareWhatsapp() {
     
     // Generate campaign link with referral ID for ticket system
     // Use OG endpoint for proper social preview + ref parameter
-    let campaignLink = `${window.location.origin}/api/og?c=${currentCampaign.id}`;
+    let campaignLink = `${window.location.host}/api/og?c=${currentCampaign.id}`;
     
     // Add referral ID if user is registered (for ticket system)
     if (currentLeadId) {
         campaignLink += `&ref=${currentLeadId}`;
     }
     
-    // Replace {{link}} placeholder in share text
-    let shareText = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';
-    shareText = shareText.replace('{{link}}', campaignLink);
-    
     // Generate WhatsApp URL and open
-    const whatsappUrl = generateWhatsAppUrl(shareText);
+    const whatsappUrl = generateCampaignShareUrl(
+        currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}',
+        campaignLink
+    );
     window.open(whatsappUrl, '_blank');
     
     // Mark task as completed
@@ -477,7 +476,7 @@ function handleFinish() {
 /**
  * Update tasks UI based on current state
  */
-function updateTasksUI() {
+async function updateTasksUI() {
     // Update contact task
     if (tasksState.savedContact) {
         elements.taskContact?.classList.add('completed');
@@ -494,6 +493,19 @@ function updateTasksUI() {
     if (elements.btnFinish) {
         const allCompleted = tasksState.savedContact && tasksState.sharedWhatsapp;
         elements.btnFinish.disabled = !allCompleted;
+    }
+
+    // Update tickets count in success step
+    if (currentLeadId && currentCampaign) {
+        try {
+            const lead = await getLead(currentCampaign.id, currentLeadId);
+            const ticketsCountEl = document.getElementById('user-tickets-count');
+            if (ticketsCountEl && lead) {
+                ticketsCountEl.textContent = lead.tickets || 1;
+            }
+        } catch (error) {
+            console.error('Error updating tickets count:', error);
+        }
     }
 }
 

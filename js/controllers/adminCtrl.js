@@ -442,7 +442,7 @@ function handleNavigation(view) {
     currentView = view;
     
     if (view === 'campaigns') {
-        loadCampaigns(); // טען רק את ההגרלות שלי
+        loadCampaigns(); // טוען רק את ההגרלות שלי
         showCampaignsView();
     } else if (view === 'create') {
         showCreateView();
@@ -550,6 +550,11 @@ async function showDetailsView(campaignId) {
         // Calculate shares
         const shares = leads.filter(l => l.tasksCompleted?.sharedWhatsapp).length;
         document.getElementById('stat-shares').textContent = shares;
+        
+        // Calculate total tickets
+        const totalTickets = leads.reduce((sum, lead) => sum + (lead.tickets || 1), 0);
+        const ticketsEl = document.getElementById('stat-tickets');
+        if (ticketsEl) ticketsEl.textContent = totalTickets;
         
         // Calculate conversion
         const conversion = campaign.viewsCount > 0 
@@ -721,50 +726,60 @@ function handleUserSearch(e) {
 /**
  * Show user details modal with their campaigns
  */
-function showUserDetails(userId) {
+async function showUserDetails(userId) {
     const user = allUsers.find(u => u.id === userId);
     if (!user) return;
     
-    const userCampaigns = campaigns.filter(c => c.managerId === userId);
     const modal = document.getElementById('user-campaigns-modal');
     const content = document.getElementById('user-modal-content');
     
     if (!modal || !content) return;
     
-    content.innerHTML = `
-        <div class="user-detail-header">
-            <img src="${user.photoURL || 'https://via.placeholder.com/80'}" alt="${user.displayName}" class="user-detail-avatar">
-            <div class="user-detail-info">
-                <h2>${escapeHtml(user.displayName || 'משתמש')}</h2>
-                <p>${escapeHtml(user.email)}</p>
-                <span>נרשם: ${formatDate(user.createdAt)}</span>
-            </div>
-        </div>
-        <h3>ההגרלות של ${escapeHtml(user.displayName || 'משתמש')} (${userCampaigns.length})</h3>
-        ${userCampaigns.length === 0 ? '<p class="text-muted">אין הגרלות</p>' : `
-            <div class="user-campaigns-list">
-                ${userCampaigns.map(c => `
-                    <div class="user-campaign-item" data-campaign="${c.id}">
-                        <div class="campaign-item-title">${escapeHtml(c.title)}</div>
-                        <div class="campaign-item-meta">
-                            <span>${c.stats?.totalLeads || 0} נרשמים</span>
-                            <span>${formatDate(c.createdAt)}</span>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `}
-    `;
-    
-    // Add click events for campaign items
-    content.querySelectorAll('.user-campaign-item').forEach(item => {
-        item.addEventListener('click', () => {
-            closeUserModal();
-            showCampaignDetails(item.dataset.campaign);
-        });
-    });
-    
+    // Show loading state in modal
+    content.innerHTML = '<div class="text-center padding-xl"><div class="loader margin-auto"></div><p>טוען הגרלות...</p></div>';
     modal.classList.remove('hidden');
+    
+    try {
+        // Fetch campaigns specifically for this user
+        const userCampaigns = await getCampaignsByManager(userId);
+        
+        content.innerHTML = `
+            <div class="user-detail-header">
+                <img src="${user.photoURL || 'https://via.placeholder.com/80'}" alt="${user.displayName}" class="user-detail-avatar">
+                <div class="user-detail-info">
+                    <h2>${escapeHtml(user.displayName || 'משתמש')}</h2>
+                    <p>${escapeHtml(user.email)}</p>
+                    <span>נרשם: ${formatDate(user.createdAt)}</span>
+                </div>
+            </div>
+            <h3>ההגרלות של המנהל (${userCampaigns.length})</h3>
+            ${userCampaigns.length === 0 ? '<p class="text-muted">אין הגרלות למשתמש זה</p>' : `
+                <div class="user-campaigns-list">
+                    ${userCampaigns.map(c => `
+                        <div class="user-campaign-item" data-id="${c.id}">
+                            <div class="campaign-item-title">${escapeHtml(c.title)}</div>
+                            <div class="campaign-item-meta">
+                                <span>נוצר: ${formatDate(c.createdAt)}</span>
+                                <span class="campaign-status ${c.isActive ? 'active' : 'ended'}">${c.isActive ? 'פעיל' : 'הסתיים'}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `}
+        `;
+        
+        // Add click events for campaign items
+        content.querySelectorAll('.user-campaign-item').forEach(item => {
+            item.addEventListener('click', () => {
+                closeUserModal();
+                showDetailsView(item.dataset.id);
+            });
+        });
+        
+    } catch (error) {
+        console.error('Error loading user details:', error);
+        content.innerHTML = '<p class="text-error text-center">שגיאה בטעינת הנתונים</p>';
+    }
 }
 
 /**
@@ -782,21 +797,25 @@ function renderUsersList() {
     if (!usersList) return;
     
     if (allUsers.length === 0) {
-        usersList.innerHTML = '<p class="text-center text-muted">אין משתמשים רשומים</p>';
+        usersList.innerHTML = '<div class="empty-state small"><p>אין משתמשים רשומים</p></div>';
         return;
     }
     
     usersList.innerHTML = allUsers.map(user => {
-        const campaignCount = campaigns.filter(c => c.managerId === user.id).length;
+        // Count how many campaigns this user has
+        const userCampaignsCount = campaigns.filter(c => c.managerId === user.id).length;
+        
         return `
-            <div class="user-card" data-user-id="${user.id}" onclick="window.showUserDetailsFromCard('${user.id}')">
+            <div class="user-card" data-user-id="${user.id}">
                 <div class="user-card-avatar">
                     <img src="${user.photoURL || 'https://via.placeholder.com/50'}" alt="${user.displayName}">
                 </div>
                 <div class="user-card-info">
                     <h3>${escapeHtml(user.displayName || 'משתמש')}</h3>
                     <p>${escapeHtml(user.email)}</p>
-                    <span class="user-card-stats">${campaignCount} הגרלות</span>
+                    <div class="user-card-stats">
+                        <span class="stat-badge">📊 ${userCampaignsCount} הגרלות</span>
+                    </div>
                 </div>
                 <div class="user-card-date">
                     נרשם: ${formatDate(user.createdAt)}
@@ -804,10 +823,12 @@ function renderUsersList() {
             </div>
         `;
     }).join('');
-}
 
-// Expose function to window for onclick
-window.showUserDetailsFromCard = showUserDetails;
+    // Add click events to user cards
+    document.querySelectorAll('.user-card').forEach(card => {
+        card.addEventListener('click', () => showUserDetails(card.dataset.userId));
+    });
+}
 
 /**
  * Render campaigns list
@@ -1213,6 +1234,7 @@ function renderLeadsTable(leads) {
             <td>${escapeHtml(lead.fullName)}</td>
             <td dir="ltr">${escapeHtml(lead.phone)}</td>
             <td>${formatDate(lead.joinedAt)}</td>
+            <td><span class="ticket-badge">🎫 ${lead.tickets || 1}</span></td>
             <td class="${lead.tasksCompleted?.savedContact ? 'status-yes' : 'status-no'}">
                 ${lead.tasksCompleted?.savedContact ? '✓' : '✗'}
             </td>

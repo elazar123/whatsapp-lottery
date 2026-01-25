@@ -36,7 +36,7 @@
     --border-radius-sm: 12px;
     --border-radius: 16px;
     --border-radius-lg: 24px;
-    --border-radius-xl: 32px;
+    --border-radius-xl: 40px;
     --border-radius-full: 9999px;
     
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -312,15 +312,15 @@ strong {
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    padding: 12px 24px;
+    padding: 14px 28px;
     font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
+    font-weight: 700;
     border-radius: var(--border-radius-full);
     transition: all var(--transition-base);
     white-space: nowrap;
     cursor: pointer;
     border: 2px solid transparent;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn svg {
