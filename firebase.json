@@ -1,14 +1,11 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**",
-      "README.md",
-      "package.json",
-      "vercel.json",
-      "api/**"
+      "README.md"
     ],
     "rewrites": [
       {
