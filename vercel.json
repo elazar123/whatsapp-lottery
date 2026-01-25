@@ -3,6 +3,14 @@
   "outputDirectory": ".",
   "rewrites": [
     {
+      "source": "/j/:c/:ref",
+      "destination": "/api/og.js?c=:c&ref=:ref"
+    },
+    {
+      "source": "/j/:c",
+      "destination": "/api/og.js?c=:c"
+    },
+    {
       "source": "/api/og",
       "destination": "/api/og.js"
     }

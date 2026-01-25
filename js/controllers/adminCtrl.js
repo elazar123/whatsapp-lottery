@@ -584,10 +584,9 @@ async function showDetailsView(campaignId) {
             : 0;
         document.getElementById('stat-conversion').textContent = `${conversion}%`;
         
-        // Campaign link - MUST USE VERCEL DOMAIN FOR OG TAGS
+        // Campaign link - Short format
         const vDomain = 'whatsapp-lottery-wsam.vercel.app';
-        const referralParam = campaign.managerLeadId ? `&ref=${campaign.managerLeadId}` : '';
-        const campaignLink = `https://${vDomain}/api/og?c=${campaignId}${referralParam}`;
+        const campaignLink = `https://${vDomain}/j/${campaignId}${campaign.managerLeadId ? `/${campaign.managerLeadId}` : ''}`;
         document.getElementById('campaign-link').value = campaignLink;
         
         // Store campaign ID for actions
@@ -1272,12 +1271,12 @@ function renderLeadsTable(leads) {
     
     emptyState.classList.add('hidden');
     
-    // Use Vercel domain for referral links to ensure OG tags work
+    // Use Vercel domain for referral links
     const vDomain = 'whatsapp-lottery-wsam.vercel.app';
     
     tbody.innerHTML = leads.map((lead, index) => {
-        // Generate unique referral link for this lead
-        const referralLink = `https://${vDomain}/api/og?c=${campaignId}&ref=${lead.id}`;
+        // Generate unique referral link for this lead - Short format
+        const referralLink = `https://${vDomain}/j/${campaignId}/${lead.id}`;
         
         return `
             <tr>

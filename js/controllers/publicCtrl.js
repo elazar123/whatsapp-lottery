@@ -459,13 +459,9 @@ function handleShareWhatsapp() {
     if (!currentCampaign) return;
     
     // Generate campaign link with referral ID for ticket system
-    // Use host for shorter link + OG endpoint
-    let campaignLink = `${window.location.host}/api/og?c=${currentCampaign.id}`;
-    
-    // Add referral ID if user is registered (for ticket system)
-    if (currentLeadId) {
-        campaignLink += `&ref=${currentLeadId}`;
-    }
+    // Use short URL format for sharing
+    const vDomain = 'whatsapp-lottery-wsam.vercel.app';
+    const campaignLink = `${vDomain}/j/${currentCampaign.id}${currentLeadId ? `/${currentLeadId}` : ''}`;
     
     // Generate WhatsApp URL and open using specialized helper
     const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';
