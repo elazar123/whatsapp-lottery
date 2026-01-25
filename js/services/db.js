@@ -89,28 +89,15 @@ export async function createCampaign(campaignData, managerId) {
 }
 
 /**
- * Get a single campaign by ID or prefix
- * @param {string} campaignId - Campaign document ID or prefix
+ * Get a single campaign by ID
+ * @param {string} campaignId - Campaign document ID
  * @returns {Promise<Object|null>} - Campaign data or null
  */
 export async function getCampaign(campaignId) {
     const db = getDbInstance();
     
     try {
-        // If it's a prefix (short ID), find the full ID
-        let targetId = campaignId;
-        if (campaignId.length < 15) {
-            const q = query(collection(db, CAMPAIGNS_COLLECTION));
-            const querySnapshot = await getDocs(q);
-            const match = querySnapshot.docs.find(doc => doc.id.startsWith(campaignId));
-            if (match) {
-                targetId = match.id;
-            } else {
-                return null;
-            }
-        }
-
-        const docRef = doc(db, CAMPAIGNS_COLLECTION, targetId);
+        const docRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
@@ -261,32 +248,17 @@ export async function saveLead(campaignId, leadData) {
 /**
  * Add a ticket to referrer when someone registers through their link
  * @param {string} campaignId - Campaign document ID
- * @param {string} referrerId - Lead ID or prefix of the referrer
+ * @param {string} referrerLeadId - Lead ID of the referrer
  */
-export async function addTicketToReferrer(campaignId, referrerId) {
+export async function addTicketToReferrer(campaignId, referrerLeadId) {
     const db = getDbInstance();
     
     try {
-        let targetLeadId = referrerId;
-
-        // If it's a prefix (short ID), find the full ID
-        if (referrerId.length < 20) {
-            const leadsRef = collection(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION);
-            const querySnapshot = await getDocs(leadsRef);
-            const matchingLead = querySnapshot.docs.find(doc => doc.id.startsWith(referrerId));
-            if (matchingLead) {
-                targetLeadId = matchingLead.id;
-            } else {
-                console.warn('No lead found matching prefix:', referrerId);
-                return;
-            }
-        }
-
-        const leadRef = doc(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION, targetLeadId);
+        const leadRef = doc(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION, referrerLeadId);
         await updateDoc(leadRef, {
             tickets: increment(1)
         });
-        console.log('Added ticket to referrer:', targetLeadId);
+        console.log('Added ticket to referrer:', referrerLeadId);
     } catch (error) {
         console.error('Error adding ticket to referrer:', error);
         // Don't throw - this is not critical
