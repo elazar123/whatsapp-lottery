@@ -743,48 +743,94 @@
 
 /* Optional Viral Tasks in Success Page */
 .optional-tasks {
-    margin-top: var(--space-2xl);
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--border-color);
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--border-radius-xl);
     text-align: right;
 }
 
+.optional-tasks.main-cta {
+    border: 2px solid var(--campaign-primary);
+    background: #f0f7ff;
+    margin-bottom: var(--space-xl);
+}
+
 .optional-tasks h3 {
-    font-size: var(--font-size-base);
-    color: var(--text-primary);
+    font-size: var(--font-size-lg);
+    color: var(--campaign-primary);
     margin-bottom: var(--space-xs);
     text-align: center;
+    font-weight: 700;
 }
 
 .tasks-subtitle {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     color: var(--text-secondary);
     margin-bottom: var(--space-lg);
     text-align: center;
 }
 
 .optional-tasks .tasks-container {
-    gap: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
 }
 
 .optional-tasks .task-item {
-    padding: var(--space-sm) var(--space-md);
-    background: #f8fafc;
+    padding: var(--space-md);
+    background: white;
     border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-md);
 }
 
 .optional-tasks .task-content h4 {
-    font-size: var(--font-size-sm);
-    margin-bottom: 0;
+    font-size: var(--font-size-base);
+    margin-bottom: 4px;
+    color: var(--text-primary);
 }
 
 .optional-tasks .task-content p {
-    font-size: 11px;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
 }
 
 .optional-tasks .btn-task {
-    padding: 6px 14px;
-    font-size: 11px;
+    width: 100%;
+    padding: 12px 24px;
+    font-size: var(--font-size-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.optional-tasks .btn-task .task-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Allow buttons to show even if completed in optional section */
+.optional-tasks .task-item.completed .btn-task {
+    display: flex; /* Always show buttons in success page */
+    opacity: 0.8;
+}
+
+.optional-tasks .task-item.completed .btn-task:hover {
+    opacity: 1;
+}
+
+.optional-tasks .task-item.completed .task-check {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    transform: none;
 }
 
 /* --------------------------------------------------------------------------
