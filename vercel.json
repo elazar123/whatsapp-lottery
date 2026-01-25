@@ -4,19 +4,19 @@
   "rewrites": [
     {
       "source": "/l/:c/:ref",
-      "destination": "/api/og?c=:c&ref=:ref"
+      "destination": "/api/og.js?c=:c&ref=:ref"
     },
     {
       "source": "/l/:c",
-      "destination": "/api/og?c=:c"
+      "destination": "/api/og.js?c=:c"
     },
     {
       "source": "/j/:c/:ref",
-      "destination": "/api/og?c=:c&ref=:ref"
+      "destination": "/api/og.js?c=:c&ref=:ref"
     },
     {
       "source": "/j/:c",
-      "destination": "/api/og?c=:c"
+      "destination": "/api/og.js?c=:c"
     }
   ]
 }
