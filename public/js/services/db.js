@@ -89,15 +89,28 @@ export async function createCampaign(campaignData, managerId) {
 }
 
 /**
- * Get a single campaign by ID
- * @param {string} campaignId - Campaign document ID
+ * Get a single campaign by ID or prefix
+ * @param {string} campaignId - Campaign document ID or prefix
  * @returns {Promise<Object|null>} - Campaign data or null
  */
 export async function getCampaign(campaignId) {
     const db = getDbInstance();
     
     try {
-        const docRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
+        // If it's a prefix (short ID), find the full ID
+        let targetId = campaignId;
+        if (campaignId.length < 15) {
+            const q = query(collection(db, CAMPAIGNS_COLLECTION));
+            const querySnapshot = await getDocs(q);
+            const match = querySnapshot.docs.find(doc => doc.id.startsWith(campaignId));
+            if (match) {
+                targetId = match.id;
+            } else {
+                return null;
+            }
+        }
+
+        const docRef = doc(db, CAMPAIGNS_COLLECTION, targetId);
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {

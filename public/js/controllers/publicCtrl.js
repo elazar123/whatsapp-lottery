@@ -458,7 +458,7 @@ function handleShareWhatsapp() {
     // Generate campaign link with referral ID for ticket system
     // Use short URL format for sharing
     const vDomain = 'whatsapp-lottery-wsam.vercel.app';
-    const campaignLink = `${vDomain}/l/${currentCampaign.id}${currentLeadId ? `/${currentLeadId.substring(0, 6)}` : ''}`;
+    const campaignLink = `${vDomain}/l/${currentCampaign.id.substring(0, 6)}${currentLeadId ? `/${currentLeadId.substring(0, 6)}` : ''}`;
     
     // Generate WhatsApp URL and open using specialized helper
     const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';

@@ -15,9 +15,27 @@ export default async function handler(req, res) {
     const pageUrl = `https://whatsapp-lottery-wsam.vercel.app${redirectUrl}`;
     
     try {
-        // Fetch campaign from Firestore REST API
         const projectId = 'whatsapp-lottery1';
-        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/campaigns/${campaignId}`;
+        let fullCampaignId = campaignId;
+
+        // If campaignId is short, resolve it
+        if (campaignId.length < 15) {
+            const listUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/campaigns`;
+            const listRes = await fetch(listUrl);
+            if (listRes.ok) {
+                const listData = await listRes.json();
+                const match = listData.documents?.find(d => {
+                    const id = d.name.split('/').pop();
+                    return id.startsWith(campaignId);
+                });
+                if (match) {
+                    fullCampaignId = match.name.split('/').pop();
+                }
+            }
+        }
+
+        // Fetch campaign from Firestore REST API
+        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/campaigns/${fullCampaignId}`;
         
         const response = await fetch(firestoreUrl);
         
