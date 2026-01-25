@@ -1093,6 +1093,12 @@ function resetForm() {
     const defaultEnd = new Date();
     defaultEnd.setDate(defaultEnd.getDate() + 7);
     document.getElementById('campaign-end-date').value = defaultEnd.toISOString().slice(0, 16);
+    
+    // Set default WhatsApp share text
+    const shareText = document.getElementById('share-text');
+    if (shareText) {
+        shareText.value = 'הירשמתי להגרלה מטורפת! 🎉 בואו גם אתם:';
+    }
 }
 
 /**

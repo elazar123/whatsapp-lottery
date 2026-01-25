@@ -38,12 +38,22 @@ async function init() {
     const campaignId = getCampaignIdFromUrl();
     
     if (!campaignId) {
-        showError('לא נמצא קמפיין. אנא בדקו את הקישור.');
+        showHomePage();
         return;
     }
     
     // Load campaign
     await loadCampaign(campaignId);
+}
+
+/**
+ * Show the project homepage
+ */
+function showHomePage() {
+    elements.loadingState.classList.add('hidden');
+    document.getElementById('home-page').classList.remove('hidden');
+    // Set page title for homepage
+    document.title = 'WhatsApp Lottery - הגרלות ויראליות בוואטסאפ';
 }
 
 /**

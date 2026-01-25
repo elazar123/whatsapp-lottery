@@ -337,6 +337,24 @@ export async function getLeadCount(campaignId) {
     }
 }
 
+/**
+ * Get a single lead by its ID
+ * @param {string} campaignId 
+ * @param {string} leadId 
+ * @returns {Promise<Object|null>}
+ */
+export async function getLead(campaignId, leadId) {
+    const db = getDbInstance();
+    try {
+        const leadRef = doc(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION, leadId);
+        const leadDoc = await getDoc(leadRef);
+        return leadDoc.exists() ? { id: leadDoc.id, ...leadDoc.data() } : null;
+    } catch (error) {
+        console.error('Error getting lead:', error);
+        throw error;
+    }
+}
+
 /* ==========================================================================
    Super Admin Operations (for main admin to see everything)
    ========================================================================== */
@@ -414,11 +432,15 @@ export async function getActiveCampaigns() {
     } catch (error) {
         console.error('Error getting active campaigns:', error);
         // Fallback if index isn't ready: filter client-side
+        const now = new Date();
         const q = query(collection(db, CAMPAIGNS_COLLECTION), where('isActive', '==', true));
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs
             .map(doc => ({ id: doc.id, ...doc.data() }))
-            .filter(c => new Date(c.endDate?.toDate?.() || c.endDate) > now);
+            .filter(c => {
+                const campaignEnd = c.endDate?.toDate ? c.endDate.toDate() : new Date(c.endDate);
+                return campaignEnd > now;
+            });
     }
 }
 
@@ -440,6 +462,14 @@ export async function getLeaderboard(campaignId, limitCount = 5) {
         return [];
     }
 }
+
+/**
+ * Find lead by phone number in a specific campaign
+ * @param {string} campaignId 
+ * @param {string} phone 
+ * @returns {Promise<Object|null>}
+ */
+export async function findLeadByPhone(campaignId, phone) {
     const db = getDbInstance();
     
     try {

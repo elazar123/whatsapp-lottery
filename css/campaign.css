@@ -626,6 +626,122 @@
 }
 
 /* --------------------------------------------------------------------------
+   Home Page Styles
+   -------------------------------------------------------------------------- */
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-xl);
+    margin-bottom: var(--space-3xl);
+}
+
+.home-card {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    padding: var(--space-2xl);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-card:hover {
+    transform: translateY(-5px);
+}
+
+.home-card-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-lg);
+}
+
+.home-card h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-md);
+    color: var(--primary-color);
+}
+
+.home-card p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+    line-height: 1.6;
+}
+
+.home-card .btn {
+    width: 100%;
+    margin-top: auto;
+}
+
+.features-section {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-md);
+}
+
+.features-section h3 {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+    font-size: var(--font-size-2xl);
+    color: var(--text-primary);
+}
+
+.features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-xl);
+}
+
+.feature-item {
+    display: flex;
+    gap: var(--space-lg);
+    align-items: flex-start;
+}
+
+.feature-icon {
+    font-size: 24px;
+    background: var(--primary-light);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-lg);
+    flex-shrink: 0;
+}
+
+.feature-item h4 {
+    margin-bottom: var(--space-xs);
+    color: var(--primary-color);
+}
+
+.feature-item p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.home-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #4f46e5 100%);
+    color: white;
+    padding: var(--space-3xl) var(--space-md);
+    text-align: center;
+    border-radius: 0 0 var(--border-radius-2xl) var(--border-radius-2xl);
+    margin-bottom: var(--space-2xl);
+}
+
+.home-header h1 { color: white; margin-bottom: var(--space-sm); font-size: 3rem; }
+.home-header p { font-size: 1.25rem; opacity: 0.9; }
+
+.logo-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--space-md);
+}
+
+/* --------------------------------------------------------------------------
    Campaign Footer
    -------------------------------------------------------------------------- */
 .campaign-footer {

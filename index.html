@@ -36,6 +36,66 @@
 </head>
 <body>
     <div id="app" class="campaign-container">
+        <!-- Project Homepage (Shown if no campaign ID) -->
+        <div id="home-page" class="hidden">
+            <header class="page-header home-header">
+                <div class="logo">
+                    <svg viewBox="0 0 48 48" fill="none" class="logo-icon">
+                        <rect width="48" height="48" rx="12" fill="white"/>
+                        <path d="M24 14L32 22L24 30L16 22L24 14Z" fill="var(--primary-color)"/>
+                        <circle cx="24" cy="32" r="4" fill="var(--primary-color)"/>
+                    </svg>
+                </div>
+                <h1>WhatsApp Lottery</h1>
+                <p>פלטפורמת הגרלות ויראליות בוואטסאפ</p>
+            </header>
+
+            <main class="step-section">
+                <div class="home-grid">
+                    <div class="home-card">
+                        <div class="home-card-icon">🏗️</div>
+                        <h3>מנהלי קמפיינים</h3>
+                        <p>צרו הגרלה ויראלית חדשה, נהלו משתתפים ובחרו זוכים בקלות.</p>
+                        <a href="admin.html" class="btn btn-primary">כניסה למערכת ניהול</a>
+                    </div>
+
+                    <div class="home-card">
+                        <div class="home-card-icon">🎁</div>
+                        <h3>מחפשים הגרלות?</h3>
+                        <p>צפו בכל ההגרלות הפעילות עכשיו והצטרפו כדי לזכות בפרסים.</p>
+                        <a href="lotteries.html" class="btn btn-secondary">לכל ההגרלות הפתוחות</a>
+                    </div>
+                </div>
+
+                <div class="features-section">
+                    <h3>למה WhatsApp Lottery?</h3>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">🚀</span>
+                            <div>
+                                <h4>צמיחה ויראלית</h4>
+                                <p>מערכת הפניות (Referrals) מובנית - כל משתף מקבל יותר סיכויים לזכות.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📱</span>
+                            <div>
+                                <h4>מותאם לוואטסאפ</h4>
+                                <p>חוויית משתמש חלקה בתוך הווטסאפ עם תצוגה מקדימה עשירה.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <div>
+                                <h4>ניהול פשוט</h4>
+                                <p>לוח בקרה מלא למנהלים, מעקב לידים ובחירת זוכים אוטומטית.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
         <!-- Loading State -->
         <div id="loading-state" class="state-container">
             <div class="loader"></div>
