@@ -6,7 +6,7 @@
 import { initFirebase } from '../config/firebase.js';
 import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByPhone, getLead, getLeaderboard } from '../services/db.js';
 import { generateVCard, downloadVCard } from '../utils/vcfGenerator.js';
-import { generateWhatsAppUrl, generateCampaignShareUrl, openWhatsAppShare } from '../utils/whatsappUrl.js';
+import { generateWhatsAppUrl, generateCampaignShareUrl, openWhatsAppShare, shortenUrl } from '../utils/whatsappUrl.js';
 import { launchConfetti } from '../utils/confetti.js';
 
 // State
@@ -452,15 +452,19 @@ function handleSaveContact() {
 /**
  * Handle share on WhatsApp task
  */
-function handleShareWhatsapp() {
+async function handleShareWhatsapp() {
     if (!currentCampaign) return;
     
-    // Generate campaign link with referral ID for ticket system
     // Use short URL format for sharing
     const vDomain = 'whatsapp-lottery-wsam.vercel.app';
-    const campaignLink = `${vDomain}/j/${currentCampaign.id}${currentLeadId ? `/${currentLeadId}` : ''}`;
+    const campaignIdShort = currentCampaign.id.substring(0, 6);
+    const leadIdShort = currentLeadId ? currentLeadId.substring(0, 6) : '';
+    const rawCampaignLink = `https://${vDomain}/l/${campaignIdShort}${leadIdShort ? `/${leadIdShort}` : ''}`;
     
-    // Generate WhatsApp URL and open using specialized helper
+    // 1. Shorten the URL further using external service
+    const campaignLink = await shortenUrl(rawCampaignLink);
+    
+    // 2. Generate WhatsApp URL and open using specialized helper
     const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';
     const whatsappUrl = generateCampaignShareUrl(shareTextTemplate, campaignLink);
     

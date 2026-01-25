@@ -4,6 +4,26 @@
  */
 
 /**
+ * Shorten a URL using a free service (is.gd)
+ * @param {string} url - Long URL
+ * @returns {Promise<string>} Shortened URL (or original if failed)
+ */
+export async function shortenUrl(url) {
+    try {
+        // Use is.gd - it's free, no key needed, and very simple
+        const response = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`);
+        if (response.ok) {
+            const shortUrl = await response.text();
+            return shortUrl;
+        }
+        return url;
+    } catch (error) {
+        console.error('URL shortening failed:', error);
+        return url;
+    }
+}
+
+/**
  * Generate WhatsApp share URL
  * Opens WhatsApp with pre-filled message text
  * @param {string} text - Message text to share
