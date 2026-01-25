@@ -202,6 +202,12 @@ export async function saveLead(campaignId, leadData) {
         const leadsRef = collection(db, CAMPAIGNS_COLLECTION, campaignId, LEADS_SUBCOLLECTION);
         const docRef = await addDoc(leadsRef, lead);
         
+        // עדכון מונה הנרשמים בקמפיין באופן אטומי
+        const campaignRef = doc(db, CAMPAIGNS_COLLECTION, campaignId);
+        await updateDoc(campaignRef, {
+            leadsCount: increment(1)
+        });
+        
         // אם יש מפנה - תן לו כרטיס נוסף!
         if (leadData.referredBy) {
             await addTicketToReferrer(campaignId, leadData.referredBy);

@@ -6,7 +6,7 @@
 import { initFirebase } from '../config/firebase.js';
 import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByPhone, getLead } from '../services/db.js';
 import { generateVCard, downloadVCard } from '../utils/vcfGenerator.js';
-import { generateWhatsAppUrl, generateCampaignShareUrl } from '../utils/whatsappUrl.js';
+import { generateWhatsAppUrl, generateCampaignShareUrl, openWhatsAppShare } from '../utils/whatsappUrl.js';
 import { launchConfetti } from '../utils/confetti.js';
 
 // State
@@ -445,12 +445,11 @@ function handleShareWhatsapp() {
         campaignLink += `&ref=${currentLeadId}`;
     }
     
-    // Generate WhatsApp URL and open
-    const whatsappUrl = generateCampaignShareUrl(
-        currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}',
-        campaignLink
-    );
-    window.open(whatsappUrl, '_blank');
+    // Generate WhatsApp URL and open using specialized helper
+    const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';
+    const whatsappUrl = generateCampaignShareUrl(shareTextTemplate, campaignLink);
+    
+    openWhatsAppShare(whatsappUrl);
     
     // Mark task as completed
     tasksState.sharedWhatsapp = true;

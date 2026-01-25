@@ -81,16 +81,14 @@ export function isMobileDevice() {
 /**
  * Open WhatsApp with message
  * Handles both mobile app and web WhatsApp
- * @param {string} text - Message to share
+ * @param {string} whatsappUrl - Full WhatsApp URL (wa.me/...)
  */
-export function openWhatsAppShare(text) {
-    const url = generateWhatsAppUrl(text);
-    
+export function openWhatsAppShare(whatsappUrl) {
     if (isMobileDevice()) {
-        // On mobile, try to open the app directly
-        window.location.href = url;
+        // On mobile, opening via window.location.href is more reliable for deep links
+        window.location.href = whatsappUrl;
     } else {
         // On desktop, open in new tab (will redirect to web WhatsApp)
-        window.open(url, '_blank');
+        window.open(whatsappUrl, '_blank');
     }
 }

@@ -618,7 +618,19 @@ async function loadAllUsers() {
     if (!isSuperAdminUser) return;
     
     try {
-        allUsers = await getAllUsers();
+        // Fetch users and ALL campaigns to get accurate counts
+        const [users, allCampaignsData] = await Promise.all([
+            getAllUsers(),
+            getAllCampaigns()
+        ]);
+        
+        allUsers = users;
+        // Map campaign counts to users
+        allUsers = allUsers.map(user => ({
+            ...user,
+            campaignCount: allCampaignsData.filter(c => c.managerId === user.id).length
+        }));
+        
         renderUsersList();
     } catch (error) {
         console.error('Error loading users:', error);
@@ -802,9 +814,6 @@ function renderUsersList() {
     }
     
     usersList.innerHTML = allUsers.map(user => {
-        // Count how many campaigns this user has
-        const userCampaignsCount = campaigns.filter(c => c.managerId === user.id).length;
-        
         return `
             <div class="user-card" data-user-id="${user.id}">
                 <div class="user-card-avatar">
@@ -814,7 +823,7 @@ function renderUsersList() {
                     <h3>${escapeHtml(user.displayName || 'משתמש')}</h3>
                     <p>${escapeHtml(user.email)}</p>
                     <div class="user-card-stats">
-                        <span class="stat-badge">📊 ${userCampaignsCount} הגרלות</span>
+                        <span class="stat-badge">📊 ${user.campaignCount || 0} הגרלות</span>
                     </div>
                 </div>
                 <div class="user-card-date">
@@ -878,7 +887,7 @@ function renderCampaignsList(showingAll = false) {
                         <span class="campaign-stat-label">צפיות</span>
                     </div>
                     <div class="campaign-stat">
-                        <span class="campaign-stat-value">--</span>
+                        <span class="campaign-stat-value">${campaign.leadsCount || 0}</span>
                         <span class="campaign-stat-label">נרשמים</span>
                     </div>
                 </div>
