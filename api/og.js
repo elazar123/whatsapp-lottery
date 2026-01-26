@@ -56,8 +56,9 @@ export default async function handler(req, res) {
         const shareImageUrl = fields.shareImageUrl?.stringValue || '';
         const shareVideoUrl = fields.shareVideoUrl?.stringValue || '';
         
-        // Use share image/video if available, otherwise use banner
-        const ogImage = shareImageUrl || shareVideoUrl || bannerUrl;
+        // Use share image if available, otherwise banner, otherwise default
+        // For video, we'll use it separately in og:video tag
+        const ogImage = shareImageUrl || bannerUrl || defaultImage;
         
         // Return HTML with proper meta tags
         const html = `<!DOCTYPE html>
@@ -76,7 +77,9 @@ export default async function handler(req, res) {
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     ${shareVideoUrl ? `<meta property="og:video" content="${shareVideoUrl}">
-    <meta property="og:video:type" content="video/mp4">` : ''}
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="1200">
+    <meta property="og:video:height" content="630">` : ''}
     <meta property="og:url" content="${pageUrl}">
     <meta property="og:locale" content="he_IL">
     <meta property="og:site_name" content="WhatsApp Lottery">

@@ -225,14 +225,26 @@ function populateCampaignContent(campaign) {
     
     // Show video if exists (priority over banner)
     if (campaign.shareVideoUrl) {
+        console.log('🎥 Found video URL:', campaign.shareVideoUrl);
         const videoContainer = document.getElementById('campaign-video');
         const videoPlayer = document.getElementById('campaign-video-player');
         const videoSource = document.getElementById('campaign-video-source');
+        
         if (videoContainer && videoPlayer && videoSource) {
+            console.log('✅ Video elements found, setting source...');
             videoSource.src = campaign.shareVideoUrl;
             videoPlayer.load(); // Reload video with new source
             videoContainer.classList.remove('hidden');
+            console.log('✅ Video container shown');
+        } else {
+            console.error('❌ Video elements not found:', {
+                videoContainer: !!videoContainer,
+                videoPlayer: !!videoPlayer,
+                videoSource: !!videoSource
+            });
         }
+    } else {
+        console.log('ℹ️ No video URL found in campaign');
     }
     // Show banner if exists and no video
     else if (campaign.bannerUrl) {
@@ -248,8 +260,15 @@ function populateCampaignContent(campaign) {
     // Update page title
     document.title = campaign.title + ' | הגרלה';
     
-    // Update meta tags for social sharing
+    // Update meta tags for social sharing (must be called after content is populated)
     updateMetaTags(campaign);
+    
+    console.log('📋 Meta tags updated for campaign:', {
+        title: campaign.title,
+        hasShareImage: !!campaign.shareImageUrl,
+        hasShareVideo: !!campaign.shareVideoUrl,
+        hasBanner: !!campaign.bannerUrl
+    });
 }
 
 /**
@@ -260,9 +279,9 @@ function updateMetaTags(campaign) {
     const title = campaign.title;
     const description = campaign.description || 'הירשמו להגרלה וזכו בפרסים מדהימים!';
     
-    // Use uploaded image or a professional default lottery image
+    // Use share image if available, otherwise banner, otherwise default
     const defaultImage = 'https://images.unsplash.com/photo-1596742572445-d93531c099d5?q=80&w=1200&h=630&auto=format&fit=crop';
-    const imageUrl = campaign.bannerUrl || defaultImage;
+    const imageUrl = campaign.shareImageUrl || campaign.bannerUrl || defaultImage;
     const pageUrl = window.location.href;
     
     // Update standard meta
@@ -275,10 +294,18 @@ function updateMetaTags(campaign) {
     updateMetaTag('og-url', 'content', pageUrl);
     
     // Update video if available
-    const videoUrl = currentCampaign.shareVideoUrl || currentCampaign.bannerUrl;
+    const videoUrl = campaign.shareVideoUrl;
     if (videoUrl) {
         updateMetaTag('og-video', 'content', videoUrl);
         updateMetaTag('og-video-type', 'content', 'video/mp4');
+        updateMetaTag('og-video:width', 'content', '1200');
+        updateMetaTag('og-video:height', 'content', '630');
+    } else {
+        // Remove video tags if no video
+        const ogVideo = document.querySelector('meta[property="og:video"]');
+        const ogVideoType = document.querySelector('meta[property="og:video:type"]');
+        if (ogVideo) ogVideo.remove();
+        if (ogVideoType) ogVideoType.remove();
     }
     
     // Update Twitter
@@ -296,8 +323,15 @@ function updateMetaTags(campaign) {
  */
 function updateMetaTag(id, attr, value) {
     const el = document.getElementById(id);
-    if (el && value) {
-        el.setAttribute(attr, value);
+    if (el) {
+        if (value) {
+            el.setAttribute(attr, value);
+        } else {
+            // If no value, remove the attribute or set empty
+            el.removeAttribute(attr);
+        }
+    } else {
+        console.warn(`⚠️ Meta tag element not found: #${id}`);
     }
 }
 
