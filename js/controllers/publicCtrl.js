@@ -783,6 +783,21 @@ function showStep(step) {
     }
 }
 
+/**
+ * Format date for display
+ */
+function formatDate(timestamp) {
+    if (!timestamp) return '--';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString('he-IL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
 /* ==========================================================================
    Initialize on DOM Ready
    ========================================================================== */
