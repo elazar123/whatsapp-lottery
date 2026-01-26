@@ -5,6 +5,7 @@
 
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 import { getApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuthInstance } from '../config/firebase.js';
 
 let storage = null;
 
@@ -104,6 +105,12 @@ export async function uploadBase64Image(base64String, campaignId) {
  * @returns {Promise<string>} - Public URL of uploaded file
  */
 export async function uploadShareMedia(file, campaignId, type = 'image') {
+    // Check authentication first
+    const auth = getAuthInstance();
+    if (!auth.currentUser) {
+        throw new Error('User must be authenticated to upload files to Firebase Storage');
+    }
+    
     initStorage();
     
     // Generate unique filename
@@ -114,19 +121,31 @@ export async function uploadShareMedia(file, campaignId, type = 'image') {
     // Create reference
     const storageRef = ref(storage, filename);
     
-    // Upload file
-    const snapshot = await uploadBytes(storageRef, file, {
-        contentType: file.type,
-        customMetadata: {
-            uploadedAt: new Date().toISOString(),
-            type: type
+    try {
+        // Upload file
+        const snapshot = await uploadBytes(storageRef, file, {
+            contentType: file.type,
+            customMetadata: {
+                uploadedAt: new Date().toISOString(),
+                type: type
+            }
+        });
+        
+        // Get public URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        
+        return downloadURL;
+    } catch (error) {
+        console.error('Firebase Storage upload error:', error);
+        // Provide more helpful error message
+        if (error.code === 'storage/unauthorized') {
+            throw new Error('אין הרשאה להעלות קבצים. נא להתחבר מחדש.');
+        } else if (error.code === 'storage/canceled') {
+            throw new Error('ההעלאה בוטלה.');
+        } else {
+            throw new Error(`שגיאה בהעלאת הקובץ: ${error.message}`);
         }
-    });
-    
-    // Get public URL
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    
-    return downloadURL;
+    }
 }
 
 /**

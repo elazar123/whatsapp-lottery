@@ -20,7 +20,7 @@ import { ADMIN_CONFIG, isSuperAdmin } from '../config/admin.js';
 import { showSpinningWheel } from '../utils/spinningWheel.js';
 import { downloadMultipleContacts } from '../utils/vcfGenerator.js';
 import { uploadImage } from '../services/imageUpload.js';
-import { uploadShareMedia } from '../services/storage.js';
+import { uploadVideo } from '../services/videoUpload.js';
 
 // State
 let currentUser = null;
@@ -1120,9 +1120,6 @@ async function handleSaveCampaign() {
             }
         }
         
-        // Get campaign ID for uploads (use existing or generate temp)
-        const tempCampaignId = editingCampaignId || 'temp_' + Date.now();
-        
         // Upload share image if provided
         const shareImageFile = formData.get('shareImage');
         if (shareImageFile && shareImageFile.size > 0) {
@@ -1134,10 +1131,16 @@ async function handleSaveCampaign() {
             }
             saveBtn.textContent = 'מעלה תמונה לשיתוף...';
             try {
-                // Use Firebase Storage for share images
-                const imageUrl = await uploadShareMedia(shareImageFile, tempCampaignId, 'image');
-                campaignData.shareImageUrl = imageUrl;
-                console.log('Share image uploaded to Firebase Storage:', imageUrl);
+                // Convert file to base64 and upload to imgBB (works without CORS issues)
+                const reader = new FileReader();
+                const imageDataUrl = await new Promise((resolve, reject) => {
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(shareImageFile);
+                });
+                const uploadResult = await uploadImage(imageDataUrl);
+                campaignData.shareImageUrl = uploadResult.url;
+                console.log('Share image uploaded to imgBB:', uploadResult.url);
             } catch (uploadError) {
                 console.error('Error uploading share image:', uploadError);
                 alert('שגיאה בהעלאת התמונה לשיתוף. נסה שוב.');
@@ -1150,21 +1153,21 @@ async function handleSaveCampaign() {
         // Upload share video if provided
         const shareVideoFile = formData.get('shareVideo');
         if (shareVideoFile && shareVideoFile.size > 0) {
-            if (shareVideoFile.size > 16 * 1024 * 1024) {
-                alert('גודל הסרטון לשיתוף גדול מדי. מקסימום 16MB.');
+            if (shareVideoFile.size > 100 * 1024 * 1024) {
+                alert('גודל הסרטון לשיתוף גדול מדי. מקסימום 100MB.');
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'שמירה ופרסום';
                 return;
             }
             saveBtn.textContent = 'מעלה סרטון לשיתוף...';
             try {
-                // Use Firebase Storage for videos
-                const videoUrl = await uploadShareMedia(shareVideoFile, tempCampaignId, 'video');
-                campaignData.shareVideoUrl = videoUrl;
-                console.log('Share video uploaded to Firebase Storage:', videoUrl);
+                // Use Cloudinary for video uploads (free plan)
+                const uploadResult = await uploadVideo(shareVideoFile);
+                campaignData.shareVideoUrl = uploadResult.url;
+                console.log('Share video uploaded to Cloudinary:', uploadResult.url);
             } catch (uploadError) {
                 console.error('Error uploading share video:', uploadError);
-                alert('שגיאה בהעלאת הסרטון לשיתוף. נסה שוב.');
+                alert('שגיאה בהעלאת הסרטון לשיתוף: ' + (uploadError.message || 'נסה שוב'));
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'שמירה ופרסום';
                 return;
@@ -1184,6 +1187,7 @@ async function handleSaveCampaign() {
                     backgroundColor: campaignData.backgroundColor
                 }
             });
+            savedCampaignId = editingCampaignId;
         } else {
             // Create new
             savedCampaignId = await createCampaign(campaignData, currentUser.uid);
