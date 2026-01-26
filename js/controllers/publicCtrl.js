@@ -469,19 +469,34 @@ function handleSaveContact() {
  */
 async function urlToFile(url, filename) {
     try {
+        console.log('⬇️ Downloading file from:', url);
         const response = await fetch(url, {
             mode: 'cors',
-            credentials: 'omit'
+            credentials: 'omit',
+            cache: 'no-cache'
         });
         
         if (!response.ok) {
             throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
         }
         
+        const contentType = response.headers.get('content-type') || 'image/jpeg';
+        console.log('📦 Content-Type:', contentType);
+        
         const blob = await response.blob();
-        return new File([blob], filename, { type: blob.type });
+        console.log('📦 Blob size:', blob.size, 'bytes, type:', blob.type);
+        
+        const file = new File([blob], filename, { type: contentType });
+        console.log('✅ File created:', file.name, file.size, 'bytes, type:', file.type);
+        
+        return file;
     } catch (error) {
-        console.error('Error downloading file for sharing:', error);
+        console.error('❌ Error downloading file for sharing:', error);
+        console.error('Error details:', {
+            message: error.message,
+            name: error.name,
+            stack: error.stack
+        });
         // If CORS fails, we can't use Web Share API with files
         // Fall back to URL sharing only
         throw error;
@@ -529,7 +544,18 @@ async function handleShareWhatsapp() {
     const hasShareImage = currentCampaign.shareImageUrl;
     const hasShareVideo = currentCampaign.shareVideoUrl;
     const hasMedia = hasShareImage || hasShareVideo;
-    const canUseWebShare = navigator.share && navigator.canShare;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const canUseWebShare = navigator.share && navigator.canShare && isMobile;
+    
+    console.log('🔍 Share check:', {
+        hasShareImage,
+        hasShareVideo,
+        hasMedia,
+        isMobile,
+        canUseWebShare,
+        hasNavigatorShare: !!navigator.share,
+        hasNavigatorCanShare: !!navigator.canShare
+    });
     
     // 4. Try Web Share API with files (mobile browsers)
     if (canUseWebShare && hasMedia) {
@@ -540,17 +566,29 @@ async function handleShareWhatsapp() {
             // Only try if URLs are from imgBB or Cloudinary (CORS-friendly)
             if (hasShareImage) {
                 const imageUrl = currentCampaign.shareImageUrl;
-                // Check if URL is from imgBB (i.ibb.co) or other CORS-friendly services
-                if (imageUrl.includes('i.ibb.co') || imageUrl.includes('imgbb.com') || imageUrl.includes('cloudinary.com')) {
+                console.log('📸 Attempting to share image:', imageUrl);
+                
+                // Check if URL is from imgBB (various domains) or other CORS-friendly services
+                const isImgBB = imageUrl.includes('i.ibb.co') || 
+                              imageUrl.includes('ibb.co') || 
+                              imageUrl.includes('imgbb.com') ||
+                              imageUrl.includes('i.imgbb.com');
+                const isCloudinary = imageUrl.includes('cloudinary.com') || imageUrl.includes('res.cloudinary.com');
+                
+                if (isImgBB || isCloudinary) {
                     try {
+                        console.log('✅ Image URL is from CORS-friendly service, downloading...');
                         const imageExt = imageUrl.split('.').pop().split('?')[0] || 'jpg';
                         const imageFile = await urlToFile(imageUrl, `share_image.${imageExt}`);
+                        console.log('✅ Image downloaded successfully:', imageFile.name, imageFile.size, 'bytes');
                         files.push(imageFile);
                     } catch (error) {
-                        console.warn('Could not download image for sharing, will use URL only:', error);
+                        console.error('❌ Could not download image for sharing:', error);
+                        console.warn('Will use URL-only sharing (text + link)');
                     }
                 } else {
-                    console.warn('Image URL is not from a CORS-friendly service, skipping file download');
+                    console.warn('⚠️ Image URL is not from a CORS-friendly service:', imageUrl);
+                    console.warn('Supported services: imgBB (ibb.co, imgbb.com), Cloudinary');
                 }
             }
             
@@ -572,6 +610,7 @@ async function handleShareWhatsapp() {
             
             // Only proceed with Web Share API if we successfully downloaded files
             if (files.length > 0) {
+                console.log(`📤 Sharing ${files.length} file(s) with Web Share API`);
                 // Check if we can share these files
                 const shareData = {
                     text: shareText,
@@ -579,7 +618,9 @@ async function handleShareWhatsapp() {
                 };
                 
                 if (navigator.canShare(shareData)) {
+                    console.log('✅ Can share files, opening share dialog...');
                     await navigator.share(shareData);
+                    console.log('✅ Share completed');
                     
                     // Mark task as completed
                     tasksState.sharedWhatsapp = true;
@@ -590,16 +631,29 @@ async function handleShareWhatsapp() {
                         updateLeadTasks(currentCampaign.id, currentLeadId, { sharedWhatsapp: true });
                     }
                     return;
+                } else {
+                    console.warn('⚠️ navigator.canShare() returned false for files');
                 }
+            } else {
+                console.warn('⚠️ No files downloaded, falling back to URL-only sharing');
             }
         } catch (error) {
             // User cancelled or error occurred, fall back to URL method
-            console.log('Web Share API failed, falling back to URL method:', error);
+            console.error('❌ Web Share API failed:', error);
+            console.log('Falling back to URL method (text + link only, no files)');
+        }
+    } else {
+        console.log('ℹ️ Web Share API not available or not on mobile, using URL method');
+        if (hasMedia) {
+            console.warn('⚠️ Media files cannot be shared via WhatsApp URL API (wa.me/?text=...)');
+            console.warn('⚠️ Only text + link will be shared. For file sharing, use mobile device with Web Share API.');
         }
     }
     
     // 5. Fallback: Use traditional WhatsApp URL method (works on desktop and as fallback)
+    // Note: This only supports text, not files
     const whatsappUrl = generateCampaignShareUrl(shareTextTemplate, campaignLink);
+    console.log('📱 Opening WhatsApp with URL method:', whatsappUrl);
     openWhatsAppShare(whatsappUrl);
     
     // Mark task as completed
