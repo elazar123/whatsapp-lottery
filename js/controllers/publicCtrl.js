@@ -569,20 +569,11 @@ async function handleShareWhatsapp() {
     const currentOrigin = window.location.origin;
     const currentPath = window.location.pathname.replace('index.html', '');
     
-    // Check if we are on Vercel (to decide between short /l/ format and standard format)
-    const isVercel = window.location.hostname.includes('vercel.app');
-    
-    let rawCampaignLink;
-    if (isVercel) {
-        // Use the short format that triggers OG tags on Vercel
-        rawCampaignLink = `${currentOrigin}/l/${currentCampaign.id.substring(0, 6)}${currentLeadId ? `/${currentLeadId.substring(0, 6)}` : ''}`;
-    } else {
-        // Fallback for GitHub Pages or local testing
-        const url = new URL(currentOrigin + currentPath);
-        url.searchParams.set('c', currentCampaign.id);
-        if (currentLeadId) url.searchParams.set('ref', currentLeadId);
-        rawCampaignLink = url.toString();
-    }
+    // Always use GitHub Pages format (query parameters)
+    const url = new URL(currentOrigin + currentPath + 'index.html');
+    url.searchParams.set('c', currentCampaign.id);
+    if (currentLeadId) url.searchParams.set('ref', currentLeadId);
+    const rawCampaignLink = url.toString();
     
     // Shorten the URL
     const campaignLink = await shortenUrl(rawCampaignLink);

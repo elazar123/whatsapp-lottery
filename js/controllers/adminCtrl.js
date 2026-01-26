@@ -717,17 +717,11 @@ async function showDetailsView(campaignId) {
             : 0;
         document.getElementById('stat-conversion').textContent = `${conversion}%`;
         
-        // Campaign link - Dynamic detection
+        // Campaign link - Always use GitHub Pages format
         const currentOrigin = window.location.origin;
         const currentPath = window.location.pathname.replace('admin.html', '');
-        const isVercel = window.location.hostname.includes('vercel.app');
         
-        let campaignLink;
-        if (isVercel) {
-            campaignLink = `${currentOrigin}/l/${campaignId.substring(0, 6)}${campaign.managerLeadId ? `/${campaign.managerLeadId.substring(0, 6)}` : ''}`;
-        } else {
-            campaignLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}${campaign.managerLeadId ? `&ref=${campaign.managerLeadId}` : ''}`;
-        }
+        const campaignLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}${campaign.managerLeadId ? `&ref=${campaign.managerLeadId}` : ''}`;
         
         document.getElementById('campaign-link').value = campaignLink;
         
@@ -1222,14 +1216,9 @@ async function handleSaveCampaign() {
         if (savedCampaignId) {
             const currentOrigin = window.location.origin;
             const currentPath = window.location.pathname.replace('admin.html', '');
-            const isVercel = window.location.hostname.includes('vercel.app');
             
-            let campaignLink;
-            if (isVercel) {
-                campaignLink = `${currentOrigin}/l/${savedCampaignId.substring(0, 6)}`;
-            } else {
-                campaignLink = `${currentOrigin}${currentPath}index.html?c=${savedCampaignId}`;
-            }
+            // Always use GitHub Pages format
+            const campaignLink = `${currentOrigin}${currentPath}index.html?c=${savedCampaignId}`;
             
             const successLinkInput = document.getElementById('success-campaign-link');
             if (successLinkInput) successLinkInput.value = campaignLink;
@@ -1544,16 +1533,10 @@ function renderLeadsTable(leads) {
     // Referral link - Dynamic detection
     const currentOrigin = window.location.origin;
     const currentPath = window.location.pathname.replace('admin.html', '');
-    const isVercel = window.location.hostname.includes('vercel.app');
     
     tbody.innerHTML = leads.map((lead, index) => {
-        // Generate unique referral link for this lead
-        let referralLink;
-        if (isVercel) {
-            referralLink = `${currentOrigin}/l/${campaignId.substring(0, 6)}/${lead.id.substring(0, 6)}`;
-        } else {
-            referralLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}&ref=${lead.id}`;
-        }
+        // Generate unique referral link for this lead - Always use GitHub Pages format
+        const referralLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}&ref=${lead.id}`;
         
         return `
             <tr>
