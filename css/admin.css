@@ -92,6 +92,17 @@
     color: var(--text-muted);
 }
 
+.lead-name-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.lead-email {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
 /* Terms Modal Styles */
 .terms-content h4 {
     margin-top: 25px;

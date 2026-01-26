@@ -68,6 +68,8 @@ function cacheElements() {
     elements.campaignTitle = document.getElementById('campaign-title');
     elements.campaignDescription = document.getElementById('campaign-description');
     elements.registrationForm = document.getElementById('registration-form');
+    elements.groupEmail = document.getElementById('group-email');
+    elements.inputEmail = document.getElementById('email');
     elements.stepRegistration = document.getElementById('step-registration');
     elements.stepSuccess = document.getElementById('step-success');
     elements.btnSaveContact = document.getElementById('btn-save-contact');
@@ -223,6 +225,15 @@ function populateCampaignContent(campaign) {
     
     if (elements.campaignDescription) {
         elements.campaignDescription.textContent = campaign.description || '';
+    }
+    
+    // Show/hide email field
+    if (campaign.collectEmail && elements.groupEmail) {
+        elements.groupEmail.classList.remove('hidden');
+        if (elements.inputEmail) elements.inputEmail.required = true;
+    } else if (elements.groupEmail) {
+        elements.groupEmail.classList.add('hidden');
+        if (elements.inputEmail) elements.inputEmail.required = false;
     }
     
     // Show banner if exists
@@ -429,6 +440,15 @@ function showCampaignTerms() {
    Registration Flow
    ========================================================================== */
 
+    elements.btnConfirmConsent?.addEventListener('click', () => {
+        elements.consentModal?.classList.add('hidden');
+        completeRegistration();
+    });
+}
+
+// Global variable to store pending registration data
+let pendingRegistration = null;
+
 /**
  * Handle registration form submission
  * @param {Event} e 
@@ -439,18 +459,38 @@ async function handleRegistration(e) {
     const formData = new FormData(e.target);
     const fullName = formData.get('fullName')?.trim();
     const phone = normalizePhone(formData.get('phone')?.trim());
+    const email = formData.get('email')?.trim();
     
-    if (!fullName || !phone) {
+    if (!fullName || !phone || (currentCampaign.collectEmail && !email)) {
         alert('אנא מלאו את כל השדות');
         return;
     }
     
-    // Validate phone
     if (!isValidPhone(phone)) {
         alert('אנא הזינו מספר טלפון תקין');
         return;
     }
+
+    // Store data for completion after consent
+    pendingRegistration = { fullName, phone, email };
+
+    // Update consent modal title with campaign name
+    if (elements.consentTitle && currentCampaign) {
+        elements.consentTitle.textContent = `ברוכים הבאים להגרלת ${currentCampaign.title}!`;
+    }
+
+    // Show consent modal
+    elements.consentModal?.classList.remove('hidden');
+}
+
+/**
+ * Complete the registration process after legal consent
+ */
+async function completeRegistration() {
+    if (!pendingRegistration || !currentCampaign) return;
     
+    const { fullName, phone, email } = pendingRegistration;
+
     try {
         // Check if already registered
         const existingLead = await findLeadByPhone(currentCampaign.id, phone);
@@ -458,41 +498,34 @@ async function handleRegistration(e) {
         if (existingLead) {
             currentLeadId = existingLead.id;
             tasksState = existingLead.tasksCompleted || { savedContact: false, sharedWhatsapp: false };
-            
-            // Update UI based on existing tasks
             updateTasksUI();
-            
-            // If lead already exists, go straight to success
             showStep('success');
             loadAndShowLeaderboard();
             return;
         }
         
-        // Get referrer from URL (if someone shared this link)
         const referredBy = getReferrerFromUrl();
         
-        // Save new lead (with referral info for ticket system)
+        // Save new lead with consent info
         currentLeadId = await saveLead(currentCampaign.id, { 
             fullName, 
             phone,
-            referredBy 
+            email: email || '',
+            referredBy,
+            confirmedLegalTerms: true,
+            legalConsentAt: new Date().toISOString()
         });
         
-        // Show success step immediately
         showStep('success');
-        
-        // Launch confetti celebration!
         launchConfetti();
-        
-        // Load and show leaderboard
         loadAndShowLeaderboard();
-        
-        // Show immediate social proof
         showSocialProof(fullName.split(' ')[0]);
         
     } catch (error) {
         console.error('Error registering:', error);
-        alert('אירעה שגיאה בהרשמה: ' + (error.message || 'נסו שוב.'));
+        alert('אירעה שגיאה בהרשמה. נסו שוב.');
+    } finally {
+        pendingRegistration = null;
     }
 }
 

@@ -990,6 +990,8 @@ async function handleSaveCampaign() {
         prizeValue: formData.get('prizeValue') || '',
         customTerms: formData.get('customTerms') || '',
         managerName: currentUser.displayName,
+        // Registration Settings
+        collectEmail: document.getElementById('collect-email-toggle')?.checked || false,
         // הגדרות הגרלה
         lotteryMode: formData.get('lotteryMode') || 'manual',
         maxEntriesPerUser: parseInt(formData.get('maxEntriesPerUser')) || 1,
@@ -1104,6 +1106,10 @@ function populateForm(campaign) {
     document.getElementById('inspector-name').value = campaign.inspectorName || '';
     document.getElementById('prize-value').value = campaign.prizeValue || '';
     document.getElementById('custom-terms').value = campaign.customTerms || '';
+    
+    // Registration settings
+    const collectEmailToggle = document.getElementById('collect-email-toggle');
+    if (collectEmailToggle) collectEmailToggle.checked = !!campaign.collectEmail;
 
     // Handle date
     if (campaign.endDate) {
@@ -1356,7 +1362,12 @@ function renderLeadsTable(leads) {
         return `
             <tr>
                 <td>${index + 1}</td>
-                <td>${escapeHtml(lead.fullName)}</td>
+                <td>
+                    <div class="lead-name-cell">
+                        <strong>${escapeHtml(lead.fullName)}</strong>
+                        ${lead.email ? `<small class="lead-email">${escapeHtml(lead.email)}</small>` : ''}
+                    </div>
+                </td>
                 <td dir="ltr">${escapeHtml(lead.phone)}</td>
                 <td>${formatDate(lead.joinedAt)}</td>
                 <td><span class="ticket-badge">🎫 ${lead.tickets || 1}</span></td>
@@ -1424,9 +1435,10 @@ async function handleExportLeads() {
         }
         
         // Generate CSV
-        const headers = ['שם מלא', 'טלפון', 'תאריך הצטרפות', 'שמר איש קשר', 'שיתף'];
+        const headers = ['שם מלא', 'אימייל', 'טלפון', 'תאריך הצטרפות', 'שמר איש קשר', 'שיתף'];
         const rows = leads.map(lead => [
             lead.fullName,
+            lead.email || '',
             lead.phone,
             formatDate(lead.joinedAt),
             lead.tasksCompleted?.savedContact ? 'כן' : 'לא',

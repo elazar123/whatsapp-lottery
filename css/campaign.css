@@ -995,6 +995,86 @@
 }
 
 /* --------------------------------------------------------------------------
+   Consent Modal Styling
+   -------------------------------------------------------------------------- */
+.consent-modal-content {
+    max-width: 500px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    border-radius: var(--border-radius-2xl) !important;
+}
+
+.consent-header {
+    background: linear-gradient(135deg, var(--campaign-primary) 0%, var(--campaign-primary-hover) 100%);
+    color: white;
+    padding: var(--space-xl);
+    text-align: center;
+}
+
+.consent-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-sm);
+}
+
+.consent-header h2 {
+    font-size: 20px;
+    margin: 0;
+    color: white;
+}
+
+.consent-body {
+    padding: var(--space-xl);
+    text-align: right;
+}
+
+.consent-intro {
+    font-weight: 700;
+    margin-bottom: var(--space-lg);
+    color: var(--text-primary);
+}
+
+.consent-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.consent-item {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-start;
+    padding: var(--space-sm);
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+}
+
+.check-v {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.consent-item p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.consent-item a {
+    color: var(--campaign-primary);
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.consent-footer {
+    padding: var(--space-lg) var(--space-xl) var(--space-xl);
+}
+
+.consent-footer .btn {
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
    Responsive Adjustments
    -------------------------------------------------------------------------- */
 @media (min-width: 768px) {
