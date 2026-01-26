@@ -1464,3 +1464,71 @@
 .guide-tip strong {
     color: #92400e;
 }
+
+/* --------------------------------------------------------------------------
+   Save Success Modal
+   -------------------------------------------------------------------------- */
+.success-modal {
+    padding: var(--space-2xl);
+    text-align: center;
+    max-width: 500px;
+}
+
+.success-icon {
+    font-size: 64px;
+    margin-bottom: var(--space-md);
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.share-box {
+    background: var(--bg-color);
+    padding: var(--space-lg);
+    border-radius: var(--border-radius-lg);
+    margin: var(--space-xl) 0;
+    text-align: right;
+}
+
+.share-box label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--text-secondary);
+}
+
+.copy-input-group {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.copy-input-group input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: monospace;
+    font-size: 14px;
+    background: white;
+}
+
+.share-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.btn-whatsapp {
+    background: #25D366;
+    color: white;
+    border: none;
+}
+
+.btn-whatsapp:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+}

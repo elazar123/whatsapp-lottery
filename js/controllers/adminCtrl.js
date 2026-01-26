@@ -161,9 +161,54 @@ function setupEventListeners() {
     document.querySelectorAll('.guide-tab').forEach(tab => {
         tab.addEventListener('click', (e) => switchGuideTab(e.target.dataset.tab));
     });
+
+    // Save Success Modal
+    document.getElementById('btn-close-success-modal')?.addEventListener('click', () => {
+        document.getElementById('save-success-modal')?.classList.add('hidden');
+        showCampaignsView();
+    });
+    document.getElementById('btn-copy-success-link')?.addEventListener('click', handleCopySuccessLink);
+    document.getElementById('btn-share-admin-whatsapp')?.addEventListener('click', handleAdminWhatsAppShare);
     
     // Image upload
     setupImageUpload();
+}
+
+/**
+ * Handle copy link in success modal
+ */
+function handleCopySuccessLink() {
+    const linkInput = document.getElementById('success-campaign-link');
+    if (!linkInput) return;
+    
+    linkInput.select();
+    document.execCommand('copy');
+    
+    const btn = document.getElementById('btn-copy-success-link');
+    const originalText = btn.textContent;
+    btn.textContent = '✓ הועתק';
+    setTimeout(() => btn.textContent = originalText, 2000);
+}
+
+/**
+ * Handle WhatsApp share from admin success modal
+ */
+function handleAdminWhatsAppShare() {
+    const link = document.getElementById('success-campaign-link')?.value;
+    const shareText = document.getElementById('share-text')?.value || 'בואו להשתתף בהגרלה!';
+    
+    if (!link) return;
+
+    // Use {{link}} placeholder if present, otherwise append to end
+    let finalMsg = shareText;
+    if (finalMsg.includes('{{link}}')) {
+        finalMsg = finalMsg.replace('{{link}}', link);
+    } else {
+        finalMsg = finalMsg + '\n\n' + link;
+    }
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(finalMsg)}`;
+    window.open(whatsappUrl, '_blank');
 }
 
 /**
@@ -1016,6 +1061,8 @@ async function handleSaveCampaign() {
         
         saveBtn.textContent = 'שומר...';
         
+        let savedCampaignId = editingCampaignId;
+        
         if (editingCampaignId) {
             // Update existing
             await updateCampaign(editingCampaignId, {
@@ -1027,15 +1074,35 @@ async function handleSaveCampaign() {
             });
         } else {
             // Create new
-            await createCampaign(campaignData, currentUser.uid);
+            savedCampaignId = await createCampaign(campaignData, currentUser.uid);
             
             // שליחת התראה למנהל על הגרלה חדשה
             notifyNewCampaignCreated(campaignData, currentUser);
         }
         
-        // Refresh list and go back
+        // Refresh list and show success modal
         await loadCampaigns();
-        showCampaignsView();
+        
+        // Prepare success modal
+        if (savedCampaignId) {
+            const currentOrigin = window.location.origin;
+            const currentPath = window.location.pathname.replace('admin.html', '');
+            const isVercel = window.location.hostname.includes('vercel.app');
+            
+            let campaignLink;
+            if (isVercel) {
+                campaignLink = `${currentOrigin}/l/${savedCampaignId.substring(0, 6)}`;
+            } else {
+                campaignLink = `${currentOrigin}${currentPath}index.html?c=${savedCampaignId}`;
+            }
+            
+            const successLinkInput = document.getElementById('success-campaign-link');
+            if (successLinkInput) successLinkInput.value = campaignLink;
+            
+            document.getElementById('save-success-modal')?.classList.remove('hidden');
+        } else {
+            showCampaignsView();
+        }
         
     } catch (error) {
         console.error('Error saving campaign:', error);

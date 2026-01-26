@@ -78,19 +78,6 @@ function cacheElements() {
     elements.taskContact = document.getElementById('task-contact');
     elements.taskWhatsapp = document.getElementById('task-whatsapp');
     
-    // Terms Modal
-    elements.btnShowTerms = document.getElementById('btn-show-campaign-terms');
-    elements.termsModal = document.getElementById('campaign-terms-modal');
-    elements.termsBody = document.getElementById('campaign-terms-body');
-    elements.btnCloseTerms = document.getElementById('close-campaign-terms');
-    elements.btnCloseTermsOk = document.getElementById('btn-close-terms-ok');
-    
-    // Consent Modal
-    elements.consentModal = document.getElementById('consent-modal');
-    elements.btnConfirmConsent = document.getElementById('btn-confirm-consent');
-    elements.linkFullTerms = document.getElementById('link-full-terms');
-    elements.consentTitle = document.getElementById('consent-title');
-    
     // Countdown elements
     elements.days = document.getElementById('days');
     elements.hours = document.getElementById('hours');
@@ -355,94 +342,11 @@ function setupEventListeners() {
     elements.btnSaveContact?.addEventListener('click', handleSaveContact);
     elements.btnShareWhatsapp?.addEventListener('click', handleShareWhatsapp);
     elements.btnShareQuick?.addEventListener('click', handleShareWhatsapp);
-
-    // Terms Modal
-    elements.btnShowTerms?.addEventListener('click', (e) => {
-        e.preventDefault();
-        showCampaignTerms();
-    });
-
-    [elements.btnCloseTerms, elements.btnCloseTermsOk].forEach(btn => {
-        btn?.addEventListener('click', () => {
-            elements.termsModal?.classList.add('hidden');
-        });
-    });
-
-    // Consent Modal Logic
-    elements.linkFullTerms?.addEventListener('click', (e) => {
-        e.preventDefault();
-        showCampaignTerms();
-    });
-
-    elements.btnConfirmConsent?.addEventListener('click', () => {
-        elements.consentModal?.classList.add('hidden');
-        completeRegistration();
-    });
-}
-
-/**
- * Show the legal terms modal for the campaign
- */
-function showCampaignTerms() {
-    if (!currentCampaign || !elements.termsBody) return;
-
-    const startDate = formatDate(currentCampaign.createdAt || new Date());
-    const endDate = formatDate(currentCampaign.endDate);
-    
-    elements.termsBody.innerHTML = `
-        <h2 class="terms-title">תקנון הגרלה: ${escapeHtml(currentCampaign.title)}</h2>
-        <p class="terms-intro">הגרלה זו נערכת בהתאם להוראות ההיתר הכללי לעריכת הגרלות לפרסומת מסחרית לפי חוק העונשין, התשל"ז-1977.</p>
-        
-        <div class="terms-section">
-            <h3>1. הגדרות</h3>
-            <ul>
-                <li><strong>עורך ההגרלה:</strong> ${escapeHtml(currentCampaign.managerName || 'בעל העסק')}</li>
-                <li><strong>ההגרלה:</strong> ${escapeHtml(currentCampaign.title)} שמטרתה קידום מכירות.</li>
-            </ul>
-        </div>
-
-        <div class="terms-section">
-            <h3>2. תקופת ההגרלה</h3>
-            <p>ההגרלה תיערך בין תאריך ${startDate} לבין תאריך ${endDate}.</p>
-        </div>
-
-        <div class="terms-section">
-            <h3>3. הזכאות להשתתף</h3>
-            <p>ההשתתפות מותרת לכל אדם מעל גיל 18 אשר עמד בתנאי ההשתתפות. ההשתתפות אסורה על עורך ההגרלה ובני משפחתם.</p>
-        </div>
-
-        <div class="terms-section">
-            <h3>4. אופן ההשתתפות</h3>
-            <p>כדי להשתתף יש להירשם במערכת ולמסור פרטים נכונים. המערכת לא תהיה אחראית לתקלות טכניות המונעות את קליטת ההשתתפות.</p>
-        </div>
-
-        <div class="terms-section">
-            <h3>5. קביעת הזוכה</h3>
-            <p>הזוכה ייבחר באמצעות מערכת ממוחשבת המבוססת על אלגוריתם רנדומלי.</p>
-        </div>
-
-        <div class="terms-section">
-            <h3>6. הפרסים</h3>
-            <p>הפרס אינו ניתן להמרה למזומן.</p>
-        </div>
-
-        <div class="terms-section">
-            <h3>7. איתור הזוכה</h3>
-            <p>הודעה על הזכייה תישלח לזוכה בטלפון/וואטסאפ. על הזוכה לממש את הפרס תוך 14 יום.</p>
-        </div>
-
-        <p class="terms-footer">ט.ל.ח. כל הזכויות שמורות לריגר הפקות.</p>
-    `;
-
-    elements.termsModal?.classList.remove('hidden');
 }
 
 /* ==========================================================================
    Registration Flow
    ========================================================================== */
-
-// Global variable to store pending registration data
-let pendingRegistration = null;
 
 /**
  * Handle registration form submission
@@ -466,27 +370,13 @@ async function handleRegistration(e) {
         return;
     }
 
-    // Store data for completion after consent
-    pendingRegistration = { fullName, phone, email };
-
-    // Update consent modal title with campaign name
-    if (elements.consentTitle && currentCampaign) {
-        elements.consentTitle.textContent = `ברוכים הבאים להגרלת ${currentCampaign.title}!`;
-    }
-
-    // Show consent modal
-    elements.consentModal?.classList.remove('hidden');
-}
-
-/**
- * Complete the registration process after legal consent
- */
-async function completeRegistration() {
-    if (!pendingRegistration || !currentCampaign) return;
-    
-    const { fullName, phone, email } = pendingRegistration;
-
     try {
+        // Show loading state on button
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'נרשם...';
+
         // Check if already registered
         const existingLead = await findLeadByPhone(currentCampaign.id, phone);
         
@@ -496,19 +386,20 @@ async function completeRegistration() {
             updateTasksUI();
             showStep('success');
             loadAndShowLeaderboard();
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
             return;
         }
         
         const referredBy = getReferrerFromUrl();
         
-        // Save new lead with consent info
+        // Save new lead
         currentLeadId = await saveLead(currentCampaign.id, { 
             fullName, 
             phone,
             email: email || '',
             referredBy,
-            confirmedLegalTerms: true,
-            legalConsentAt: new Date().toISOString()
+            joinedAt: new Date().toISOString()
         });
         
         showStep('success');
@@ -519,8 +410,6 @@ async function completeRegistration() {
     } catch (error) {
         console.error('Error registering:', error);
         alert('אירעה שגיאה בהרשמה. נסו שוב.');
-    } finally {
-        pendingRegistration = null;
     }
 }
 
