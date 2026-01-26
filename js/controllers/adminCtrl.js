@@ -457,14 +457,40 @@ function handleAuthStateChange(user) {
         updateUserInfo(user);
         loadCampaigns();
         
-        // אם סופר אדמין - טען גם את רשימת המשתמשים והוסף תפריט
+        // נהל את תצוגת הסופר אדמין
         if (isSuperAdminUser) {
             loadAllUsers();
             showSuperAdminUI();
+        } else {
+            removeSuperAdminUI();
         }
     } else {
         // User is signed out
         showLoginScreen();
+        removeSuperAdminUI();
+    }
+}
+
+/**
+ * Remove super admin UI elements from sidebar and content
+ */
+function removeSuperAdminUI() {
+    // הסר תגיות "מנהל ראשי"
+    const userNameEl = document.getElementById('user-name');
+    if (userNameEl && currentUser) {
+        userNameEl.textContent = currentUser.displayName || 'משתמש';
+    }
+
+    // הסר פריטי תפריט של סופר אדמין
+    document.querySelector('[data-view="all-campaigns"]')?.remove();
+    document.querySelector('[data-view="users"]')?.remove();
+    
+    // הסר את מיכל המשתמשים
+    document.getElementById('view-users')?.remove();
+    
+    // אם המשתמש היה בתצוגה של סופר אדמין, החזר אותו לקמפיינים שלו
+    if (currentView === 'all-campaigns' || currentView === 'users') {
+        handleNavigation('campaigns');
     }
 }
 

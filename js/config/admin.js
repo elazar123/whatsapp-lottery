@@ -32,5 +32,6 @@ export const ADMIN_CONFIG = {
  * @returns {boolean}
  */
 export function isSuperAdmin(email) {
-    return email === ADMIN_CONFIG.superAdminEmail;
+    if (!email) return false;
+    return email.toLowerCase() === ADMIN_CONFIG.superAdminEmail.toLowerCase();
 }
