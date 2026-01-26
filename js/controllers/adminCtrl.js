@@ -985,6 +985,11 @@ async function handleSaveCampaign() {
         primaryColor: formData.get('primaryColor'),
         backgroundColor: formData.get('backgroundColor'),
         bannerUrl: bannerUrl, // Set initial value from input
+        // Legal & Terms
+        inspectorName: formData.get('inspectorName') || '',
+        prizeValue: formData.get('prizeValue') || '',
+        customTerms: formData.get('customTerms') || '',
+        managerName: currentUser.displayName,
         // הגדרות הגרלה
         lotteryMode: formData.get('lotteryMode') || 'manual',
         maxEntriesPerUser: parseInt(formData.get('maxEntriesPerUser')) || 1,
@@ -1095,6 +1100,11 @@ function populateForm(campaign) {
     document.getElementById('contact-phone').value = campaign.contactPhoneNumber || '';
     document.getElementById('share-text').value = campaign.whatsappShareText || '';
     
+    // Legal fields
+    document.getElementById('inspector-name').value = campaign.inspectorName || '';
+    document.getElementById('prize-value').value = campaign.prizeValue || '';
+    document.getElementById('custom-terms').value = campaign.customTerms || '';
+
     // Handle date
     if (campaign.endDate) {
         const date = campaign.endDate.toDate ? campaign.endDate.toDate() : new Date(campaign.endDate);
