@@ -206,11 +206,11 @@ main {
     z-index: 10;
 }
 
-/* Features Grid */
+/* Features Grid - Enhanced 3D Background */
 .features-grid-section {
     width: 100%;
     padding: 80px 5%;
-    background: white;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f0f9ff 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -218,19 +218,37 @@ main {
     overflow: hidden;
 }
 
-/* 3D background elements */
+/* Animated 3D background blobs */
 .features-grid-section::before, .features-grid-section::after {
     content: '';
     position: absolute;
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba(0, 173, 239, 0.04) 0%, transparent 70%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 173, 239, 0.08) 0%, rgba(0, 173, 239, 0.02) 50%, transparent 70%);
     border-radius: 50%;
     z-index: 0;
+    animation: floatBlob 20s ease-in-out infinite;
 }
 
-.features-grid-section::before { top: 5%; left: -100px; }
-.features-grid-section::after { bottom: 5%; right: -100px; }
+.features-grid-section::before { 
+    top: -150px; 
+    left: -150px; 
+    animation-duration: 25s;
+    background: radial-gradient(circle, rgba(0, 173, 239, 0.1) 0%, rgba(0, 173, 239, 0.03) 50%, transparent 70%);
+}
+
+.features-grid-section::after { 
+    bottom: -150px; 
+    right: -150px; 
+    animation-duration: 30s;
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.08) 0%, rgba(255, 140, 0, 0.02) 50%, transparent 70%);
+}
+
+@keyframes floatBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50px, -80px) scale(1.2); }
+    66% { transform: translate(-30px, 50px) scale(0.9); }
+}
 
 .section-header {
     text-align: center;
@@ -352,59 +370,6 @@ main {
 
 .home-card .btn { width: 100%; padding: 15px; font-size: 1rem; font-weight: 900; border-radius: 12px; transform: translateZ(35px); }
 
-/* Testimonial Section */
-.testimonial-section {
-    width: 100%;
-    padding: 100px 10%;
-    background: linear-gradient(135deg, var(--bg-green), #00c853);
-    color: white;
-    text-align: center;
-    position: relative;
-}
-
-.testimonial-content { max-width: 800px; margin: 0 auto; }
-.quote-icon { width: 50px; height: 50px; margin-bottom: 25px; opacity: 0.3; }
-.testimonial-section blockquote { font-size: clamp(1.15rem, 2.5vw, 1.8rem); line-height: 1.4; font-weight: 700; margin-bottom: 25px; }
-.testimonial-section cite { font-size: 1.15rem; font-weight: 400; opacity: 0.85; }
-
-/* Contact Form Section */
-.contact-section {
-    padding: 100px 5%;
-    width: 100%;
-    max-width: 750px;
-    margin: 0 auto;
-}
-
-.contact-form {
-    background: white;
-    padding: 50px;
-    border-radius: 32px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.contact-form input, .contact-form textarea {
-    padding: 15px;
-    border-radius: 12px;
-    border: 2px solid #e2e8f0;
-    font-size: 1rem;
-    background: #f8fafc;
-    transition: all 0.2s ease;
-}
-
-.contact-form input:focus { border-color: var(--primary-color); background: white; box-shadow: 0 0 0 4px rgba(0, 173, 239, 0.06); outline: none; }
-
-.btn-submit-contact {
-    background: var(--primary-color);
-    color: white;
-    padding: 18px;
-    border-radius: 12px;
-    font-weight: 900;
-    font-size: 1.1rem;
-    box-shadow: 0 10px 20px rgba(0, 173, 239, 0.2);
-}
 
 /* --------------------------------------------------------------------------
    Campaign Page Styles (Public)

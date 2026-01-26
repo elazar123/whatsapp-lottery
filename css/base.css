@@ -63,8 +63,9 @@
     --space-2xl: 48px;
     --space-3xl: 64px;
     
-    /* Typography */
-    --font-family: 'Rubik', 'Assistant', 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* Typography - Almoni Tzar Professional Fonts */
+    --font-family: 'Almoni Tzar', 'Rubik', 'Assistant', 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-family-heading: 'Almoni Tzar', 'Rubik', 'Assistant', sans-serif;
     --font-size-xs: 0.75rem;    /* 12px */
     --font-size-sm: 0.875rem;   /* 14px */
     --font-size-base: 1rem;     /* 16px */
@@ -94,6 +95,25 @@
     --z-sticky: 200;
     --z-modal: 300;
     --z-toast: 400;
+}
+
+/* --------------------------------------------------------------------------
+   Custom Fonts - Almoni Tzar
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Almoni Tzar';
+    src: url('../fonts/almoni-light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almoni Tzar';
+    src: url('../fonts/almoni-bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* --------------------------------------------------------------------------
@@ -198,7 +218,8 @@ table {
    Typography
    -------------------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6 {
-    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family-heading);
+    font-weight: 700;
     line-height: var(--line-height-tight);
     color: var(--text-primary);
 }
