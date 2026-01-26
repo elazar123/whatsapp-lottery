@@ -20,7 +20,7 @@ import { ADMIN_CONFIG, isSuperAdmin } from '../config/admin.js';
 import { showSpinningWheel } from '../utils/spinningWheel.js';
 import { downloadMultipleContacts } from '../utils/vcfGenerator.js';
 import { uploadImage } from '../services/imageUpload.js';
-import { uploadVideo } from '../services/videoUpload.js';
+import { uploadVideo, uploadImage as uploadImageToCloud } from '../services/cloudService.js';
 
 // State
 let currentUser = null;
@@ -1173,12 +1173,20 @@ async function handleSaveCampaign() {
             saveBtn.textContent = 'מעלה סרטון לשיתוף...';
             try {
                 // Use Cloudinary for video uploads (free plan)
-                const uploadResult = await uploadVideo(shareVideoFile);
-                campaignData.shareVideoUrl = uploadResult.url;
-                console.log('Share video uploaded to Cloudinary:', uploadResult.url);
+                // Note: uploadVideo returns a string URL directly, not an object
+                const videoUrl = await uploadVideo(shareVideoFile);
+                campaignData.shareVideoUrl = videoUrl;
+                console.log('✅ Share video uploaded to Cloudinary:', videoUrl);
             } catch (uploadError) {
-                console.error('Error uploading share video:', uploadError);
-                alert('שגיאה בהעלאת הסרטון לשיתוף: ' + (uploadError.message || 'נסה שוב'));
+                console.error('❌ Error uploading share video:', uploadError);
+                const errorMessage = uploadError.message || 'שגיאה לא ידועה';
+                
+                // Check if it's a configuration error
+                if (errorMessage.includes('Cloudinary לא מוגדר')) {
+                    alert(`⚠️ Cloudinary לא מוגדר\n\nנא להגדיר את ה-Cloud Name וה-Upload Preset בקובץ:\njs/services/cloudService.js\n\nשורות 11-12`);
+                } else {
+                    alert(`שגיאה בהעלאת הסרטון לשיתוף: ${errorMessage}\n\nנסה שוב או בדוק את החיבור לאינטרנט.`);
+                }
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'שמירה ופרסום';
                 return;
