@@ -1448,6 +1448,9 @@ function generatePreviewHtml(title, description, primaryColor, bgColor, bannerUr
                 .desc {
                     color: #64748b;
                     font-size: 14px;
+                    white-space: pre-wrap; /* Preserve line breaks and spaces */
+                    word-wrap: break-word; /* Break long words if needed */
+                    line-height: 1.6;
                 }
                 .card {
                     background: white;
@@ -1496,7 +1499,7 @@ function generatePreviewHtml(title, description, primaryColor, bgColor, bannerUr
             ${bannerUrl ? `<div class="banner"><img src="${bannerUrl}" alt="באנר"></div>` : ''}
             <div class="header">
                 <h1 class="title">${escapeHtml(title)}</h1>
-                ${description ? `<p class="desc">${escapeHtml(description)}</p>` : ''}
+                ${description ? `<p class="desc">${escapeHtml(description).replace(/\n/g, '<br>')}</p>` : ''}
             </div>
             <div class="card">
                 <h2 class="card-title">הירשמו להגרלה</h2>

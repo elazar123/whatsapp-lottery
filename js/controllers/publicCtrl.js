@@ -211,7 +211,10 @@ function populateCampaignContent(campaign) {
     }
     
     if (elements.campaignDescription) {
-        elements.campaignDescription.textContent = campaign.description || '';
+        // Preserve line breaks and spacing from the textarea
+        const description = campaign.description || '';
+        // textContent with white-space: pre-wrap will preserve line breaks
+        elements.campaignDescription.textContent = description;
     }
     
     // Show/hide email field

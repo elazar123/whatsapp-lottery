@@ -16,7 +16,7 @@
     },
     {
       "collectionGroup": "campaigns",
-      "queryScope": "COLLECTION",
+      "queryScope": "COLLECTION",האם 
       "fields": [
         {
           "fieldPath": "isActive",

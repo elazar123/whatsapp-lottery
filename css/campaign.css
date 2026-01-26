@@ -424,7 +424,13 @@ main {
    -------------------------------------------------------------------------- */
 .campaign-header { text-align: center; padding: 50px 20px; max-width: 800px; }
 .campaign-title { font-size: 2.6rem; font-weight: 900; color: var(--campaign-primary); margin-bottom: 15px; }
-.campaign-description { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.4; }
+.campaign-description { 
+    font-size: 1.15rem; 
+    color: var(--text-secondary); 
+    line-height: 1.6; 
+    white-space: pre-wrap; /* Preserve line breaks and spaces */
+    word-wrap: break-word; /* Break long words if needed */
+}
 
 /* Video Player */
 .campaign-video {
