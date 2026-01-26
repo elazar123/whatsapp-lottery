@@ -51,7 +51,8 @@ export default async function handler(req, res) {
         // Extract campaign data
         const title = fields.title?.stringValue || 'הגרלה מיוחדת';
         const description = fields.description?.stringValue || 'הירשמו להגרלה וזכו בפרסים מדהימים!';
-        const bannerUrl = fields.bannerUrl?.stringValue || '';
+        const defaultImage = 'https://images.unsplash.com/photo-1596742572445-d93531c099d5?q=80&w=1200&h=630&auto=format&fit=crop';
+        const bannerUrl = fields.bannerUrl?.stringValue || defaultImage;
         
         // Return HTML with proper meta tags
         const html = `<!DOCTYPE html>

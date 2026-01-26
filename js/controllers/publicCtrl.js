@@ -72,6 +72,7 @@ function cacheElements() {
     elements.stepSuccess = document.getElementById('step-success');
     elements.btnSaveContact = document.getElementById('btn-save-contact');
     elements.btnShareWhatsapp = document.getElementById('btn-share-whatsapp');
+    elements.btnShareQuick = document.getElementById('btn-share-quick');
     elements.taskContact = document.getElementById('task-contact');
     elements.taskWhatsapp = document.getElementById('task-whatsapp');
     
@@ -236,7 +237,10 @@ function populateCampaignContent(campaign) {
 function updateMetaTags(campaign) {
     const title = campaign.title;
     const description = campaign.description || 'הירשמו להגרלה וזכו בפרסים מדהימים!';
-    const imageUrl = campaign.bannerUrl || '';
+    
+    // Use uploaded image or a professional default lottery image
+    const defaultImage = 'https://images.unsplash.com/photo-1596742572445-d93531c099d5?q=80&w=1200&h=630&auto=format&fit=crop';
+    const imageUrl = campaign.bannerUrl || defaultImage;
     const pageUrl = window.location.href;
     
     // Update standard meta
@@ -326,6 +330,7 @@ function setupEventListeners() {
     // Task buttons
     elements.btnSaveContact?.addEventListener('click', handleSaveContact);
     elements.btnShareWhatsapp?.addEventListener('click', handleShareWhatsapp);
+    elements.btnShareQuick?.addEventListener('click', handleShareWhatsapp);
 }
 
 /* ==========================================================================

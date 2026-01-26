@@ -984,7 +984,7 @@ async function handleSaveCampaign() {
         whatsappShareText: formData.get('whatsappShareText'),
         primaryColor: formData.get('primaryColor'),
         backgroundColor: formData.get('backgroundColor'),
-        bannerUrl: '', // Will be set after upload
+        bannerUrl: bannerUrl, // Set initial value from input
         // הגדרות הגרלה
         lotteryMode: formData.get('lotteryMode') || 'manual',
         maxEntriesPerUser: parseInt(formData.get('maxEntriesPerUser')) || 1,
@@ -994,10 +994,10 @@ async function handleSaveCampaign() {
     try {
         const saveBtn = document.getElementById('btn-save-campaign');
         saveBtn.disabled = true;
-        saveBtn.textContent = 'מעלה תמונה...';
         
-        // Upload banner image to imgBB if exists
+        // Upload banner image to imgBB if it's a new base64 image
         if (bannerUrl && bannerUrl.startsWith('data:')) {
+            saveBtn.textContent = 'מעלה תמונה...';
             try {
                 const uploadResult = await uploadImage(bannerUrl);
                 campaignData.bannerUrl = uploadResult.url;
@@ -1005,11 +1005,10 @@ async function handleSaveCampaign() {
             } catch (uploadError) {
                 console.error('Error uploading image:', uploadError);
                 alert('שגיאה בהעלאת התמונה. נסה שוב.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'שמירה ופרסום';
                 return;
             }
-        } else if (bannerUrl && bannerUrl.startsWith('http')) {
-            // Keep existing URL if it's already a hosted image
-            campaignData.bannerUrl = bannerUrl;
         }
         
         saveBtn.textContent = 'שומר...';
@@ -1111,6 +1110,33 @@ function populateForm(campaign) {
     
     document.querySelector('#primary-color').closest('.color-picker-wrapper').querySelector('.color-value').textContent = primaryColor;
     document.querySelector('#bg-color').closest('.color-picker-wrapper').querySelector('.color-value').textContent = bgColor;
+
+    // Handle banner image
+    const preview = document.getElementById('banner-preview');
+    const placeholder = document.getElementById('upload-placeholder');
+    const removeBtn = document.getElementById('btn-remove-banner');
+    const uploadArea = document.getElementById('banner-upload-area');
+    const urlInput = document.getElementById('banner-url');
+
+    if (campaign.bannerUrl) {
+        if (preview) {
+            preview.src = campaign.bannerUrl;
+            preview.classList.remove('hidden');
+        }
+        if (placeholder) placeholder.classList.add('hidden');
+        if (removeBtn) removeBtn.classList.remove('hidden');
+        if (uploadArea) uploadArea.classList.add('has-image');
+        if (urlInput) urlInput.value = campaign.bannerUrl;
+    } else {
+        if (preview) {
+            preview.src = '';
+            preview.classList.add('hidden');
+        }
+        if (placeholder) placeholder.classList.remove('hidden');
+        if (removeBtn) removeBtn.classList.add('hidden');
+        if (uploadArea) uploadArea.classList.remove('has-image');
+        if (urlInput) urlInput.value = '';
+    }
 }
 
 /**
