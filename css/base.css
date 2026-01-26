@@ -137,7 +137,7 @@ html {
 body {
     font-family: var(--font-family);
     font-size: var(--font-size-base);
-    font-weight: var(--font-weight-normal);
+    font-weight: 300; /* Use Almoni Light for body text */
     line-height: var(--line-height-normal);
     color: var(--text-primary);
     background-color: var(--bg-color);
@@ -219,9 +219,10 @@ table {
    -------------------------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-family-heading);
-    font-weight: 700;
+    font-weight: 700; /* Use Almoni Bold for headings */
     line-height: var(--line-height-tight);
     color: var(--text-primary);
+    font-feature-settings: normal;
 }
 
 h1 {

@@ -80,7 +80,8 @@ main {
 }
 
 .nav-logo span {
-    font-weight: 900;
+    font-family: var(--font-family-heading);
+    font-weight: 700;
     font-size: 1.15rem;
     color: var(--text-primary);
     letter-spacing: -0.4px;
@@ -163,8 +164,9 @@ main {
 }
 
 .hero-content h1 {
+    font-family: var(--font-family-heading);
     font-size: clamp(1.8rem, 3.5vw, 3.2rem);
-    font-weight: 900;
+    font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 15px;
     line-height: 1.1;
@@ -258,7 +260,12 @@ main {
     z-index: 1;
 }
 
-.section-header h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 900; margin-bottom: 12px; }
+.section-header h2 { 
+    font-family: var(--font-family-heading);
+    font-size: clamp(1.6rem, 3vw, 2.4rem); 
+    font-weight: 700; 
+    margin-bottom: 12px; 
+}
 .section-header p { font-size: 1rem; color: var(--text-secondary); }
 
 .creative-grid {
@@ -313,7 +320,13 @@ main {
     transform: translateZ(50px) rotateY(180deg);
 }
 
-.creative-card h4 { font-size: 1.15rem; font-weight: 900; margin-bottom: 10px; transform: translateZ(15px); }
+.creative-card h4 { 
+    font-family: var(--font-family-heading);
+    font-size: 1.15rem; 
+    font-weight: 700; 
+    margin-bottom: 10px; 
+    transform: translateZ(15px); 
+}
 .creative-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4; transform: translateZ(10px); }
 
 /* Home Actions */
@@ -365,7 +378,13 @@ main {
 
 .home-card-icon i { width: 40px; height: 40px; }
 
-.home-card h3 { font-size: 1.6rem; font-weight: 900; margin-bottom: 12px; transform: translateZ(25px); }
+.home-card h3 { 
+    font-family: var(--font-family-heading);
+    font-size: 1.6rem; 
+    font-weight: 700; 
+    margin-bottom: 12px; 
+    transform: translateZ(25px); 
+}
 .home-card p { font-size: 1rem; color: var(--text-secondary); margin-bottom: 30px; line-height: 1.5; transform: translateZ(15px); }
 
 .home-card .btn { width: 100%; padding: 15px; font-size: 1rem; font-weight: 900; border-radius: 12px; transform: translateZ(35px); }
