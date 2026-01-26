@@ -1135,15 +1135,26 @@ async function handleSaveCampaign() {
                 const reader = new FileReader();
                 const imageDataUrl = await new Promise((resolve, reject) => {
                     reader.onload = (e) => resolve(e.target.result);
-                    reader.onerror = reject;
+                    reader.onerror = (error) => {
+                        console.error('FileReader error:', error);
+                        reject(new Error('שגיאה בקריאת הקובץ'));
+                    };
                     reader.readAsDataURL(shareImageFile);
                 });
+                
+                console.log('Uploading image to imgBB...');
                 const uploadResult = await uploadImage(imageDataUrl);
-                campaignData.shareImageUrl = uploadResult.url;
-                console.log('Share image uploaded to imgBB:', uploadResult.url);
+                
+                if (uploadResult && uploadResult.url) {
+                    campaignData.shareImageUrl = uploadResult.url;
+                    console.log('✅ Share image uploaded to imgBB:', uploadResult.url);
+                } else {
+                    throw new Error('העלאה נכשלה - לא התקבל URL');
+                }
             } catch (uploadError) {
-                console.error('Error uploading share image:', uploadError);
-                alert('שגיאה בהעלאת התמונה לשיתוף. נסה שוב.');
+                console.error('❌ Error uploading share image:', uploadError);
+                const errorMessage = uploadError.message || 'שגיאה לא ידועה';
+                alert(`שגיאה בהעלאת התמונה לשיתוף: ${errorMessage}\n\nנסה שוב או בדוק את החיבור לאינטרנט.`);
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'שמירה ופרסום';
                 return;

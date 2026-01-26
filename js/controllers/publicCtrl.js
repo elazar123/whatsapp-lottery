@@ -468,9 +468,24 @@ function handleSaveContact() {
  * @returns {Promise<File>} - File object
  */
 async function urlToFile(url, filename) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new File([blob], filename, { type: blob.type });
+    try {
+        const response = await fetch(url, {
+            mode: 'cors',
+            credentials: 'omit'
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+        }
+        
+        const blob = await response.blob();
+        return new File([blob], filename, { type: blob.type });
+    } catch (error) {
+        console.error('Error downloading file for sharing:', error);
+        // If CORS fails, we can't use Web Share API with files
+        // Fall back to URL sharing only
+        throw error;
+    }
 }
 
 /**
@@ -522,38 +537,60 @@ async function handleShareWhatsapp() {
             const files = [];
             
             // Download and convert media to File objects
+            // Only try if URLs are from imgBB or Cloudinary (CORS-friendly)
             if (hasShareImage) {
                 const imageUrl = currentCampaign.shareImageUrl;
-                const imageExt = imageUrl.split('.').pop().split('?')[0] || 'jpg';
-                const imageFile = await urlToFile(imageUrl, `share_image.${imageExt}`);
-                files.push(imageFile);
+                // Check if URL is from imgBB (i.ibb.co) or other CORS-friendly services
+                if (imageUrl.includes('i.ibb.co') || imageUrl.includes('imgbb.com') || imageUrl.includes('cloudinary.com')) {
+                    try {
+                        const imageExt = imageUrl.split('.').pop().split('?')[0] || 'jpg';
+                        const imageFile = await urlToFile(imageUrl, `share_image.${imageExt}`);
+                        files.push(imageFile);
+                    } catch (error) {
+                        console.warn('Could not download image for sharing, will use URL only:', error);
+                    }
+                } else {
+                    console.warn('Image URL is not from a CORS-friendly service, skipping file download');
+                }
             }
             
             if (hasShareVideo) {
                 const videoUrl = currentCampaign.shareVideoUrl;
-                const videoExt = videoUrl.split('.').pop().split('?')[0] || 'mp4';
-                const videoFile = await urlToFile(videoUrl, `share_video.${videoExt}`);
-                files.push(videoFile);
+                // Check if URL is from Cloudinary or other CORS-friendly services
+                if (videoUrl.includes('cloudinary.com') || videoUrl.includes('res.cloudinary.com')) {
+                    try {
+                        const videoExt = videoUrl.split('.').pop().split('?')[0] || 'mp4';
+                        const videoFile = await urlToFile(videoUrl, `share_video.${videoExt}`);
+                        files.push(videoFile);
+                    } catch (error) {
+                        console.warn('Could not download video for sharing, will use URL only:', error);
+                    }
+                } else {
+                    console.warn('Video URL is not from a CORS-friendly service, skipping file download');
+                }
             }
             
-            // Check if we can share these files
-            const shareData = {
-                text: shareText,
-                files: files
-            };
-            
-            if (navigator.canShare(shareData)) {
-                await navigator.share(shareData);
+            // Only proceed with Web Share API if we successfully downloaded files
+            if (files.length > 0) {
+                // Check if we can share these files
+                const shareData = {
+                    text: shareText,
+                    files: files
+                };
                 
-                // Mark task as completed
-                tasksState.sharedWhatsapp = true;
-                updateTasksUI();
-                
-                // Update in database
-                if (currentLeadId) {
-                    updateLeadTasks(currentCampaign.id, currentLeadId, { sharedWhatsapp: true });
+                if (navigator.canShare(shareData)) {
+                    await navigator.share(shareData);
+                    
+                    // Mark task as completed
+                    tasksState.sharedWhatsapp = true;
+                    updateTasksUI();
+                    
+                    // Update in database
+                    if (currentLeadId) {
+                        updateLeadTasks(currentCampaign.id, currentLeadId, { sharedWhatsapp: true });
+                    }
+                    return;
                 }
-                return;
             }
         } catch (error) {
             // User cancelled or error occurred, fall back to URL method
