@@ -246,9 +246,7 @@ function populateCampaignContent(campaign) {
                 videoSource: !!videoSource
             });
         }
-    } else {
-        console.log('ℹ️ No video URL found in campaign');
-    }
+    } 
     // Show banner if exists and no video
     else if (campaign.bannerUrl) {
         const bannerContainer = document.getElementById('campaign-banner');
