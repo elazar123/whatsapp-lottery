@@ -261,6 +261,34 @@
                                             אם תרצו לשלב אותו בתוך הטקסט, השתמשו ב-{{link}}.
                                         </small>
                                     </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="share-image">תמונה לשיתוף (אופציונלי)</label>
+                                        <input 
+                                            type="file" 
+                                            id="share-image" 
+                                            name="shareImage"
+                                            accept="image/*"
+                                        >
+                                        <small class="form-hint">
+                                            התמונה תישלח אוטומטית כשמישהו משתף את הקמפיין. מקסימום 5MB.
+                                        </small>
+                                        <div id="share-image-preview" class="file-preview hidden"></div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="share-video">סרטון לשיתוף (אופציונלי)</label>
+                                        <input 
+                                            type="file" 
+                                            id="share-video" 
+                                            name="shareVideo"
+                                            accept="video/*"
+                                        >
+                                        <small class="form-hint">
+                                            הסרטון יישלח אוטומטית כשמישהו משתף את הקמפיין. מקסימום 16MB.
+                                        </small>
+                                        <div id="share-video-preview" class="file-preview hidden"></div>
+                                    </div>
                                 </fieldset>
 
                                 <!-- Design/Theming -->

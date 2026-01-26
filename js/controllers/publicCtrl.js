@@ -462,6 +462,18 @@ function handleSaveContact() {
 }
 
 /**
+ * Download file from URL and convert to File object
+ * @param {string} url - File URL
+ * @param {string} filename - Desired filename
+ * @returns {Promise<File>} - File object
+ */
+async function urlToFile(url, filename) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+}
+
+/**
  * Handle share on WhatsApp task
  */
 async function handleShareWhatsapp() {
@@ -489,10 +501,68 @@ async function handleShareWhatsapp() {
     // 1. Shorten the URL further using external service
     const campaignLink = await shortenUrl(rawCampaignLink);
     
-    // 2. Generate WhatsApp URL and open using specialized helper
+    // 2. Prepare share text
     const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';
-    const whatsappUrl = generateCampaignShareUrl(shareTextTemplate, campaignLink);
+    let shareText = shareTextTemplate;
+    if (shareText.includes('{{link}}')) {
+        shareText = shareText.replace(/\{\{link\}\}/g, campaignLink);
+    } else {
+        shareText = `${shareText}\n\n${campaignLink}`;
+    }
     
+    // 3. Check if Web Share API is available and we have media to share
+    const hasShareImage = currentCampaign.shareImageUrl;
+    const hasShareVideo = currentCampaign.shareVideoUrl;
+    const hasMedia = hasShareImage || hasShareVideo;
+    const canUseWebShare = navigator.share && navigator.canShare;
+    
+    // 4. Try Web Share API with files (mobile browsers)
+    if (canUseWebShare && hasMedia) {
+        try {
+            const files = [];
+            
+            // Download and convert media to File objects
+            if (hasShareImage) {
+                const imageUrl = currentCampaign.shareImageUrl;
+                const imageExt = imageUrl.split('.').pop().split('?')[0] || 'jpg';
+                const imageFile = await urlToFile(imageUrl, `share_image.${imageExt}`);
+                files.push(imageFile);
+            }
+            
+            if (hasShareVideo) {
+                const videoUrl = currentCampaign.shareVideoUrl;
+                const videoExt = videoUrl.split('.').pop().split('?')[0] || 'mp4';
+                const videoFile = await urlToFile(videoUrl, `share_video.${videoExt}`);
+                files.push(videoFile);
+            }
+            
+            // Check if we can share these files
+            const shareData = {
+                text: shareText,
+                files: files
+            };
+            
+            if (navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+                
+                // Mark task as completed
+                tasksState.sharedWhatsapp = true;
+                updateTasksUI();
+                
+                // Update in database
+                if (currentLeadId) {
+                    updateLeadTasks(currentCampaign.id, currentLeadId, { sharedWhatsapp: true });
+                }
+                return;
+            }
+        } catch (error) {
+            // User cancelled or error occurred, fall back to URL method
+            console.log('Web Share API failed, falling back to URL method:', error);
+        }
+    }
+    
+    // 5. Fallback: Use traditional WhatsApp URL method (works on desktop and as fallback)
+    const whatsappUrl = generateCampaignShareUrl(shareTextTemplate, campaignLink);
     openWhatsAppShare(whatsappUrl);
     
     // Mark task as completed

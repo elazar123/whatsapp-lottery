@@ -1532,3 +1532,24 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
 }
+
+/* File Preview */
+.file-preview {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg-light-blue);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.file-preview img,
+.file-preview video {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: var(--border-radius-sm);
+    margin-top: var(--space-sm);
+}
+
+.file-preview.hidden {
+    display: none;
+}

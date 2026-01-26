@@ -97,6 +97,39 @@ export async function uploadBase64Image(base64String, campaignId) {
 }
 
 /**
+ * Upload share media (image or video) for campaign sharing
+ * @param {File} file - Media file to upload
+ * @param {string} campaignId - Campaign ID
+ * @param {string} type - 'image' or 'video'
+ * @returns {Promise<string>} - Public URL of uploaded file
+ */
+export async function uploadShareMedia(file, campaignId, type = 'image') {
+    initStorage();
+    
+    // Generate unique filename
+    const timestamp = Date.now();
+    const extension = file.name.split('.').pop();
+    const filename = `campaigns/${campaignId}/share_${type}_${timestamp}.${extension}`;
+    
+    // Create reference
+    const storageRef = ref(storage, filename);
+    
+    // Upload file
+    const snapshot = await uploadBytes(storageRef, file, {
+        contentType: file.type,
+        customMetadata: {
+            uploadedAt: new Date().toISOString(),
+            type: type
+        }
+    });
+    
+    // Get public URL
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    
+    return downloadURL;
+}
+
+/**
  * Delete image from storage
  * @param {string} imageUrl - Full URL of image to delete
  */

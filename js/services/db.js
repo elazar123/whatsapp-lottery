@@ -46,6 +46,8 @@ export async function createCampaign(campaignData, managerId) {
         whatsappShareText: campaignData.whatsappShareText,
         contactVcardName: campaignData.contactVcardName,
         contactPhoneNumber: campaignData.contactPhoneNumber,
+        shareImageUrl: campaignData.shareImageUrl || '',
+        shareVideoUrl: campaignData.shareVideoUrl || '',
         theme: {
             primaryColor: campaignData.primaryColor || '#6366f1',
             backgroundColor: campaignData.backgroundColor || '#f8fafc'

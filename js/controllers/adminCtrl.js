@@ -20,6 +20,7 @@ import { ADMIN_CONFIG, isSuperAdmin } from '../config/admin.js';
 import { showSpinningWheel } from '../utils/spinningWheel.js';
 import { downloadMultipleContacts } from '../utils/vcfGenerator.js';
 import { uploadImage } from '../services/imageUpload.js';
+import { uploadShareMedia } from '../services/storage.js';
 
 // State
 let currentUser = null;
@@ -145,6 +146,40 @@ function setupEventListeners() {
             previewFrame.classList.remove('mobile', 'desktop');
             previewFrame.classList.add(e.target.dataset.device);
         });
+    });
+    
+    // File preview handlers
+    const shareImageInput = document.getElementById('share-image');
+    const shareVideoInput = document.getElementById('share-video');
+    const shareImagePreview = document.getElementById('share-image-preview');
+    const shareVideoPreview = document.getElementById('share-video-preview');
+    
+    shareImageInput?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                shareImagePreview.innerHTML = `<img src="${event.target.result}" alt="תמונה לשיתוף">`;
+                shareImagePreview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            shareImagePreview.classList.add('hidden');
+        }
+    });
+    
+    shareVideoInput?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                shareVideoPreview.innerHTML = `<video src="${event.target.result}" controls style="max-width: 100%; max-height: 200px;"></video>`;
+                shareVideoPreview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            shareVideoPreview.classList.add('hidden');
+        }
     });
     
     // Campaign details actions
@@ -1079,6 +1114,57 @@ async function handleSaveCampaign() {
             } catch (uploadError) {
                 console.error('Error uploading image:', uploadError);
                 alert('שגיאה בהעלאת התמונה. נסה שוב.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'שמירה ופרסום';
+                return;
+            }
+        }
+        
+        // Get campaign ID for uploads (use existing or generate temp)
+        const tempCampaignId = editingCampaignId || 'temp_' + Date.now();
+        
+        // Upload share image if provided
+        const shareImageFile = formData.get('shareImage');
+        if (shareImageFile && shareImageFile.size > 0) {
+            if (shareImageFile.size > 5 * 1024 * 1024) {
+                alert('גודל התמונה לשיתוף גדול מדי. מקסימום 5MB.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'שמירה ופרסום';
+                return;
+            }
+            saveBtn.textContent = 'מעלה תמונה לשיתוף...';
+            try {
+                // Use Firebase Storage for share images
+                const imageUrl = await uploadShareMedia(shareImageFile, tempCampaignId, 'image');
+                campaignData.shareImageUrl = imageUrl;
+                console.log('Share image uploaded to Firebase Storage:', imageUrl);
+            } catch (uploadError) {
+                console.error('Error uploading share image:', uploadError);
+                alert('שגיאה בהעלאת התמונה לשיתוף. נסה שוב.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'שמירה ופרסום';
+                return;
+            }
+        }
+        
+        // Upload share video if provided
+        const shareVideoFile = formData.get('shareVideo');
+        if (shareVideoFile && shareVideoFile.size > 0) {
+            if (shareVideoFile.size > 16 * 1024 * 1024) {
+                alert('גודל הסרטון לשיתוף גדול מדי. מקסימום 16MB.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'שמירה ופרסום';
+                return;
+            }
+            saveBtn.textContent = 'מעלה סרטון לשיתוף...';
+            try {
+                // Use Firebase Storage for videos
+                const videoUrl = await uploadShareMedia(shareVideoFile, tempCampaignId, 'video');
+                campaignData.shareVideoUrl = videoUrl;
+                console.log('Share video uploaded to Firebase Storage:', videoUrl);
+            } catch (uploadError) {
+                console.error('Error uploading share video:', uploadError);
+                alert('שגיאה בהעלאת הסרטון לשיתוף. נסה שוב.');
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'שמירה ופרסום';
                 return;

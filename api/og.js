@@ -53,6 +53,11 @@ export default async function handler(req, res) {
         const description = fields.description?.stringValue || 'הירשמו להגרלה וזכו בפרסים מדהימים!';
         const defaultImage = 'https://images.unsplash.com/photo-1596742572445-d93531c099d5?q=80&w=1200&h=630&auto=format&fit=crop';
         const bannerUrl = fields.bannerUrl?.stringValue || defaultImage;
+        const shareImageUrl = fields.shareImageUrl?.stringValue || '';
+        const shareVideoUrl = fields.shareVideoUrl?.stringValue || '';
+        
+        // Use share image/video if available, otherwise use banner
+        const ogImage = shareImageUrl || shareVideoUrl || bannerUrl;
         
         // Return HTML with proper meta tags
         const html = `<!DOCTYPE html>
@@ -67,9 +72,11 @@ export default async function handler(req, res) {
     <meta property="og:type" content="website">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">
-    <meta property="og:image" content="${bannerUrl}">
+    <meta property="og:image" content="${ogImage}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    ${shareVideoUrl ? `<meta property="og:video" content="${shareVideoUrl}">
+    <meta property="og:video:type" content="video/mp4">` : ''}
     <meta property="og:url" content="${pageUrl}">
     <meta property="og:locale" content="he_IL">
     <meta property="og:site_name" content="WhatsApp Lottery">
@@ -78,7 +85,10 @@ export default async function handler(req, res) {
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(description)}">
-    <meta name="twitter:image" content="${bannerUrl}">
+    <meta name="twitter:image" content="${ogImage}">
+    ${shareVideoUrl ? `<meta name="twitter:player" content="${shareVideoUrl}">
+    <meta name="twitter:player:width" content="1200">
+    <meta name="twitter:player:height" content="630">` : ''}
     
     <!-- Redirect to actual page -->
     <meta http-equiv="refresh" content="0;url=${redirectUrl}">
