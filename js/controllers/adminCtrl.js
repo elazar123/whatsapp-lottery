@@ -21,6 +21,7 @@ import { showSpinningWheel } from '../utils/spinningWheel.js';
 import { downloadMultipleContacts } from '../utils/vcfGenerator.js';
 import { uploadImage } from '../services/imageUpload.js';
 import { uploadVideo, uploadImage as uploadImageToCloud } from '../services/cloudService.js';
+import { processImageForWhatsApp } from '../utils/imageProcessor.js';
 
 // State
 let currentUser = null;
@@ -1123,9 +1124,15 @@ async function handleSaveCampaign() {
                 saveBtn.textContent = 'שמירה ופרסום';
                 return;
             }
-            saveBtn.textContent = 'מעלה תמונה לשיתוף...';
+            saveBtn.textContent = 'מעבד תמונה לוואטסאפ...';
             try {
-                // Convert file to base64 and upload to imgBB (works without CORS issues)
+                // Process image for WhatsApp OG compatibility (1200x630, <300KB, JPEG)
+                console.log('🔄 Processing image for WhatsApp OG...');
+                const processedFile = await processImageForWhatsApp(shareImageFile);
+                console.log(`✅ Image processed: ${(processedFile.size / 1024).toFixed(2)}KB (was ${(shareImageFile.size / 1024).toFixed(2)}KB)`);
+                
+                // Convert processed file to base64 and upload to imgBB
+                saveBtn.textContent = 'מעלה תמונה לשיתוף...';
                 const reader = new FileReader();
                 const imageDataUrl = await new Promise((resolve, reject) => {
                     reader.onload = (e) => resolve(e.target.result);
@@ -1133,10 +1140,10 @@ async function handleSaveCampaign() {
                         console.error('FileReader error:', error);
                         reject(new Error('שגיאה בקריאת הקובץ'));
                     };
-                    reader.readAsDataURL(shareImageFile);
+                    reader.readAsDataURL(processedFile);
                 });
                 
-                console.log('Uploading image to imgBB...');
+                console.log('📤 Uploading processed image to imgBB...');
                 const uploadResult = await uploadImage(imageDataUrl);
                 
                 if (uploadResult && uploadResult.url) {
@@ -1146,9 +1153,9 @@ async function handleSaveCampaign() {
                     throw new Error('העלאה נכשלה - לא התקבל URL');
                 }
             } catch (uploadError) {
-                console.error('❌ Error uploading share image:', uploadError);
+                console.error('❌ Error processing/uploading share image:', uploadError);
                 const errorMessage = uploadError.message || 'שגיאה לא ידועה';
-                alert(`שגיאה בהעלאת התמונה לשיתוף: ${errorMessage}\n\nנסה שוב או בדוק את החיבור לאינטרנט.`);
+                alert(`שגיאה בעיבוד/העלאת התמונה לשיתוף: ${errorMessage}\n\nנסה שוב או בדוק את החיבור לאינטרנט.`);
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'שמירה ופרסום';
                 return;
