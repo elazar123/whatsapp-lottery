@@ -985,10 +985,6 @@ async function handleSaveCampaign() {
         primaryColor: formData.get('primaryColor'),
         backgroundColor: formData.get('backgroundColor'),
         bannerUrl: bannerUrl, // Set initial value from input
-        // Legal & Terms
-        inspectorName: formData.get('inspectorName') || '',
-        prizeValue: formData.get('prizeValue') || '',
-        customTerms: formData.get('customTerms') || '',
         managerName: currentUser.displayName,
         // Registration Settings
         collectEmail: document.getElementById('collect-email-toggle')?.checked || false,
@@ -1101,11 +1097,6 @@ function populateForm(campaign) {
     document.getElementById('contact-name').value = campaign.contactVcardName || '';
     document.getElementById('contact-phone').value = campaign.contactPhoneNumber || '';
     document.getElementById('share-text').value = campaign.whatsappShareText || '';
-    
-    // Legal fields
-    document.getElementById('inspector-name').value = campaign.inspectorName || '';
-    document.getElementById('prize-value').value = campaign.prizeValue || '';
-    document.getElementById('custom-terms').value = campaign.customTerms || '';
     
     // Registration settings
     const collectEmailToggle = document.getElementById('collect-email-toggle');

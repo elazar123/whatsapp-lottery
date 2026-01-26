@@ -388,8 +388,6 @@ function showCampaignTerms() {
 
     const startDate = formatDate(currentCampaign.createdAt || new Date());
     const endDate = formatDate(currentCampaign.endDate);
-    const inspector = currentCampaign.inspectorName || 'טרם נקבע';
-    const prizeValue = currentCampaign.prizeValue || '0';
     
     elements.termsBody.innerHTML = `
         <h2 class="terms-title">תקנון הגרלה: ${escapeHtml(currentCampaign.title)}</h2>
@@ -400,7 +398,6 @@ function showCampaignTerms() {
             <ul>
                 <li><strong>עורך ההגרלה:</strong> ${escapeHtml(currentCampaign.managerName || 'בעל העסק')}</li>
                 <li><strong>ההגרלה:</strong> ${escapeHtml(currentCampaign.title)} שמטרתה קידום מכירות.</li>
-                <li><strong>המפקח:</strong> ${escapeHtml(inspector)}</li>
             </ul>
         </div>
 
@@ -411,7 +408,7 @@ function showCampaignTerms() {
 
         <div class="terms-section">
             <h3>3. הזכאות להשתתף</h3>
-            <p>ההשתתפות מותרת לכל אדם מעל גיל 18 אשר עמד בתנאי ההשתתפות. ההשתתפות אסורה על עורך ההגרלה, המפקח, ובני משפחותיהם.</p>
+            <p>ההשתתפות מותרת לכל אדם מעל גיל 18 אשר עמד בתנאי ההשתתפות. ההשתתפות אסורה על עורך ההגרלה ובני משפחתם.</p>
         </div>
 
         <div class="terms-section">
@@ -421,25 +418,18 @@ function showCampaignTerms() {
 
         <div class="terms-section">
             <h3>5. קביעת הזוכה</h3>
-            <p>הזוכה ייבחר באמצעות מערכת ממוחשבת המבוססת על אלגוריתם רנדומלי בפיקוח המפקח.</p>
+            <p>הזוכה ייבחר באמצעות מערכת ממוחשבת המבוססת על אלגוריתם רנדומלי.</p>
         </div>
 
         <div class="terms-section">
             <h3>6. הפרסים</h3>
-            <p>שווי הפרס הכולל: ${prizeValue} ש"ח. הפרס אינו ניתן להמרה למזומן.</p>
+            <p>הפרס אינו ניתן להמרה למזומן.</p>
         </div>
 
         <div class="terms-section">
             <h3>7. איתור הזוכה</h3>
             <p>הודעה על הזכייה תישלח לזוכה בטלפון/וואטסאפ. על הזוכה לממש את הפרס תוך 14 יום.</p>
         </div>
-
-        ${currentCampaign.customTerms ? `
-        <div class="terms-section">
-            <h3>8. תנאים נוספים</h3>
-            <p>${escapeHtml(currentCampaign.customTerms).replace(/\n/g, '<br>')}</p>
-        </div>
-        ` : ''}
 
         <p class="terms-footer">ט.ל.ח. כל הזכויות שמורות לריגר הפקות.</p>
     `;
