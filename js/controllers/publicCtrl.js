@@ -436,6 +436,10 @@ async function handleRegistration(e) {
             currentLeadId = existingLead.id;
             tasksState = existingLead.tasksCompleted || { savedContact: false, sharedWhatsapp: false };
             updateTasksUI();
+            
+            // Update success message with personalized message
+            updateSuccessMessage(fullName);
+            
             showStep('success');
             loadAndShowLeaderboard();
             submitBtn.disabled = false;
@@ -453,6 +457,9 @@ async function handleRegistration(e) {
             referredBy,
             joinedAt: new Date().toISOString()
         });
+        
+        // Update success message with personalized message if available
+        updateSuccessMessage(fullName);
         
         showStep('success');
         launchConfetti();
@@ -740,6 +747,33 @@ function showContent() {
 }
 
 /**
+ * Update success message with personalized message
+ * @param {string} fullName - User's full name
+ */
+function updateSuccessMessage(fullName) {
+    const successTitle = document.querySelector('.success-title');
+    const successMessage = document.querySelector('.success-message');
+    
+    // Use custom thank you message if available, otherwise use default
+    if (currentCampaign && currentCampaign.thankYouMessage) {
+        // Replace {{name}} placeholder with user's first name
+        const firstName = fullName.split(' ')[0];
+        let customMessage = currentCampaign.thankYouMessage;
+        customMessage = customMessage.replace(/\{\{name\}\}/g, firstName);
+        customMessage = customMessage.replace(/\{\{fullName\}\}/g, fullName);
+        
+        if (successMessage) {
+            successMessage.textContent = customMessage;
+        }
+    } else {
+        // Default message
+        if (successMessage) {
+            successMessage.textContent = 'פרטיכם נקלטו במערכת ואתם משתתפים בהגרלה.';
+        }
+    }
+}
+
+/**
  * Show specific step
  * @param {'registration'|'success'} step 
  */
@@ -750,9 +784,31 @@ function showStep(step) {
     switch (step) {
         case 'registration':
             elements.stepRegistration?.classList.remove('hidden');
+            // Show campaign content (header, countdown, etc.)
+            if (elements.campaignContent) {
+                elements.campaignContent.classList.remove('hidden');
+            }
+            // Show campaign header and countdown
+            const campaignHeader = document.querySelector('.campaign-header');
+            const countdownSection = document.querySelector('.countdown-section');
+            if (campaignHeader) campaignHeader.classList.remove('hidden');
+            if (countdownSection) countdownSection.classList.remove('hidden');
             break;
         case 'success':
             elements.stepSuccess?.classList.remove('hidden');
+            // Hide campaign content (header, countdown, etc.) - show only thank you page
+            if (elements.campaignContent) {
+                elements.campaignContent.classList.remove('hidden'); // Keep main visible for success content
+            }
+            // Hide campaign header and countdown on success page
+            const header = document.querySelector('.campaign-header');
+            const countdown = document.querySelector('.countdown-section');
+            const banner = document.getElementById('campaign-banner');
+            const video = document.getElementById('campaign-video');
+            if (header) header.classList.add('hidden');
+            if (countdown) countdown.classList.add('hidden');
+            if (banner) banner.classList.add('hidden');
+            if (video) video.classList.add('hidden');
             break;
     }
 }
