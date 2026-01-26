@@ -367,6 +367,17 @@ function setupEventListeners() {
             elements.termsModal?.classList.add('hidden');
         });
     });
+
+    // Consent Modal Logic
+    elements.linkFullTerms?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showCampaignTerms();
+    });
+
+    elements.btnConfirmConsent?.addEventListener('click', () => {
+        elements.consentModal?.classList.add('hidden');
+        completeRegistration();
+    });
 }
 
 /**
@@ -439,12 +450,6 @@ function showCampaignTerms() {
 /* ==========================================================================
    Registration Flow
    ========================================================================== */
-
-    elements.btnConfirmConsent?.addEventListener('click', () => {
-        elements.consentModal?.classList.add('hidden');
-        completeRegistration();
-    });
-}
 
 // Global variable to store pending registration data
 let pendingRegistration = null;
