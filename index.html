@@ -13,6 +13,10 @@
     <meta property="og:image" id="og-image" content="">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:video" id="og-video" content="">
+    <meta property="og:video:type" id="og-video-type" content="video/mp4">
+    <meta property="og:video:width" content="1200">
+    <meta property="og:video:height" content="630">
     <meta property="og:url" id="og-url" content="">
     <meta property="og:locale" content="he_IL">
     
@@ -148,6 +152,22 @@
             <!-- Banner Image -->
             <div class="campaign-banner hidden" id="campaign-banner">
                 <img id="banner-image" src="" alt="באנר ההגרלה">
+            </div>
+            
+            <!-- Video Player (if video exists) -->
+            <div class="campaign-video hidden" id="campaign-video">
+                <video 
+                    id="campaign-video-player"
+                    controls 
+                    playsinline 
+                    autoplay 
+                    muted 
+                    loop
+                    class="campaign-video-player"
+                >
+                    <source id="campaign-video-source" src="" type="video/mp4">
+                    הדפדפן שלך לא תומך בנגן וידאו.
+                </video>
             </div>
             
             <!-- Header Section -->

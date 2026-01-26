@@ -7,6 +7,7 @@ import { initFirebase } from '../config/firebase.js';
 import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByPhone, getLead, getLeaderboard } from '../services/db.js';
 import { generateVCard, downloadVCard } from '../utils/vcfGenerator.js';
 import { generateWhatsAppUrl, generateCampaignShareUrl, openWhatsAppShare, shortenUrl } from '../utils/whatsappUrl.js';
+import { shareCampaign } from '../services/sharingService.js';
 import { launchConfetti } from '../utils/confetti.js';
 
 // State
@@ -222,8 +223,19 @@ function populateCampaignContent(campaign) {
         if (elements.inputEmail) elements.inputEmail.required = false;
     }
     
-    // Show banner if exists
-    if (campaign.bannerUrl) {
+    // Show video if exists (priority over banner)
+    if (campaign.shareVideoUrl) {
+        const videoContainer = document.getElementById('campaign-video');
+        const videoPlayer = document.getElementById('campaign-video-player');
+        const videoSource = document.getElementById('campaign-video-source');
+        if (videoContainer && videoPlayer && videoSource) {
+            videoSource.src = campaign.shareVideoUrl;
+            videoPlayer.load(); // Reload video with new source
+            videoContainer.classList.remove('hidden');
+        }
+    }
+    // Show banner if exists and no video
+    else if (campaign.bannerUrl) {
         const bannerContainer = document.getElementById('campaign-banner');
         const bannerImage = document.getElementById('banner-image');
         if (bannerContainer && bannerImage) {
@@ -261,6 +273,13 @@ function updateMetaTags(campaign) {
     updateMetaTag('og-description', 'content', description);
     updateMetaTag('og-image', 'content', imageUrl);
     updateMetaTag('og-url', 'content', pageUrl);
+    
+    // Update video if available
+    const videoUrl = currentCampaign.shareVideoUrl || currentCampaign.bannerUrl;
+    if (videoUrl) {
+        updateMetaTag('og-video', 'content', videoUrl);
+        updateMetaTag('og-video-type', 'content', 'video/mp4');
+    }
     
     // Update Twitter
     updateMetaTag('twitter-title', 'content', title);
@@ -528,133 +547,24 @@ async function handleShareWhatsapp() {
         rawCampaignLink = url.toString();
     }
     
-    // 1. Shorten the URL further using external service
+    // Shorten the URL
     const campaignLink = await shortenUrl(rawCampaignLink);
     
-    // 2. Prepare share text
-    const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה! {{link}}';
+    // Prepare share text (without link, as shareCampaign will add it)
+    const shareTextTemplate = currentCampaign.whatsappShareText || 'בואו להשתתף בהגרלה!';
     let shareText = shareTextTemplate;
-    if (shareText.includes('{{link}}')) {
-        shareText = shareText.replace(/\{\{link\}\}/g, campaignLink);
-    } else {
-        shareText = `${shareText}\n\n${campaignLink}`;
-    }
+    // Remove {{link}} placeholder if exists, as we'll add the link separately
+    shareText = shareText.replace(/\{\{link\}\}/g, '').trim();
     
-    // 3. Check if Web Share API is available and we have media to share
-    const hasShareImage = currentCampaign.shareImageUrl;
-    const hasShareVideo = currentCampaign.shareVideoUrl;
-    const hasMedia = hasShareImage || hasShareVideo;
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const canUseWebShare = navigator.share && navigator.canShare && isMobile;
+    // Use the new sharing service
+    const result = await shareCampaign(
+        currentCampaign.title || 'הגרלה מיוחדת',
+        shareText,
+        campaignLink,
+        currentCampaign.shareImageUrl || null
+    );
     
-    console.log('🔍 Share check:', {
-        hasShareImage,
-        hasShareVideo,
-        hasMedia,
-        isMobile,
-        canUseWebShare,
-        hasNavigatorShare: !!navigator.share,
-        hasNavigatorCanShare: !!navigator.canShare
-    });
-    
-    // 4. Try Web Share API with files (mobile browsers)
-    if (canUseWebShare && hasMedia) {
-        try {
-            const files = [];
-            
-            // Download and convert media to File objects
-            // Only try if URLs are from imgBB or Cloudinary (CORS-friendly)
-            if (hasShareImage) {
-                const imageUrl = currentCampaign.shareImageUrl;
-                console.log('📸 Attempting to share image:', imageUrl);
-                
-                // Check if URL is from imgBB (various domains) or other CORS-friendly services
-                const isImgBB = imageUrl.includes('i.ibb.co') || 
-                              imageUrl.includes('ibb.co') || 
-                              imageUrl.includes('imgbb.com') ||
-                              imageUrl.includes('i.imgbb.com');
-                const isCloudinary = imageUrl.includes('cloudinary.com') || imageUrl.includes('res.cloudinary.com');
-                
-                if (isImgBB || isCloudinary) {
-                    try {
-                        console.log('✅ Image URL is from CORS-friendly service, downloading...');
-                        const imageExt = imageUrl.split('.').pop().split('?')[0] || 'jpg';
-                        const imageFile = await urlToFile(imageUrl, `share_image.${imageExt}`);
-                        console.log('✅ Image downloaded successfully:', imageFile.name, imageFile.size, 'bytes');
-                        files.push(imageFile);
-                    } catch (error) {
-                        console.error('❌ Could not download image for sharing:', error);
-                        console.warn('Will use URL-only sharing (text + link)');
-                    }
-                } else {
-                    console.warn('⚠️ Image URL is not from a CORS-friendly service:', imageUrl);
-                    console.warn('Supported services: imgBB (ibb.co, imgbb.com), Cloudinary');
-                }
-            }
-            
-            if (hasShareVideo) {
-                const videoUrl = currentCampaign.shareVideoUrl;
-                // Check if URL is from Cloudinary or other CORS-friendly services
-                if (videoUrl.includes('cloudinary.com') || videoUrl.includes('res.cloudinary.com')) {
-                    try {
-                        const videoExt = videoUrl.split('.').pop().split('?')[0] || 'mp4';
-                        const videoFile = await urlToFile(videoUrl, `share_video.${videoExt}`);
-                        files.push(videoFile);
-                    } catch (error) {
-                        console.warn('Could not download video for sharing, will use URL only:', error);
-                    }
-                } else {
-                    console.warn('Video URL is not from a CORS-friendly service, skipping file download');
-                }
-            }
-            
-            // Only proceed with Web Share API if we successfully downloaded files
-            if (files.length > 0) {
-                console.log(`📤 Sharing ${files.length} file(s) with Web Share API`);
-                // Check if we can share these files
-                const shareData = {
-                    text: shareText,
-                    files: files
-                };
-                
-                if (navigator.canShare(shareData)) {
-                    console.log('✅ Can share files, opening share dialog...');
-                    await navigator.share(shareData);
-                    console.log('✅ Share completed');
-                    
-                    // Mark task as completed
-                    tasksState.sharedWhatsapp = true;
-                    updateTasksUI();
-                    
-                    // Update in database
-                    if (currentLeadId) {
-                        updateLeadTasks(currentCampaign.id, currentLeadId, { sharedWhatsapp: true });
-                    }
-                    return;
-                } else {
-                    console.warn('⚠️ navigator.canShare() returned false for files');
-                }
-            } else {
-                console.warn('⚠️ No files downloaded, falling back to URL-only sharing');
-            }
-        } catch (error) {
-            // User cancelled or error occurred, fall back to URL method
-            console.error('❌ Web Share API failed:', error);
-            console.log('Falling back to URL method (text + link only, no files)');
-        }
-    } else {
-        console.log('ℹ️ Web Share API not available or not on mobile, using URL method');
-        if (hasMedia) {
-            console.warn('⚠️ Media files cannot be shared via WhatsApp URL API (wa.me/?text=...)');
-            console.warn('⚠️ Only text + link will be shared. For file sharing, use mobile device with Web Share API.');
-        }
-    }
-    
-    // 5. Fallback: Use traditional WhatsApp URL method (works on desktop and as fallback)
-    // Note: This only supports text, not files
-    const whatsappUrl = generateCampaignShareUrl(shareTextTemplate, campaignLink);
-    console.log('📱 Opening WhatsApp with URL method:', whatsappUrl);
-    openWhatsAppShare(whatsappUrl);
+    console.log('📤 Share result:', result);
     
     // Mark task as completed
     tasksState.sharedWhatsapp = true;
