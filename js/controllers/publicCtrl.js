@@ -440,6 +440,9 @@ async function handleRegistration(e) {
             // Update success message with personalized message
             updateSuccessMessage(fullName);
             
+            // Hide ALL campaign content BEFORE showing success page
+            hideCampaignContent();
+            
             showStep('success');
             loadAndShowLeaderboard();
             submitBtn.disabled = false;
@@ -460,6 +463,9 @@ async function handleRegistration(e) {
         
         // Update success message with personalized message if available
         updateSuccessMessage(fullName);
+        
+        // Hide ALL campaign content BEFORE showing success page
+        hideCampaignContent();
         
         showStep('success');
         launchConfetti();
@@ -747,6 +753,79 @@ function showContent() {
 }
 
 /**
+ * Hide all campaign content (header, countdown, banner, video)
+ */
+function hideCampaignContent() {
+    // Hide campaign header
+    const header = document.querySelector('.campaign-header');
+    if (header) {
+        header.classList.add('hidden');
+        header.style.display = 'none';
+    }
+    
+    // Hide countdown section
+    const countdown = document.querySelector('.countdown-section');
+    if (countdown) {
+        countdown.classList.add('hidden');
+        countdown.style.display = 'none';
+    }
+    
+    // Hide banner
+    const banner = document.getElementById('campaign-banner');
+    if (banner) {
+        banner.classList.add('hidden');
+        banner.style.display = 'none';
+    }
+    
+    // Hide video
+    const video = document.getElementById('campaign-video');
+    if (video) {
+        video.classList.add('hidden');
+        video.style.display = 'none';
+    }
+    
+    // Hide brand logo
+    const brandLogo = document.getElementById('brand-logo');
+    if (brandLogo) {
+        brandLogo.classList.add('hidden');
+        brandLogo.style.display = 'none';
+    }
+    
+    // Hide campaign title and description
+    const campaignTitle = document.getElementById('campaign-title');
+    const campaignDesc = document.getElementById('campaign-description');
+    if (campaignTitle) {
+        campaignTitle.classList.add('hidden');
+        campaignTitle.style.display = 'none';
+    }
+    if (campaignDesc) {
+        campaignDesc.classList.add('hidden');
+        campaignDesc.style.display = 'none';
+    }
+    
+    // Also hide by class names to be extra sure
+    document.querySelectorAll('.campaign-header').forEach(el => {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+    });
+    
+    document.querySelectorAll('.countdown-section').forEach(el => {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+    });
+    
+    document.querySelectorAll('.campaign-banner').forEach(el => {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+    });
+    
+    document.querySelectorAll('.campaign-video').forEach(el => {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+    });
+}
+
+/**
  * Update success message with personalized message
  * @param {string} fullName - User's full name
  */
@@ -795,20 +874,10 @@ function showStep(step) {
             if (countdownSection) countdownSection.classList.remove('hidden');
             break;
         case 'success':
+            // Hide ALL campaign content first
+            hideCampaignContent();
+            // Then show success page
             elements.stepSuccess?.classList.remove('hidden');
-            // Hide campaign content (header, countdown, etc.) - show only thank you page
-            if (elements.campaignContent) {
-                elements.campaignContent.classList.remove('hidden'); // Keep main visible for success content
-            }
-            // Hide campaign header and countdown on success page
-            const header = document.querySelector('.campaign-header');
-            const countdown = document.querySelector('.countdown-section');
-            const banner = document.getElementById('campaign-banner');
-            const video = document.getElementById('campaign-video');
-            if (header) header.classList.add('hidden');
-            if (countdown) countdown.classList.add('hidden');
-            if (banner) banner.classList.add('hidden');
-            if (video) video.classList.add('hidden');
             break;
     }
 }

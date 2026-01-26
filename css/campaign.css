@@ -423,6 +423,9 @@ main {
    Campaign Page Styles (Public)
    -------------------------------------------------------------------------- */
 .campaign-header { text-align: center; padding: 50px 20px; max-width: 800px; }
+.campaign-header.hidden { display: none !important; }
+.countdown-section.hidden { display: none !important; }
+.campaign-banner.hidden { display: none !important; }
 .campaign-title { font-size: 2.6rem; font-weight: 900; color: var(--campaign-primary); margin-bottom: 15px; }
 .campaign-description { 
     font-size: 1.15rem; 
