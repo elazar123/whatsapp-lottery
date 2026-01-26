@@ -32,67 +32,67 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Rubik:wght@300;400;500;600;700;800&family=Assistant:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="app" class="campaign-container">
         <!-- Project Homepage (Shown if no campaign ID) -->
         <div id="home-page" class="hidden">
-            <header class="page-header home-header">
-                <div class="logo">
-                    <svg viewBox="0 0 48 48" fill="none" class="logo-icon">
-                        <rect width="48" height="48" rx="12" fill="white"/>
-                        <path d="M24 14L32 22L24 30L16 22L24 14Z" fill="var(--primary-color)"/>
-                        <circle cx="24" cy="32" r="4" fill="var(--primary-color)"/>
-                    </svg>
+            <nav class="main-nav">
+                <div class="nav-logo">
+                    <img src="logo.png" alt="WhatsApp Lottery Logo">
+                    <span>WhatsApp Lottery</span>
                 </div>
-                <h1>WhatsApp Lottery</h1>
-                <p>פלטפורמת הגרלות ויראליות בוואטסאפ</p>
+                <div class="nav-actions">
+                    <a href="tel:0525624350" class="btn btn-outline btn-contact">צור קשר</a>
+                </div>
+            </nav>
+
+            <header class="home-header">
+                <div class="hero-content">
+                    <img src="logo.png" alt="Logo" class="home-logo">
+                    <h1>פלטפורמת ההגרלות הויראלית לוואטסאפ</h1>
+                    <p>נהלו קמפיינים, הגדילו חשיפה וצרו באזז קהילתי בקלות – הכל אוטומטי ומותאם לנייד.</p>
+                </div>
             </header>
 
             <main class="step-section">
                 <div class="home-grid">
                     <div class="home-card">
-                        <div class="home-card-icon">🏗️</div>
+                        <div class="home-card-icon">🚀</div>
                         <h3>מנהלי קמפיינים</h3>
-                        <p>צרו הגרלה ויראלית חדשה, נהלו משתתפים ובחרו זוכים בקלות.</p>
+                        <p>צרו הגרלה ויראלית חדשה, נהלו משתתפים ובחרו זוכים בקלות עם לוח בקרה מתקדם.</p>
                         <a href="admin.html" class="btn btn-primary">כניסה למערכת ניהול</a>
                     </div>
 
                     <div class="home-card">
                         <div class="home-card-icon">🎁</div>
                         <h3>מחפשים הגרלות?</h3>
-                        <p>צפו בכל ההגרלות הפעילות עכשיו והצטרפו כדי לזכות בפרסים.</p>
-                        <a href="lotteries.html" class="btn btn-secondary">לכל ההגרלות הפתוחות</a>
+                        <p>צפו בכל ההגרלות הפעילות עכשיו, הצטרפו בחינם והגדילו סיכויים על ידי שיתוף.</p>
+                        <a href="lotteries.html" class="btn btn-outline">לכל ההגרלות הפתוחות</a>
                     </div>
                 </div>
 
-                <div class="features-section">
+                <section class="features-section">
                     <h3>למה WhatsApp Lottery?</h3>
                     <div class="features-list">
                         <div class="feature-item">
-                            <span class="feature-icon">🚀</span>
-                            <div>
-                                <h4>צמיחה ויראלית</h4>
-                                <p>מערכת הפניות (Referrals) מובנית - כל משתף מקבל יותר סיכויים לזכות.</p>
-                            </div>
+                            <div class="feature-icon">📈</div>
+                            <h4>צמיחה ויראלית</h4>
+                            <p>מערכת הפניות (Referrals) מובנית - כל משתף מקבל יותר סיכויים לזכות, מה שיוצר אפקט ויראלי עוצמתי.</p>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-icon">📱</span>
-                            <div>
-                                <h4>מותאם לוואטסאפ</h4>
-                                <p>חוויית משתמש חלקה בתוך הווטסאפ עם תצוגה מקדימה עשירה.</p>
-                            </div>
+                            <div class="feature-icon">🤖</div>
+                            <h4>אוטומציה מלאה</h4>
+                            <p>חוויית משתמש חלקה בתוך הווטסאפ עם תצוגה מקדימה עשירה, ללא צורך בהתערבות ידנית.</p>
                         </div>
                         <div class="feature-item">
-                            <span class="feature-icon">🎯</span>
-                            <div>
-                                <h4>ניהול פשוט</h4>
-                                <p>לוח בקרה מלא למנהלים, מעקב לידים ובחירת זוכים אוטומטית.</p>
-                            </div>
+                            <div class="feature-icon">💎</div>
+                            <h4>ניהול פשוט</h4>
+                            <p>לוח בקרה מלא למנהלים, מעקב לידים בזמן אמת ובחירת זוכים שקופה ואמינה בלחיצת כפתור.</p>
                         </div>
                     </div>
-                </div>
+                </section>
             </main>
         </div>
 
@@ -270,10 +270,18 @@
 
     <!-- Footer -->
     <footer class="campaign-footer">
-        <p>נבנה על ידי <strong>ריגר הפקות</strong></p>
-        <span class="footer-phone">
-            <a href="tel:0525624350">📞 052-562-4350</a>
-        </span>
+        <div class="footer-content">
+            <p>נבנה על ידי <strong>ריגר הפקות</strong></p>
+            <div class="footer-links">
+                <a href="#">תקנון הפלטפורמה</a>
+                <span class="divider">|</span>
+                <a href="#">מדיניות פרטיות</a>
+            </div>
+            <span class="footer-phone">
+                <a href="tel:0525624350">📞 052-562-4350</a>
+            </span>
+            <p class="footer-email">support@riger.co.il</p>
+        </div>
     </footer>
 
     </div>
