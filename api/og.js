@@ -12,9 +12,11 @@ export default async function handler(req, res) {
     
     // Build redirect URL with referral parameter
     const redirectUrl = ref ? `/?c=${campaignId}&r=${ref}` : `/?c=${campaignId}`;
-    // Use dynamic domain if possible, fallback to GitHub Pages
+    // Use dynamic domain (works for both Vercel and GitHub Pages)
     const host = req.headers.host || 'elazar123.github.io';
-    const pageUrl = `https://${host}/whatsapp-lottery${redirectUrl}`;
+    // Remove /whatsapp-lottery path for Vercel (it's not needed)
+    const basePath = host.includes('github.io') ? '/whatsapp-lottery' : '';
+    const pageUrl = `https://${host}${basePath}${redirectUrl}`;
     
     try {
         const projectId = 'whatsapp-lottery1';

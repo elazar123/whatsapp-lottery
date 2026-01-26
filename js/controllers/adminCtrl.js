@@ -718,7 +718,7 @@ async function showDetailsView(campaignId) {
             : 0;
         document.getElementById('stat-conversion').textContent = `${conversion}%`;
         
-        // Campaign link - Always use GitHub Pages format
+        // Campaign link (works for both Vercel and GitHub Pages)
         const currentOrigin = window.location.origin;
         const currentPath = window.location.pathname.replace('admin.html', '');
         
@@ -1224,7 +1224,7 @@ async function handleSaveCampaign() {
             const currentOrigin = window.location.origin;
             const currentPath = window.location.pathname.replace('admin.html', '');
             
-            // Always use GitHub Pages format
+            // Generate campaign link (works for both Vercel and GitHub Pages)
             const campaignLink = `${currentOrigin}${currentPath}index.html?c=${savedCampaignId}`;
             
             const successLinkInput = document.getElementById('success-campaign-link');
@@ -1542,7 +1542,7 @@ function renderLeadsTable(leads) {
     const currentPath = window.location.pathname.replace('admin.html', '');
     
     tbody.innerHTML = leads.map((lead, index) => {
-        // Generate unique referral link for this lead - Always use GitHub Pages format
+        // Generate unique referral link for this lead (works for both Vercel and GitHub Pages)
         const referralLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}&ref=${lead.id}`;
         
         return `

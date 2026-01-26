@@ -580,7 +580,7 @@ async function handleShareWhatsapp() {
     const currentOrigin = window.location.origin;
     const currentPath = window.location.pathname.replace('index.html', '');
     
-    // Always use GitHub Pages format (query parameters)
+    // Generate campaign URL (works for both Vercel and GitHub Pages)
     const url = new URL(currentOrigin + currentPath + 'index.html');
     url.searchParams.set('c', currentCampaign.id);
     if (currentLeadId) url.searchParams.set('ref', currentLeadId);
