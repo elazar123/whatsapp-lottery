@@ -74,7 +74,6 @@ function cacheElements() {
     elements.stepSuccess = document.getElementById('step-success');
     elements.btnSaveContact = document.getElementById('btn-save-contact');
     elements.btnShareWhatsapp = document.getElementById('btn-share-whatsapp');
-    elements.btnShareQuick = document.getElementById('btn-share-quick');
     elements.taskContact = document.getElementById('task-contact');
     elements.taskWhatsapp = document.getElementById('task-whatsapp');
     
@@ -341,7 +340,6 @@ function setupEventListeners() {
     // Task buttons
     elements.btnSaveContact?.addEventListener('click', handleSaveContact);
     elements.btnShareWhatsapp?.addEventListener('click', handleShareWhatsapp);
-    elements.btnShareQuick?.addEventListener('click', handleShareWhatsapp);
 }
 
 /* ==========================================================================
