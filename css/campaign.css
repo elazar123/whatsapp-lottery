@@ -476,7 +476,12 @@ main {
 }
 
 .success-animation {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+}
+
+.step-section {
+    margin: 0;
+    padding: 0;
 }
 
 .success-title {
