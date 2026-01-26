@@ -7,15 +7,25 @@
    CSS Custom Properties (Design Tokens)
    -------------------------------------------------------------------------- */
 :root {
-    /* Primary Colors */
-    --primary-color: #4f46e5;
-    --primary-hover: #4338ca;
-    --primary-light: #eef2ff;
+    /* Primary Colors - Tickchak Style */
+    --primary-color: #00adef;
+    --primary-hover: #0093cc;
+    --primary-light: #e0f4ff;
+    --cta-color: #ffc107;
+    --cta-hover: #e0ac00;
     
     /* Neutral Colors */
-    --bg-color: #f3f4f6;
+    --bg-color: #ffffff;
     --bg-white: #ffffff;
-    --bg-dark: #111827;
+    --bg-dark: #1a1a1a;
+    --bg-light-blue: #f0f9ff;
+    --bg-green: #00a859; /* For the testimonial section */
+    
+    /* Text Colors */
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #888888;
+    --text-inverse: #ffffff;
     
     /* Text Colors */
     --text-primary: #1e293b;
