@@ -184,11 +184,21 @@ main {
 }
 
 .btn-hero {
+    background: var(--cta-color) !important;
+    color: var(--text-primary) !important;
     padding: 18px 45px;
     font-size: clamp(1.1rem, 1.5vw, 1.3rem);
     font-weight: 800;
     margin-bottom: 30px;
-    box-shadow: 0 8px 25px rgba(0, 173, 239, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.35);
+    border: 2px solid transparent !important;
+}
+
+.btn-hero:hover {
+    background: var(--cta-hover) !important;
+    color: var(--text-primary) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(255, 193, 7, 0.4);
 }
 
 .hero-illustration {
