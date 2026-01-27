@@ -3,8 +3,11 @@
  * This serves proper meta tags for WhatsApp, Facebook, Twitter previews
  */
 
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || 'AIzaSyA3ofysjEvOZ5Aj3OQD7kivsxlmm8R-kIc';
+
 export default async function handler(req, res) {
-    const { c: campaignId, ref } = req.query;
+    const { c: campaignId, ref, debug } = req.query;
+    const isDebug = debug === '1' || debug === 'true';
     
     if (!campaignId) {
         return res.redirect('/');
@@ -23,7 +26,7 @@ export default async function handler(req, res) {
 
         // If campaignId is short, resolve it
         if (campaignId.length < 15) {
-            const listUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/campaigns`;
+            const listUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/campaigns?key=${FIREBASE_API_KEY}`;
             const listRes = await fetch(listUrl);
             if (listRes.ok) {
                 const listData = await listRes.json();
@@ -37,12 +40,14 @@ export default async function handler(req, res) {
             }
         }
 
-        // Fetch campaign from Firestore REST API
-        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/campaigns/${fullCampaignId}`;
-        
+        const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/campaigns/${fullCampaignId}?key=${FIREBASE_API_KEY}`;
         const response = await fetch(firestoreUrl);
         
         if (!response.ok) {
+            if (isDebug) {
+                res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+                return res.status(200).send(`Firestore fetch failed: ${response.status} ${response.statusText}`);
+            }
             return res.redirect(redirectUrl);
         }
         
@@ -75,6 +80,7 @@ export default async function handler(req, res) {
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">
     <meta property="og:image" content="${ogImageEscaped}">
+    <meta property="og:image:secure_url" content="${ogImageEscaped}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     ${shareVideoUrl ? `<meta property="og:video" content="${shareVideoUrl}">
@@ -94,12 +100,13 @@ export default async function handler(req, res) {
     <meta name="twitter:player:width" content="1200">
     <meta name="twitter:player:height" content="630">` : ''}
     
-    <!-- No meta refresh – crawlers follow it and get SPA without OG. JS redirect only. -->
-    <script>window.location.replace(${JSON.stringify(redirectUrl)});</script>
+    ${isDebug ? '<!-- debug: no redirect -->' : `<!-- No meta refresh – crawlers stay here. JS redirect only. -->
+    <script>window.location.replace(${JSON.stringify(redirectUrl)});</script>`}
 </head>
 <body>
     <p>מעביר אותך להגרלה...</p>
     <p><a href="${redirectUrl}">לחץ כאן אם אתה לא מועבר אוטומטית</a></p>
+    ${isDebug ? `<!-- og:image: ${ogImageEscaped} -->` : ''}
 </body>
 </html>`;
         
@@ -109,6 +116,10 @@ export default async function handler(req, res) {
         
     } catch (error) {
         console.error('Error fetching campaign:', error);
+        if (isDebug) {
+            res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+            return res.status(200).send(`Error: ${error.message}`);
+        }
         return res.redirect(redirectUrl);
     }
 }
