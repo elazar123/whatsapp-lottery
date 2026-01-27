@@ -8,6 +8,7 @@ import { getCampaign, incrementViewCount, saveLead, updateLeadTasks, findLeadByP
 import { generateVCard, downloadVCard } from '../utils/vcfGenerator.js';
 import { generateWhatsAppUrl, generateCampaignShareUrl, openWhatsAppShare, shortenUrl } from '../utils/whatsappUrl.js';
 import { shareCampaign } from '../services/sharingService.js';
+import { getShareableCampaignUrl } from '../utils/campaignUrls.js';
 import { launchConfetti } from '../utils/confetti.js';
 
 // State
@@ -576,17 +577,8 @@ async function urlToFile(url, filename) {
 async function handleShareWhatsapp() {
     if (!currentCampaign) return;
     
-    // Use the current domain dynamically
-    const currentOrigin = window.location.origin;
-    const currentPath = window.location.pathname.replace('index.html', '');
-    
-    // Generate campaign URL (works for both Vercel and GitHub Pages)
-    const url = new URL(currentOrigin + currentPath + 'index.html');
-    url.searchParams.set('c', currentCampaign.id);
-    if (currentLeadId) url.searchParams.set('ref', currentLeadId);
-    const rawCampaignLink = url.toString();
-    
-    // Shorten the URL
+    // Use shareable URL: /l/:c[/:ref] on Vercel (for OG preview), else index.html?c=...
+    const rawCampaignLink = getShareableCampaignUrl(currentCampaign.id, currentLeadId || undefined);
     const campaignLink = await shortenUrl(rawCampaignLink);
     
     // Prepare share text (without link, as shareCampaign will add it)

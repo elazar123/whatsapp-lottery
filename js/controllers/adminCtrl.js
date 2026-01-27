@@ -22,6 +22,7 @@ import { downloadMultipleContacts } from '../utils/vcfGenerator.js';
 import { uploadImage } from '../services/imageUpload.js';
 import { uploadVideo, uploadImage as uploadImageToCloud } from '../services/cloudService.js';
 import { processImageForWhatsApp } from '../utils/imageProcessor.js';
+import { getShareableCampaignUrl } from '../utils/campaignUrls.js';
 
 // State
 let currentUser = null;
@@ -718,11 +719,7 @@ async function showDetailsView(campaignId) {
             : 0;
         document.getElementById('stat-conversion').textContent = `${conversion}%`;
         
-        // Campaign link (works for both Vercel and GitHub Pages)
-        const currentOrigin = window.location.origin;
-        const currentPath = window.location.pathname.replace('admin.html', '');
-        
-        const campaignLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}${campaign.managerLeadId ? `&ref=${campaign.managerLeadId}` : ''}`;
+        const campaignLink = getShareableCampaignUrl(campaignId, campaign.managerLeadId || undefined);
         
         document.getElementById('campaign-link').value = campaignLink;
         
@@ -1221,11 +1218,7 @@ async function handleSaveCampaign() {
         
         // Prepare success modal
         if (savedCampaignId) {
-            const currentOrigin = window.location.origin;
-            const currentPath = window.location.pathname.replace('admin.html', '');
-            
-            // Generate campaign link (works for both Vercel and GitHub Pages)
-            const campaignLink = `${currentOrigin}${currentPath}index.html?c=${savedCampaignId}`;
+            const campaignLink = getShareableCampaignUrl(savedCampaignId);
             
             const successLinkInput = document.getElementById('success-campaign-link');
             if (successLinkInput) successLinkInput.value = campaignLink;
@@ -1537,13 +1530,8 @@ function renderLeadsTable(leads) {
     
     emptyState.classList.add('hidden');
     
-    // Referral link - Dynamic detection
-    const currentOrigin = window.location.origin;
-    const currentPath = window.location.pathname.replace('admin.html', '');
-    
     tbody.innerHTML = leads.map((lead, index) => {
-        // Generate unique referral link for this lead (works for both Vercel and GitHub Pages)
-        const referralLink = `${currentOrigin}${currentPath}index.html?c=${campaignId}&ref=${lead.id}`;
+        const referralLink = getShareableCampaignUrl(campaignId, lead.id);
         
         return `
             <tr>
