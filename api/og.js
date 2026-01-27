@@ -10,13 +10,12 @@ export default async function handler(req, res) {
         return res.redirect('/');
     }
     
-    // Build redirect URL with referral parameter
     const redirectUrl = ref ? `/?c=${campaignId}&r=${ref}` : `/?c=${campaignId}`;
-    // Use dynamic domain (works for both Vercel and GitHub Pages)
     const host = req.headers.host || 'elazar123.github.io';
-    // Remove /whatsapp-lottery path for Vercel (it's not needed)
     const basePath = host.includes('github.io') ? '/whatsapp-lottery' : '';
-    const pageUrl = `https://${host}${basePath}${redirectUrl}`;
+    // og:url = this page (/l/...). Crawlers stay here; no re-fetch of SPA.
+    const canonicalPath = ref ? `/l/${campaignId}/${ref}` : `/l/${campaignId}`;
+    const pageUrl = `https://${host}${basePath}${canonicalPath}`;
     
     try {
         const projectId = 'whatsapp-lottery1';
@@ -58,9 +57,9 @@ export default async function handler(req, res) {
         const shareImageUrl = fields.shareImageUrl?.stringValue || '';
         const shareVideoUrl = fields.shareVideoUrl?.stringValue || '';
         
-        // Use share image if available, otherwise banner, otherwise default
-        // For video, we'll use it separately in og:video tag
-        const ogImage = shareImageUrl || bannerUrl || defaultImage;
+        let ogImage = shareImageUrl || bannerUrl || defaultImage;
+        if (!ogImage || !ogImage.startsWith('http')) ogImage = defaultImage;
+        const ogImageEscaped = ogImage.replace(/"/g, '&quot;');
         
         // Return HTML with proper meta tags
         const html = `<!DOCTYPE html>
@@ -75,7 +74,7 @@ export default async function handler(req, res) {
     <meta property="og:type" content="website">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">
-    <meta property="og:image" content="${ogImage}">
+    <meta property="og:image" content="${ogImageEscaped}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     ${shareVideoUrl ? `<meta property="og:video" content="${shareVideoUrl}">
@@ -90,14 +89,13 @@ export default async function handler(req, res) {
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(description)}">
-    <meta name="twitter:image" content="${ogImage}">
+    <meta name="twitter:image" content="${ogImageEscaped}">
     ${shareVideoUrl ? `<meta name="twitter:player" content="${shareVideoUrl}">
     <meta name="twitter:player:width" content="1200">
     <meta name="twitter:player:height" content="630">` : ''}
     
-    <!-- Redirect to actual page -->
-    <meta http-equiv="refresh" content="0;url=${redirectUrl}">
-    <script>window.location.href = "${redirectUrl}";</script>
+    <!-- No meta refresh – crawlers follow it and get SPA without OG. JS redirect only. -->
+    <script>window.location.replace(${JSON.stringify(redirectUrl)});</script>
 </head>
 <body>
     <p>מעביר אותך להגרלה...</p>
